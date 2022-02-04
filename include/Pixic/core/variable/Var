@@ -1,0 +1,84 @@
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <Pixic/core/typedefs/variable/Var>
+
+#include <Pixic/core/typedefs/variable/Var_int>
+#include <Pixic/core/typedefs/variable/Var_float>
+
+interface (Var)
+{
+	size_t cast;
+
+	Var
+		(*set)(Var *self, Var *operand),
+		(*set2)(Var *self, Var_int *operand),
+		(*set3)(Var *self, Var_float *operand),
+		(*mod)(Var *self, Var *operand),
+		(*mod2)(Var *self, Var_int *operand),
+		(*mod3)(Var *self, Var_float *operand),
+		(*div)(Var *self, Var *operand),
+		(*div2)(Var *self, Var_int *operand),
+		(*div3)(Var *self, Var_float *operand),
+		(*idiv)(Var *self, Var *operand),
+		(*idiv2)(Var *self, Var_int *operand),
+		(*idiv3)(Var *self, Var_float *operand),
+		(*mul)(Var *self, Var *operand),
+		(*mul2)(Var *self, Var_int *operand),
+		(*mul3)(Var *self, Var_float *operand),
+		(*not)(Var *self),
+		(*bnot)(Var *self),
+		(*add)(Var *self, Var *operand),
+		(*add2)(Var *self, Var_int *operand),
+		(*add3)(Var *self, Var_float *operand),
+		(*neg)(Var *self),
+		(*sub)(Var *self, Var *operand),
+		(*sub2)(Var *self, Var_int *operand),
+		(*sub3)(Var *self, Var_float *operand),
+		(*rsh)(Var *self, Var *operand),
+		(*rsh2)(Var *self, Var_int *operand),
+		(*rsh3)(Var *self, Var_float *operand),
+		(*lsh)(Var *self, Var *operand),
+		(*lsh2)(Var *self, Var_int *operand),
+		(*lsh3)(Var *self, Var_float *operand),
+		(*eq)(Var *self, Var *operand),
+		(*eq2)(Var *self, Var_int *operand),
+		(*eq3)(Var *self, Var_float *operand),
+		(*neq)(Var *self, Var *operand),
+		(*neq2)(Var *self, Var_int *operand),
+		(*neq3)(Var *self, Var_float *operand),
+		(*less)(Var *self, Var *operand),
+		(*less2)(Var *self, Var_int *operand),
+		(*less3)(Var *self, Var_float *operand),
+		(*great)(Var *self, Var *operand),
+		(*great2)(Var *self, Var_int *operand),
+		(*great3)(Var *self, Var_float *operand),
+		(*leq)(Var *self, Var *operand),
+		(*leq2)(Var *self, Var_int *operand),
+		(*leq3)(Var *self, Var_float *operand),
+		(*geq)(Var *self, Var *operand),
+		(*geq2)(Var *self, Var_int *operand),
+		(*geq3)(Var *self, Var_float *operand),
+		(*bor)(Var *self, Var *operand),
+		(*bor2)(Var *self, Var_int *operand),
+		(*bor3)(Var *self, Var_float *operand),
+		(*bxor)(Var *self, Var *operand),
+		(*bxor2)(Var *self, Var_int *operand),
+		(*bxor3)(Var *self, Var_float *operand),
+		(*band)(Var *self, Var *operand),
+		(*band2)(Var *self, Var_int *operand),
+		(*band3)(Var *self, Var_float *operand),
+		(*or)(Var *self, Var *operand),
+		(*or2)(Var *self, Var_int *operand),
+		(*or3)(Var *self, Var_float *operand),
+		(*and)(Var *self, Var *operand),
+		(*and2)(Var *self, Var_int *operand),
+		(*and3)(Var *self, Var_float *operand);
+	long (*to_long)(Var *self);
+	long long (*to_long_long)(Var *self);
+	float (*to_float)(Var *self);
+	double (*to_double)(Var *self);
+	Int (*to_Int)(Var *self);
+	Float (*to_Float)(Var *self);
+	bool (*to_bool)(Var *self);
+};

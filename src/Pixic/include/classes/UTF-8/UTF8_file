@@ -1,0 +1,58 @@
+#pragma once
+
+#include "OOP.h"
+#include <typedefs/classes/UTF-8/UTF8_file>
+
+#include "stdio.h"
+#include "stdbool.h"
+#include <typedefs/classes/UTF-8/UTF32_char>
+
+#define UTF8_ERROR (-2)
+
+class (UTF8_file)
+{
+	FILE *stream;
+	long position;
+};
+inline UTF8_file UTF8_file_new()
+{
+	UTF8_file self;
+
+	self.position=EOF;
+
+	return self;
+}
+inline UTF8_file UTF8_file_new2(const char *file, const char *mode)
+{
+	UTF8_file self;
+
+	self.stream=fopen(file, mode);
+	self.position=self.stream?0:EOF;
+
+	return self;
+}
+UTF8_file UTF8_file_new3(FILE* stream);
+inline bool UTF8_file_open(UTF8_file *self, const char *file, const char *mode)
+{
+	self->stream=fopen(file, mode);
+	if (self->stream)
+	{
+		self->position=EOF;
+		return false;
+	}
+	self->position=0;
+	return true;
+}
+inline bool UTF8_file_close(UTF8_file *self)
+{
+	self->position=EOF;
+	return fclose(self->stream)?false:true;
+}
+UTF32_char UTF8_file_get(UTF8_file *self);
+UTF8_file* UTF8_file_put(UTF8_file *self, UTF32_char symbol);
+UTF8_file* UTF8_file_put_LE(UTF8_file *self, UTF32_char symbol);
+UTF8_file* UTF8_file_seek(UTF8_file *self, long offset, int origin);
+inline long UTF8_file_tell(UTF8_file *self)
+{
+	return self->position;
+}

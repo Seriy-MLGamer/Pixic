@@ -1,0 +1,5 @@
+#pragma once
+
+#include <Pixic/core/typedefs/Int>
+
+typedef Int Container_id;

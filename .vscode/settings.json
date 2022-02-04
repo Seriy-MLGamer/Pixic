@@ -1,0 +1,16 @@
+{
+	"files.associations": {
+		"var": "c",
+		"var_int": "c",
+		"var_float": "c",
+		"property": "c",
+		"container_data": "c",
+		"container": "c",
+		"c oop.h": "c",
+		"safe memory.h": "c",
+		"arithmetical": "c",
+		"var_null": "c",
+		"int": "c",
+		"float": "c",
+	}
+}

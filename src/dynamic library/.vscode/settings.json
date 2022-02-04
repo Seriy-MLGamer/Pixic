@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"*.pixih": "pixilang",
+		"var.h": "c",
+		"int.h": "c",
+		"new": "cpp",
+		"float.h": "c",
+		"typeinfo": "c",
+		"iostream": "cpp",
+		"type.h": "c"
+	}
+}

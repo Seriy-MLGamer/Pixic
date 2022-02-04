@@ -1,0 +1,1 @@
+gcc obj_rand.c src/core/variable/Var_null.c src/core/variable/Var_int.c src/core/variable/Var_float.c -I../../../include -O3 -s

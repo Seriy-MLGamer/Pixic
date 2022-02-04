@@ -1,0 +1,23 @@
+{
+	"files.associations": {
+		"*.pixih": "pixilang",
+		"configuration.h": "c",
+		"threads.h": "c",
+		"string.h": "c",
+		"safe memory.h": "c",
+		"algorithms.h": "c",
+		"hash": "c",
+		"type_traits": "c",
+		"c oop.h": "c",
+		"stdint.h": "c",
+		"*.tcc": "c",
+		"unordered_map": "c",
+		"vector": "c",
+		"memory": "c",
+		"optional": "c",
+		"string_view": "c",
+		"system_error": "c",
+		"property": "c",
+		"stdbool.h": "c"
+	}
+}

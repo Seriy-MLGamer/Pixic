@@ -1,0 +1,10 @@
+#pragma once
+
+#include <Pixic/core/typedefs/Int>
+
+/**
+ * class Var_int implements Var;
+ */
+typedef struct Var_int Var_int;
+
+Var_int Var_int_new(Int number);

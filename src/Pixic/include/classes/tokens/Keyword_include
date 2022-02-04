@@ -1,0 +1,15 @@
+#ifndef Keyword_include_h
+#define Keyword_include_h
+
+#include "Token.h"
+
+/**
+ * \brief class Keyword_include: Token;
+ */
+typedef struct keyword_include Keyword_include;
+struct keyword_include
+{
+	Token Token;
+};
+
+#endif

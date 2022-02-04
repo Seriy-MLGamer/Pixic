@@ -1,0 +1,13 @@
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <Pixic/core/typedefs/variable/Var_null>
+
+#include <Pixic/core/typedefs/variable/Var>
+
+class (Var_null)
+{
+	Var Var;
+
+	const char *name;
+};

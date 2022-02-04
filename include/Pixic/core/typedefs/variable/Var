@@ -1,0 +1,6 @@
+#pragma once
+
+/**
+ * interface Var;
+ */
+typedef const struct vtable_Var *Var;

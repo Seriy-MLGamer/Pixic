@@ -1,0 +1,3 @@
+includ include a=1
+b=a+2.3
+logf("%d\n", b)

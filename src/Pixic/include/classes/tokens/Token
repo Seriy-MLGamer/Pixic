@@ -1,0 +1,6 @@
+#ifndef Token_h
+#define Token_h
+
+class Token;
+
+#endif

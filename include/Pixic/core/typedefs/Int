@@ -1,0 +1,10 @@
+#pragma once
+
+#include "configuration.h"
+
+#ifdef x32
+	typedef long Int;
+#endif
+#ifdef x64
+	typedef long long Int;
+#endif

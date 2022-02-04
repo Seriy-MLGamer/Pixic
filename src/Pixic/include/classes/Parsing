@@ -1,0 +1,13 @@
+#pragma once
+
+#include "OOP.h"
+#include <typedefs/classes/Parsing>
+
+class (Parsing)
+{
+	char* input_file;
+	char* output_folder;
+	int optimization;
+};
+Parsing Parsing_new();
+void Parsing_Pixilang_to_C(Parsing *self);

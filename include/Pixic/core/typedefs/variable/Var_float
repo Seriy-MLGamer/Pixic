@@ -1,0 +1,10 @@
+#pragma once
+
+#include <Pixic/core/typedefs/Float>
+
+/**
+ * class Var_float implements Var;
+ */
+typedef struct Var_float Var_float;
+
+Var_float Var_float_new(Float number);

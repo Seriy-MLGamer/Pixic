@@ -1,0 +1,18 @@
+width=1000
+height=1000
+
+array=new(width*height, 1, INT)
+start_timer()
+a=0
+y=0 while y!=height
+{
+	x=0 while x!=width
+	{
+		array[x+y*width]=a+1
+		a=(a+1)%5
+		x+1
+	}
+	y+1
+}
+printf("%u ms\n", get_timer()-start)
+printf("%i\n%i\n%i\n%i\n", array[0+0*width], array[width-1+0*width], array[width-1+(height-1)*width], array[0+(height-1)*width])

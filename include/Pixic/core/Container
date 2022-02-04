@@ -1,0 +1,19 @@
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <Pixic/core/classes/typedefs/Container>
+
+#include <Pixic/core/typedefs/Color>
+#include <Pixic/core/typedefs/Container_id>
+#include <Pixic/core/classes/typedefs/Container_data>
+
+class (Container)
+{
+	void *data;
+	int type;
+	Int	width, height, size;
+	long flags;
+	Color key_color;
+	Container_id alpha;
+	Container_data *optional;
+};

@@ -1,0 +1,18 @@
+{
+	"files.associations": {
+		"*.pixih": "pixilang",
+		"parsing": "c",
+		"utf8_file": "c",
+		"utf32_char": "c",
+		"array": "c",
+		"deque": "c",
+		"string": "c",
+		"vector": "c",
+		"string_view": "c",
+		"istream": "c",
+		"ostream": "c",
+		"tuple": "c",
+		"type_traits": "c",
+		"utility": "c"
+	}
+}

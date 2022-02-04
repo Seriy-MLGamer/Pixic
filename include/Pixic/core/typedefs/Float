@@ -1,0 +1,10 @@
+#pragma once
+
+#include "configuration.h"
+
+#ifdef x32
+	typedef float Float;
+#endif
+#ifdef x64
+	typedef double Float;
+#endif

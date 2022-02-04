@@ -1,0 +1,7 @@
+what()
+halt
+what:
+$a=1
+$b=2
+logf("%i, %i\n", $a, $b)
+ret
