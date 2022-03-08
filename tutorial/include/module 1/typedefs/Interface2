@@ -1,0 +1,9 @@
+//Объявление интерфейса.
+
+#pragma once
+
+/**
+ * interface Interface2;
+ * Запомните ещё раз!
+ */
+typedef const struct vtable_Interface2 *Interface2;

@@ -1,0 +1,29 @@
+width=2000
+height=4000
+array=new(width, height, FLOAT32)
+pattern=new(5, 1, FLOAT32)
+pattern[0]=10.4
+pattern[1]=2.86
+pattern[2]=-20.1
+pattern[3]=-4.84
+pattern[4]=2
+pattern_length=get_size(pattern)
+pattern_number=0
+start=get_timer()
+for (y=0; y!=height; y+1)
+{
+	for (x=0; x!=width; x+1)
+	{
+		array[x, y]=pattern[pattern_number]
+		pattern_number+1
+		pattern_number%pattern_length
+	}
+}
+end=get_timer()-start
+logf(
+"%f %f
+%f %f
+Speed: %li op/ms.\n",
+array[0, 0], array[width-1, 0], array[0, height-1], array[width-1, height-1], (width*height) div end)
+remove(array)
+remove(pattern)

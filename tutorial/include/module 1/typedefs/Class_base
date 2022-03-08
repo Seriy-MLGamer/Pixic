@@ -1,0 +1,9 @@
+//Объявление класса.
+
+#pragma once
+
+/**
+ * class Class_base implements Interface1, Interface2;
+ * Указываем, какие интерфейсы реализует класс.
+ */
+typedef struct Class_base Class_base;

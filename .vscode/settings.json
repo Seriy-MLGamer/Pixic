@@ -1,16 +1,25 @@
 {
 	"files.associations": {
 		"var": "c",
+		"var_null": "c",
 		"var_int": "c",
 		"var_float": "c",
-		"property": "c",
-		"container_data": "c",
+		"contain": "c",
 		"container": "c",
+		"container_int8": "c",
+		"container_int16": "c",
+		"container_int32": "c",
+		"container_int64": "c",
+		"container_float32": "c",
+		"container_float64": "c",
+		"container_data": "c",
+		"container_id": "c",
+		"property": "c",
 		"c oop.h": "c",
 		"safe memory.h": "c",
 		"arithmetical": "c",
-		"var_null": "c",
 		"int": "c",
 		"float": "c",
+		"color": "c"
 	}
 }

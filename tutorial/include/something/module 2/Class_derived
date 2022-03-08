@@ -1,0 +1,25 @@
+//Определение класса.
+
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <something/module 2/typedefs/Class_derived>
+
+//При наследовании включается определение наследуемого класса.
+#include <module 1/Class_base>
+#include <something/module 2/typedefs/Interface3>
+
+class (Class_derived)
+{
+	//Наследование производится через анонимную структуру.
+	Class_base;
+	//Интерфейсы реализуются после наследования класса.
+	Interface3 Interface3;
+
+	//Поля.
+	float z;
+};
+//Методы.
+float Class_derived_magnitude(Class_derived *self);
+
+Class_derived Class_derived_new(float x, float y, float z);

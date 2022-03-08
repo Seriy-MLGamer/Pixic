@@ -1,0 +1,23 @@
+//Определение класса.
+
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <module 1/typedefs/Class_base>
+
+//При реализации интерфейсов включаются их объявления.
+#include <module 1/typedefs/Interface1>
+#include <module 1/typedefs/Interface2>
+
+class (Class_base)
+{
+	Interface1 Interface1;
+	Interface2 Interface2;
+
+	//Поля.
+	float x, y;
+};
+//Методы.
+float Class_base_magnitude(Class_base *self);
+
+Class_base Class_base_new(float x, float y);

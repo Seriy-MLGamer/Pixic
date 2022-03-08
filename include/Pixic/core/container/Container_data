@@ -1,0 +1,12 @@
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <Pixic/core/typedefs/container/Container_data>
+
+#include <Pixic/core/typedefs/container/Property>
+
+class (Container_data)
+{
+	Property *last_property;
+	void *hidden_data;
+};

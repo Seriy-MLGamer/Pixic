@@ -1,0 +1,10 @@
+{
+	"files.associations": {
+		"var_int": "c",
+		"arithmetical": "c",
+		"var": "c",
+		"c oop.h": "c",
+		"var_float": "c",
+		"var_null": "c"
+	}
+}

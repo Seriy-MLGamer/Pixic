@@ -1,6 +1,9 @@
 #pragma once
 
-#include "stdbool.h"
+#include <Pixic/core/typedefs/variable/Arithmetical>
+#include <Pixic/core/typedefs/container/Container>
 
-bool pixic_load();
-bool pixic_unload();
+extern Arithmetical (**functions)(unsigned long argument_count, ...);
+
+int Pixic_init();
+int Pixic_deinit();

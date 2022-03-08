@@ -1,0 +1,14 @@
+//Определение интерфейса.
+
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <module 1/typedefs/Interface1>
+
+interface (Interface1)
+{
+	//Смещение указателя на таблицу в классе.
+	size_t cast;
+
+	//Виртуальные методы.
+};

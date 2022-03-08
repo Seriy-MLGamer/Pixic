@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"*.pixih": "pixilang",
+		"class": "c",
+		"class_base": "c",
+		"interface1": "c",
+		"interface2": "c",
+		"class_derived": "c",
+		"interface3": "c",
+		"math.h": "c"
+	}
+}

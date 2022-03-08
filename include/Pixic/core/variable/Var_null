@@ -4,6 +4,11 @@
 #include <Pixic/core/typedefs/variable/Var_null>
 
 #include <Pixic/core/typedefs/variable/Var>
+#include <Pixic/core/typedefs/variable/Var_int>
+#include <Pixic/core/typedefs/variable/Var_float>
+#include <Pixic/core/typedefs/variable/Arithmetical>
+#include <Pixic/core/typedefs/Int>
+#include <Pixic/core/typedefs/Float>
 
 class (Var_null)
 {
@@ -11,3 +16,78 @@ class (Var_null)
 
 	const char *name;
 };
+extern void
+	(*Var_null_set)(Var_null *self, Var *rvalue),
+	(*Var_null_set2)(Var_null *self, Var_null *lvalue),
+	(*Var_null_set3)(Var_null *self, Var_int *lvalue),
+	(*Var_null_set4)(Var_null *self, Var_float *lvalue);
+extern Arithmetical
+	(*Var_null_op_mod)(Var_null *self, Var *roperand),
+	(*Var_null_op_mod2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_mod3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_div)(Var_null *self, Var *roperand),
+	(*Var_null_op_div2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_div3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_idiv)(Var_null *self, Var *roperand),
+	(*Var_null_op_idiv2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_idiv3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_mul)(Var_null *self, Var *roperand),
+	(*Var_null_op_mul2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_mul3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_not)(Var_null *self),
+	(*Var_null_op_bnot)(Var_null *self),
+	(*Var_null_op_add)(Var_null *self, Var *roperand),
+	(*Var_null_op_add2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_add3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_neg)(Var_null *self),
+	(*Var_null_op_sub)(Var_null *self, Var *roperand),
+	(*Var_null_op_sub2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_sub3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_rsh)(Var_null *self, Var *roperand),
+	(*Var_null_op_rsh2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_rsh3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_lsh)(Var_null *self, Var *roperand),
+	(*Var_null_op_lsh2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_lsh3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_eq)(Var_null *self, Var *roperand),
+	(*Var_null_op_eq2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_eq3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_neq)(Var_null *self, Var *roperand),
+	(*Var_null_op_neq2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_neq3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_less)(Var_null *self, Var *roperand),
+	(*Var_null_op_less2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_less3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_great)(Var_null *self, Var *roperand),
+	(*Var_null_op_great2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_great3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_leq)(Var_null *self, Var *roperand),
+	(*Var_null_op_leq2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_leq3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_geq)(Var_null *self, Var *roperand),
+	(*Var_null_op_geq2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_geq3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_bor)(Var_null *self, Var *roperand),
+	(*Var_null_op_bor2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_bor3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_bxor)(Var_null *self, Var *roperand),
+	(*Var_null_op_bxor2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_bxor3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_band)(Var_null *self, Var *roperand),
+	(*Var_null_op_band2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_band3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_or)(Var_null *self, Var *roperand),
+	(*Var_null_op_or2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_or3)(Var_null *self, Var_float *loperand),
+	(*Var_null_op_and)(Var_null *self, Var *roperand),
+	(*Var_null_op_and2)(Var_null *self, Var_int *loperand),
+	(*Var_null_op_and3)(Var_null *self, Var_float *loperand);
+extern long (*Var_null_to_long)(Var_null *self);
+extern long long (*Var_null_to_long_long)(Var_null *self);
+extern float (*Var_null_to_float)(Var_null *self);
+extern double (*Var_null_to_double)(Var_null *self);
+extern Int (*Var_null_to_Int)(Var_null *self);
+extern Float (*Var_null_to_Float)(Var_null *self);
+extern bool (*Var_null_to_bool)(Var_null *self);
+
+extern Var_null (*Var_null_new)(const char *name);

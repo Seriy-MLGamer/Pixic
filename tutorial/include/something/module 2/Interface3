@@ -1,0 +1,13 @@
+//Определение интерфейса.
+
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <something/module 2/typedefs/Interface3>
+
+interface (Interface3)
+{
+	size_t cast;
+
+	//Виртуальные методы.
+};

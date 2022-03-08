@@ -2,9 +2,9 @@
 
 #include "configuration.h"
 
-#ifdef x32
+#ifdef X32
 	typedef float Float;
 #endif
-#ifdef x64
+#ifdef X64
 	typedef double Float;
 #endif

@@ -1,0 +1,9 @@
+//Объявление класса.
+
+#pragma once
+
+/**
+ * class Class_derived extends Class_base implements Interface3;
+ * Указываем, от какого класса наследуется этот класс.
+ */
+typedef struct Class_derived Class_derived;

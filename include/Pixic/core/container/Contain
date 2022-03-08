@@ -1,0 +1,9 @@
+#pragma once
+
+#include "Pixic/core library/C OOP.h"
+#include <Pixic/core/typedefs/container/Contain>
+
+interface (Contain)
+{
+	size_t cast;
+};

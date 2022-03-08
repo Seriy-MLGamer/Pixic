@@ -1,13 +1,10 @@
-/**
- * Before include:
- * Pixic/core/variable/Var_null;
- * Pixic/core/variable/Var_int;
- * Pixic/core/variable/Var_float
- */
-
 #pragma once
 
 #include <Pixic/core/typedefs/variable/Arithmetical>
+
+#include <Pixic/core/variable/Var_null>
+#include <Pixic/core/variable/Var_int>
+#include <Pixic/core/variable/Var_float>
 
 union Arithmetical
 {

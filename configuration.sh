@@ -15,8 +15,8 @@ result=\
 /*Bit depth of target device.*/
 /*Choose one of them.*/
 "
-x32="//#define x32"
-x64="//#define x64"
+x32="//#define X32"
+x64="//#define X64"
 if [[ ${@:2:1} = x32 ]]
 then x32=${x32:2}
 elif [[ ${@:2:1} = x64 ]]
@@ -25,14 +25,15 @@ else
 	echo "${@:0:1}: error: bit depth is wrong."
 	exit 2
 fi
-result+="$x32
+result+=\
+"$x32
 $x64
 
 /*Target operating system.*/
 /*Choose one of them.*/
 "
-Windows="//#define OS_Windows"
-Linux="//#define OS_Linux"
+Windows="//#define OS_WINDOWS"
+Linux="//#define OS_LINUX"
 if [[ ${@:3:1} = Windows ]]
 then Windows=${Windows:2}
 elif [[ ${@:3:1} = Linux ]]
@@ -41,6 +42,7 @@ else
 	echo "${@:0:1}: error: operating system is wrong."
 	exit 3
 fi
-result+="$Windows
+result+=\
+"$Windows
 $Linux"
 echo "$result">"${@:1:1}"/configuration.h

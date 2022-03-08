@@ -4,5 +4,3 @@
  * class Var_null implements Var;
  */
 typedef struct Var_null Var_null;
-
-Var_null Var_null_new(const char *name);
