@@ -4,5 +4,5 @@ With **Pixic** you can compile Pixilang code! This is made by translation of Pix
 Performance of Pixilang code compiled by Pixic increases above **2** times!\
 Pixic is fully compatible with official version of Pixilang.\
 *Enjoy pixi-experiments.*\
-<img src="logo.jpg">
+<img src="logo.png">
 ## In development. Not working yet.
