@@ -1,8 +1,0 @@
-//Объявление интерфейса.
-
-#pragma once
-
-/**
- * interface Interface3;
- */
-typedef const struct vtable_Interface3 *Interface3;

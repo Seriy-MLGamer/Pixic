@@ -1,0 +1,13 @@
+#Executables.
+*.exe
+*.out
+#Dynameic libraries.
+*.dll
+*.so
+#Static libraries.
+*.a
+*.o
+#Binary folders.
+bin
+lib
+obj

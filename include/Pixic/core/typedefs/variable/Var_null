@@ -1,6 +1,0 @@
-#pragma once
-
-/**
- * class Var_null implements Var;
- */
-typedef struct Var_null Var_null;

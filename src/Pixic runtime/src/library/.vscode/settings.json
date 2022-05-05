@@ -1,10 +1,22 @@
 {
 	"files.associations": {
-		"var_int": "c",
-		"arithmetical": "c",
-		"var": "c",
+		"container.h": "c",
+		"arithmetical.h": "c",
+		"var.h": "c",
+		"container_int8.h": "c",
+		"container_id.h": "c",
 		"c oop.h": "c",
-		"var_float": "c",
-		"var_null": "c"
+		"containers.h": "c",
+		"iterator": "c",
+		"initializer_list": "c",
+		"type_traits": "c",
+		"xstring": "c",
+		"xutility": "c",
+		"class_base": "c",
+		"var_float.h": "c",
+		"var_int.h": "c",
+		"var_null.h": "c",
+		"container_float32.h": "c",
+		"container_int16.h": "c"
 	}
 }

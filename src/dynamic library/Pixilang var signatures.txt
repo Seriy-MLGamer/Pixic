@@ -1,6 +1,0 @@
-Beginnings of Pixilang names.
-pc - Pixilang Constant (built-ins and literals).
-pv - global Pixilang Variable.
-pl - Local Pixilang variable.
-pf - Pixilang library Function name.
-pe - temporary value of Pixilang arithmetical Expression.

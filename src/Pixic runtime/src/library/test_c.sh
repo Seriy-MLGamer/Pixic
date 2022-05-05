@@ -1,1 +1,0 @@
-make test lang=C module=core/variable

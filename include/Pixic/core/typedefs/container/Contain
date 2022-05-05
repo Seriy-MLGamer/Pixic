@@ -1,6 +1,0 @@
-#pragma once
-
-/**
- * interface Contain;
- */
-typedef const struct vtable_Contain *Contain;

@@ -1,8 +1,0 @@
-#pragma once
-
-#include "configuration.h"
-
-/**
- * abstract class Container implements Contain;
- */
-typedef struct Container Container;

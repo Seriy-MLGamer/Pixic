@@ -1,7 +1,7 @@
 #pragma once
 
-#include "stddef.h"
-#include "stdbool.h"
+#include <stddef.h>
+#include <stdbool.h>
 
 typedef struct Memory_data Memory_data;
 struct Memory_data

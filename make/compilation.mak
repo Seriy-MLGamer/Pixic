@@ -1,3 +1,6 @@
+#Dependencies.
+#core.mak
+
 ifeq ($(operating_system), Windows)
 	ifeq ($(architecture), x86)
 		arch_root=$(root)/i686-w64-mingw32
@@ -19,8 +22,8 @@ obj=$(arch_root)/obj
 lib=$(arch_root)/lib
 configuration=$(root)/configuration.h
 
-compilation_flags=$(specific_flags) $(optimizators) $(include_path) $(cflags)
-optimizators=-O3 -s
+compilation_flags=$(specific_flags) $(optimizators) -I"$(root)/include" $(include_path) $(cflags)
+link_flags=-L"$(arch_root)/lib" $(lib_path) $(libs) $(ldflags)
 ifeq ($(architecture), x86)
 	ifeq ($(operating_system), Windows)
 		specific_flags=-march=i686
@@ -32,15 +35,11 @@ endif
 ifeq ($(architecture), x86_64)
 	specific_flags=-m64
 endif
-linkage_flags=$(lib_path) $(libs) $(ldflags)
+optimizators=-O3 -s
 
-make_configuration=$(root)/configuration.sh $(root) x32 $(operating_system);\
-	make compile
 compile=gcc -c -o $@ $< $(compilation_flags)
 
-$(bin):
-	mkdir $@
-$(obj):
-	mkdir $@
-$(lib):
-	mkdir $@
+$(bin) $(obj) $(lib): $(arch_root)
+	mkdir "$@"
+$(arch_root):
+	mkdir "$@"

@@ -1,8 +1,8 @@
-#include "Pixic/core library/Safe memory.h"
+#include <Pixic/core library/Safe memory.h>
 
-#include "stdlib.h"
-#include "string.h"
-#include "Pixic/core library/threads.h"
+#include <stdlib.h>
+#include <string.h>
+#include <Pixic/core library/threads.h>
 
 typedef struct Memory_block Memory_block;
 struct Memory_block
@@ -19,14 +19,14 @@ size_t not_freed_size;
 static Memory_block *last_block;
 static Mutex memory_mutex;
 
-bool safe_memory_init()
+int safe_memory_init()
 {
 	memory_allocated=0;
 	max_memory_allocated=0;
 	last_block=NULL;
 	memory_mutex=Mutex_new();
-	if (!memory_mutex) return false;
-	return true;
+	if (!memory_mutex) return 1;
+	return 0;
 }
 void *safe_malloc(size_t size, const char *name)
 {
@@ -42,7 +42,7 @@ void *safe_malloc(size_t size, const char *name)
 	memory_allocated+=size;
 	if (memory_allocated>max_memory_allocated) max_memory_allocated=memory_allocated;
 	Mutex_unlock(memory_mutex);
-	return (void *)result+sizeof(Memory_block);
+	return (void *)(result+1);
 }
 void safe_clean(void *data)
 {
@@ -56,61 +56,65 @@ size_t safe_get_size(void *data)
 }
 void *safe_realloc(void *data, size_t new_size)
 {
-	Memory_block
-		*result=data-sizeof(Memory_block),
-		*prev=result->prev,
-		*next=result->next;
+	Memory_block *result=data-sizeof(Memory_block);
 	size_t size=result->size;
 	Mutex_lock(memory_mutex);
+	Memory_block
+		*prev=result->prev,
+		*next=result->next;
 	result=realloc(result, sizeof(Memory_block)+new_size);
 	if (!result)
 	{
 		if (next)
 		{
-			next->prev=prev;
-			if (prev) prev->next=next;
+			if (prev)
+			{
+				prev->next=next;
+				next->prev=prev;
+			}
+			else next->prev=NULL;
 		}
-		else
+		else if (prev)
 		{
-			if (prev) prev->next=NULL;
+			prev->next=NULL;
 			last_block=prev;
 		}
+		else last_block=NULL;
 		memory_allocated-=size;
 		Mutex_unlock(memory_mutex);
 		return NULL;
 	}
-	memory_allocated+=new_size-result->size;
+	memory_allocated+=new_size-size;
 	if (memory_allocated>max_memory_allocated) max_memory_allocated=memory_allocated;
-	if (next)
-	{
-		next->prev=result;
-		Mutex_unlock(memory_mutex);
-		if (prev) prev->next=result;
-		result->size=new_size;
-	}
-	else
-	{
-		if (prev) prev->next=result;
-		last_block=result;
-		result->size=new_size;
-		Mutex_unlock(memory_mutex);
-	}
+	if (next) next->prev=result;
+	else last_block=result;
+	if (prev) prev->next=result;
+	Mutex_unlock(memory_mutex);
+	result->size=new_size;
 	return (void *)result+sizeof(Memory_block);
 }
 void safe_free(void *data)
 {
 	Memory_block *block=data-sizeof(Memory_block);
 	Mutex_lock(memory_mutex);
-	if (block->next)
+	Memory_block
+		*prev=block->prev,
+		*next=block->next;
+	if (next)
 	{
-		block->next->prev=block->prev;
-		if (block->prev) block->prev->next=block->next;
+		if (prev)
+		{
+			prev->next=next;
+			next->prev=prev;
+		}
+		else next->prev=NULL;
 	}
-	else
+	else if (prev)
 	{
-		if (block->prev) block->prev->next=NULL;
-		last_block=block->prev;
+		prev->next=NULL;
+		last_block=prev;
 	}
+	else last_block=NULL;
 	memory_allocated-=block->size;
 	Mutex_unlock(memory_mutex);
 	free(block);
