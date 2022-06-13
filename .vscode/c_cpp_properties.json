@@ -1,13 +1,15 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Linux",
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/include"
             ],
-            "cStandard": "c11"
-            
+            "cStandard": "c11",
+            "compilerArgs": [
+                "-fms-extensions"
+            ]
         }
     ],
     "version": 4

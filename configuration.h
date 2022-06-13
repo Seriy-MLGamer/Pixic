@@ -13,6 +13,6 @@
 
 /*Target operating system.*/
 /*Choose one of them.*/
-#define OS_WINDOWS
-//#define OS_LINUX
+//#define OS_WINDOWS
+#define OS_LINUX
 //#define OS_MAC

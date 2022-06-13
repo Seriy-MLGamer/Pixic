@@ -1,0 +1,49 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/../../include",
+                "${workspaceFolder}/../../../..",
+                "${workspaceFolder}/../../../../include"
+            ],
+            "cStandard": "c11",
+            "compilerArgs": [
+                "-fms-extensions"
+            ],
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/include",
+                    "${workspaceFolder}/../../include",
+                    "${workspaceFolder}/../../../..",
+                    "${workspaceFolder}/../../../../include",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/x86_64-w64-mingw32-gcc",
+            "cStandard": "c11",
+            "compilerArgs": [
+                "-fms-extensions"
+            ],
+            "intelliSenseMode": "windows-gcc-x64",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

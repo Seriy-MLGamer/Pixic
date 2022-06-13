@@ -1,0 +1,12 @@
+{
+	"Тест": {
+		"Linux": {
+			"Pixilang": "60 мс",
+			"Pixic": "20 мс"
+		},
+		"Windows": {
+			"Pixilang": "45 мс",
+			"Pixic": "15 мс"
+		}
+	}
+}

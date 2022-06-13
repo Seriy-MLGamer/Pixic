@@ -12,8 +12,6 @@
 		"core.h": "c",
 		"containers.h": "c",
 		"pixic.h": "c",
-		"a.out.h": "c",
-		"app.h": "c",
-		"call.h": "c"
+		"a.out.h": "c"
 	}
 }

@@ -1,0 +1,22 @@
+RAND_MAX=32767
+next=1
+
+fn c_rand()
+{
+	next=next*1103515245+12345;
+	ret((next div 65536)%(RAND_MAX+1))
+}
+
+array=new(1000000, 1, INT16)
+start_timer()
+a=0 while a!=1000000
+{
+	array[a]=c_rand()
+	a+1
+}
+printf("%u ms\n", get_timer())
+a=999999 while a!=999989
+{
+	printf("%i\n", array[a])
+	a-1
+}

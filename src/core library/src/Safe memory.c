@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <Pixic/core library/threads.h>
+//#include <Pixic/core library/threads.h>
 
 typedef struct Memory_block Memory_block;
 struct Memory_block
@@ -17,15 +17,15 @@ size_t max_memory_allocated;
 Memory_data *not_freed;
 size_t not_freed_size;
 static Memory_block *last_block;
-static Mutex memory_mutex;
+//static Mutex memory_mutex;
 
 int safe_memory_init()
 {
 	memory_allocated=0;
 	max_memory_allocated=0;
 	last_block=NULL;
-	memory_mutex=Mutex_new();
-	if (!memory_mutex) return 1;
+	//memory_mutex=Mutex_new();
+	//if (!memory_mutex) return 1;
 	return 0;
 }
 void *safe_malloc(size_t size, const char *name)
@@ -35,13 +35,17 @@ void *safe_malloc(size_t size, const char *name)
 	result->name=name;
 	result->size=size;
 	result->next=NULL;
-	Mutex_lock(memory_mutex);
-	result->prev=last_block;
-	if (last_block) last_block->next=result;
+	//Mutex_lock(memory_mutex);
+	if (last_block)
+	{
+		result->prev=last_block;
+		last_block->next=result;
+	}
+	else result->prev=NULL;
 	last_block=result;
 	memory_allocated+=size;
 	if (memory_allocated>max_memory_allocated) max_memory_allocated=memory_allocated;
-	Mutex_unlock(memory_mutex);
+	//Mutex_unlock(memory_mutex);
 	return (void *)(result+1);
 }
 void safe_clean(void *data)
@@ -58,7 +62,7 @@ void *safe_realloc(void *data, size_t new_size)
 {
 	Memory_block *result=data-sizeof(Memory_block);
 	size_t size=result->size;
-	Mutex_lock(memory_mutex);
+	//Mutex_lock(memory_mutex);
 	Memory_block
 		*prev=result->prev,
 		*next=result->next;
@@ -81,7 +85,7 @@ void *safe_realloc(void *data, size_t new_size)
 		}
 		else last_block=NULL;
 		memory_allocated-=size;
-		Mutex_unlock(memory_mutex);
+		//Mutex_unlock(memory_mutex);
 		return NULL;
 	}
 	memory_allocated+=new_size-size;
@@ -89,14 +93,14 @@ void *safe_realloc(void *data, size_t new_size)
 	if (next) next->prev=result;
 	else last_block=result;
 	if (prev) prev->next=result;
-	Mutex_unlock(memory_mutex);
+	//Mutex_unlock(memory_mutex);
 	result->size=new_size;
 	return (void *)result+sizeof(Memory_block);
 }
 void safe_free(void *data)
 {
 	Memory_block *block=data-sizeof(Memory_block);
-	Mutex_lock(memory_mutex);
+	//Mutex_lock(memory_mutex);
 	Memory_block
 		*prev=block->prev,
 		*next=block->next;
@@ -116,7 +120,7 @@ void safe_free(void *data)
 	}
 	else last_block=NULL;
 	memory_allocated-=block->size;
-	Mutex_unlock(memory_mutex);
+	//Mutex_unlock(memory_mutex);
 	free(block);
 }
 void safe_memory_deinit(bool not_freed_list)
@@ -135,6 +139,11 @@ void safe_memory_deinit(bool not_freed_list)
 			free(a);
 			a=prev;
 		}
+		if (!not_freed_size)
+		{
+			free(not_freed);
+			not_freed=NULL;
+		}
 	}
 	else
 	{
@@ -145,5 +154,5 @@ void safe_memory_deinit(bool not_freed_list)
 			a=prev;
 		}
 	}
-	Mutex_delete(memory_mutex);
+	//Mutex_delete(memory_mutex);
 }

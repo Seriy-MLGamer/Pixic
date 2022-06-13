@@ -6,7 +6,7 @@
 #define new_array(type, size) ((type *)safe_malloc(sizeof(type)*(size), #type " array @ \"" __FILE__ "\""))
 #define clean(object) safe_clean(object)
 #define length(object_array) (safe_get_size(object_array)/sizeof *(object_array))
-#define resize(object_array, new_size) (*(void **)&(object_array)=safe_realloc(object_array, sizeof *(object_array)*(new_size)))
+#define resize(object_array, new_size) ((void *)(object_array)=safe_realloc(object_array, sizeof *(object_array)*(new_size)))
 #define delete(object) safe_free(object)
 
 /**

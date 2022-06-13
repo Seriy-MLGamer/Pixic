@@ -4,13 +4,13 @@ help()
 {
 	echo "A configuration generator of Pixic for crossplatform compilation.
 Usage.
-  configuration.sh [options] bit_depth operating_system
+  configuration.sh [options] <bit_depth> <operating_system>
 Fields.
-  bit_depth             Bit depth of Pixilang variables. Possible values: \"x32\", \"x64\".
-  operating_system      Target operating system. Possible values: \"Windows\", \"Linux\", \"MacOS\".
+  bit_depth              Bit depth of Pixilang variables. Possible values: \"x32\", \"x64\".
+  operating_system       Target operating system. Possible values: \"Windows\", \"Linux\", \"MacOS\".
 Options.
-  -h            --help  Show this message.
-  -o[directory]         Set target directory for configuration file. Default is work directory."
+  -h             --help  Show this message.
+  -o<directory>          Set target directory for configuration file. Default is work directory."
 	exit 0
 }
 for a in $@

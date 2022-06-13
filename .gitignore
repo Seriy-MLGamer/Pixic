@@ -1,7 +1,7 @@
 #Executables.
 *.exe
 *.out
-#Dynameic libraries.
+#Dynamic libraries.
 *.dll
 *.so
 #Static libraries.
