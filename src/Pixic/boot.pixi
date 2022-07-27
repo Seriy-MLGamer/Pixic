@@ -1,0 +1,13 @@
+include "include/dependencies.pixi"
+
+input=-1
+output=-1
+folder=-1
+translate_only=0
+
+parse_console()
+
+printf("Input: %s
+Output: %s
+Folder: %s
+", input, output, folder)

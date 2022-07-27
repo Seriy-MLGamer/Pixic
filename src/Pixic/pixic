@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+command="pixilang boot.pixi"
+for ((a=0; $a<=$#; a++))
+do
+	argument=${@:$a:1}
+	for ((b=0; $b!=${#argument}; b++))
+	do
+		if [ ${argument:$b:1} = \" ] || [ ${argument:$b:1} = $ ] || [ ${argument:$b:1} = \\ ]
+		then
+			argument=${argument:0:$b}\\${argument:$b}
+			((b++))
+		fi
+	done
+	command+=" \"$argument\""
+done
+eval $command

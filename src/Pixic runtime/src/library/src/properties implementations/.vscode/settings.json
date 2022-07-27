@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"map.h": "c",
+		"hash_map.h": "c",
+		"pair.h": "c",
+		"hash.h": "c",
+		"tree_map.h": "c",
+		"safe memory.h": "c",
+		"node_block.h": "c",
+		"property_block.h": "c",
+		"c oop.h": "c",
+		"cstdio": "c",
+		"stdio.h": "c"
+	}
+}
