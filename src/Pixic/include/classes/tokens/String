@@ -1,6 +1,0 @@
-#ifndef String_h
-#define String_h
-
-class String;
-
-#endif

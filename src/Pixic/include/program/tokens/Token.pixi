@@ -1,7 +1,0 @@
-fn Token_new()
-{
-	$self=Object_new()
-	$self.f=Token
-
-	ret($self)
-}

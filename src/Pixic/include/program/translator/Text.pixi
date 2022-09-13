@@ -1,0 +1,27 @@
+fn Text_new($filename, $file)
+{
+	$self=new()
+
+	$self.filename=$filename
+	fseek($file, 0, SEEK_END)
+	$length=ftell($file)
+	if $length
+	{
+		$text=new($length, 1, INT8)
+		fseek($file, 0, SEEK_SET)
+		fread($text, $length, $file)
+		$self.text=$text
+	}
+	else
+	{
+		$self.text=-1
+	}
+
+	ret($self)
+}
+fn Text_remove($self)
+{
+	remove($self.text)
+
+	remove($self)
+}

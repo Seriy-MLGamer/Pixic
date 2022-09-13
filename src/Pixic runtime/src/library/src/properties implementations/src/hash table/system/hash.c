@@ -5,14 +5,18 @@ static bool table_not_created=true;
 
 Hash hash(const char *data)
 {
-	if (table_not_created) for (int a=0; a!=256; a++)
+	Hash result;
+	if (table_not_created)
 	{
-		Hash crc=a;
-		for (int a=0; a!=8; a++) crc=crc&1?crc>>1^0xEDB88320:crc>>1;
-		CRC32_table[a]=crc;
+		for (int a=0; a!=256; a++)
+		{
+			result=a;
+			for (int a=0; a!=8; a++) result=result&1?result>>1^0xEDB88320:result>>1;
+			CRC32_table[a]=result;
+		}
 		table_not_created=false;
 	}
-	Hash result=0xFFFFFFFF;
+	result=0xFFFFFFFF;
 	while (*data) result=CRC32_table[(result^*(data++))&0xFF]^result>>8;
 	return result^0xFFFFFFFF;
 }

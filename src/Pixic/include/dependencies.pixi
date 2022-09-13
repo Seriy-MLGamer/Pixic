@@ -1,1 +1,33 @@
-include "program/console parser.pixi"
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file dependencies.pixi
+ * A full registry of Pixilang files used in this program.
+ * Pixilang doesn't have a feature to not include a file twice. Double include causes error of double function definition. This is uncomfortable, so the program needs a single and long registry of includes.
+ */
+
+include "configuration/main.pixi"
+include "configuration/OS.pixi"
+include "core/encodings/UTF-8/UTF8_file.pixi"
+include "program/console/system/make arguments.pixi"
+include "core/structures/jump table/Jump_table.pixi"
+include "core/structures/linked list/Linked_list.pixi"
+include "core/structures/linked list/List_node.pixi"
+include "core/structures/jump table/system/Jump.pixi"
+include "core/encodings/CP1251/CP1251.pixi"
+include "configuration/language.pixi"
+include "core/encodings/console/localized console.pixi"
+include "program/info/developer errors.pixi"
+include "configuration/shell.pixi"
+include "configuration/temporary folder.pixi"
+include "core/strings/file name.pixi"
+include "program/console/console parser.pixi"
+include "program/info/warnings.pixi"
+include "program/info/errors.pixi"

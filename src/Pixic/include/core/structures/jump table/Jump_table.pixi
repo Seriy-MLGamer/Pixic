@@ -1,0 +1,169 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file Jump_table.pixi
+ *
+ * Dependencies.
+ * core/structures/linked list/Linked_list.pixi
+ * core/structures/linked list/List_node.pixi
+ * core/structures/jump table/system/Jump.pixi
+ */
+
+fill_coeff_min=.25
+fill_coeff_max=.5
+
+/**
+ * class Jump_table;
+ * An implementation of "switch case" in Pixilang that supports randomized case values.
+ * Set to the case value corresponding function or jump address (or something else, even float numbers).
+ * There is no "switch case" and many other things in Pixilang, so I have to костылить.
+ * @returns an instance of class Jump_table.
+ * @see Jump_table_set()
+ * @see Jump_table_get()
+ * @see Jump_table_unset()
+ * @see Jump_table_remove()
+ */
+fn Jump_table_new()
+{
+	$self=new()
+
+	$self.jumps=Linked_list_new(1/fill_coeff_min)
+	$self.jump_count=0
+
+	ret($self)
+}
+fn Jump_table_set($self, $value, $address)
+{
+	$jumps=$self.jumps
+	if $self.jump_count
+	{
+		$array_size=get_size($jumps)
+		$jump=$value%$array_size
+		for ($a=$jumps[$jump]; $a>=0; $a=$a.next)
+		{
+			if $a.value.value==$value
+			{
+				$a.value.address=$address
+				ret
+			}
+		}
+		$jump_count=$self.jump_count
+		$jump_count_inc=$jump_count+1
+		$self.jump_count=$jump_count_inc
+		if $jump_count_inc/$array_size>=fill_coeff_max
+		{
+			$array_size=floor($jump_count_inc/fill_coeff_min)
+			$new_jumps=Linked_list_new($array_size)
+			for ($a=0; $jump_count; $a+1)
+			{
+				$b=$jumps[$a]
+				while $b>=0
+				{
+					$next=$b.next
+					List_node_set($b, $new_jumps, $b.value.value%$array_size)
+					$jump_count-1
+					$b=$next
+				}
+			}
+			remove($jumps)
+			$self.jumps=$new_jumps
+			$jump=$value%$array_size
+		}
+		List_node_set(List_node_new(Jump_new($value, $address)), $self.jumps, $jump)
+	}
+	else
+	{
+		$jumps[$value%get_size($jumps)]=List_node_new(Jump_new($value, $address))
+		$self.jump_count=1
+	}
+}
+fn Jump_table_get($self, $value)
+{
+	if $self.jump_count
+	{
+		for ($a=$self.jumps[$value%get_size($self.jumps)]; $a>=0; $a=$a.next)
+		{
+			if $a.value.value==$value
+			{
+				ret($a.value.address)
+			}
+		}
+	}
+	ret(0)
+}
+fn Jump_table_unset($self, $value)
+{
+	$jump_count=$self.jump_count
+	if $jump_count
+	{
+		$jumps=$self.jumps
+		$jump=$value%get_size($jumps)
+		for ($a=$jumps[$jump]; $a>=0; $a=$a.next)
+		{
+			if $a.value.value==$value
+			{
+				$jump_count-1
+				$self.jump_count=$jump_count
+				if $jump_count
+				{
+					List_node_unset($a, $jumps, $jump)
+					if $jump_count/get_size($jumps)<fill_coeff_min
+					{
+						$array_size=floor($jump_count/fill_coeff_max)
+						$new_jumps=Linked_list_new($array_size)
+						for ($a=0; $jump_count; $a+1)
+						{
+							$b=$jumps[$a]
+							while $b>=0
+							{
+								$next=$b.next
+								List_node_set($b, $new_jumps, $b.value.value%$array_size)
+								$jump_count-1
+								$b=$next
+							}
+						}
+						remove($jumps)
+						$self.jumps=$new_jumps
+					}
+				}
+				else
+				{
+					$jumps[$jump]=-1
+				}
+				remove($a.value)
+				remove($a)
+				ret
+			}
+		}
+	}
+}
+fn Jump_table_remove($self)
+{
+	$jump_count=$self.jump_count
+	if $jump_count
+	{
+		$jumps=$self.jumps
+		for ($a=0; $jump_count; $a+1)
+		{
+			$b=$jumps[$a]
+			while $b>=0
+			{
+				$next=$b.next
+				remove($b.value)
+				remove($b)
+				$jump_count-1
+				$b=$next
+			}
+		}
+	}
+	remove($self.jumps)
+
+	remove($self)
+}

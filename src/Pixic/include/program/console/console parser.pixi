@@ -1,0 +1,237 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file console parser.pixi
+ * Console parser provides command line interface.
+ *
+ * Include before.
+ * configuration/language.pixi
+ * configuration/temporary folder.pixi
+ * Dependencies.
+ * program/info/warnings.pixi
+ * program/info/errors.pixi
+ */
+
+input=-1
+output=-1
+folder=-1
+translate_only=0
+
+STATE_none=  0
+STATE_output=1
+STATE_folder=2
+
+jump_table=new(128, 1, INT)
+clean(jump_table)
+jump_table['-']=handle_extended_command
+jump_table['h']=help
+jump_table['l']=license
+jump_table['o']=set_output
+jump_table['f']=set_folder
+jump_table['t']=set_translate_only
+
+argument_state=STATE_none
+for (a=1; a!=argument_count; a+1)
+{
+	argument=arguments[a]
+	if argument_state
+	{
+		if argument_state==STATE_output
+		{
+			if output<0
+			{
+				output=argument
+			}
+			else
+			{
+				warning_double_output_single(a)
+			}
+		}
+		else{if argument_state==STATE_folder
+		{
+			if folder<0
+			{
+				folder=argument
+			}
+			else
+			{
+				warning_double_folder_single(a)
+			}
+		}}
+		argument_state=STATE_none
+	}
+	else{if argument[0]=='-'
+	{
+		jump=jump_table[argument[1]]
+		if jump
+		{
+			argument_state=jump(a)
+		}
+		else
+		{
+			warning_unknown_parameter(a)
+		}
+	}
+	else{if input<0
+	{
+		input=argument
+	}
+	else
+	{
+		warning_double_input(a)
+	}}}
+}
+remove(jump_table)
+
+if input<0
+{
+	error_no_input_file()
+}
+else{if !translate_only&&output<0||folder<0
+{
+	extension=get_file_extension(input)
+	if strcmp(extension, "pixi")&&strcmp(extension, "txt")||extension<0
+	{
+		name=get_full_file_name(input)
+	}
+	else
+	{
+		name=get_file_name(input)
+	}
+	if name<0
+	{
+		error_wrong_input_file()
+	}
+	remove(extension)
+	if !translate_only&&output<0
+	{
+		output=clone(name)
+		if OS==OS_Windows
+		{
+			strcat(output, ".exe")
+		}
+	}
+	if folder<0
+	{
+		if translate_only
+		{
+			folder=clone(name)
+		}
+		else
+		{
+			folder=clone(temporary_folder)
+			strcat(folder, name)
+		}
+	}
+	remove(name)
+}}
+
+fn handle_extended_command($arg)
+{
+	$argument=arguments[$arg]
+	if !strcmp($argument, 2, "help")
+	{
+		help()
+	}
+	else{if !strcmp($argument, 2, "license")
+	{
+		license()
+	}
+	else{if strstr($argument, 2, "output=")==2
+	{
+		if $argument[9]
+		{
+			if output<0
+			{
+				output=new(get_size($argument)-9, 1, INT8)
+				copy(output, $argument, 0, 9)
+			}
+			else
+			{
+				warning_double_output_extended($arg)
+			}
+		}
+	}
+	else{if strstr($argument, 2, "folder=")==2
+	{
+		if $argument[9]
+		{
+			if folder<0
+			{
+				folder=new(get_size($argument)-9, 1, INT8)
+				copy(folder, $argument, 0, 9)
+			}
+			else
+			{
+				warning_double_folder_extended($arg)
+			}
+		}
+	}
+	else{if !strcmp($argument, 2, "translate-only")
+	{
+		set_translate_only()
+	}
+	else
+	{
+		warning_unknown_parameter($arg)
+	}}}}}
+	ret(STATE_none)
+}
+fn help()
+{
+	printf(text_help, temporary_folder)
+	exit(0)
+}
+fn license()
+{
+	printf(text_license)
+	exit(0)
+}
+fn set_output($arg)
+{
+	$argument=arguments[$arg]
+	if $argument[2]
+	{
+		if output<0
+		{
+			output=new(get_size($argument)-2, 1, INT8)
+			copy(output, $argument, 0, 2)
+		}
+		else
+		{
+			warning_double_output_extended($arg)
+		}
+		ret(STATE_none)
+	}
+	ret(STATE_output)
+}
+fn set_folder($arg)
+{
+	$argument=arguments[$arg]
+	if $argument[2]
+	{
+		if folder<0
+		{
+			folder=new(get_size($argument)-2, 1, INT8)
+			copy(folder, $argument, 0, 2)
+		}
+		else
+		{
+			warning_double_folder_extended($arg)
+		}
+		ret(STATE_none)
+	}
+	ret(STATE_folder)
+}
+fn set_translate_only()
+{
+	translate_only=1
+	ret(STATE_none)
+}

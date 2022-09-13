@@ -1,0 +1,15 @@
+fn parse()
+{
+	$file=fopen(input, "rb")
+	if !$file
+	{
+		error_input_file_not_found()
+	}
+	$main_text=Text_new(input, $file)
+	fclose($file)
+	$pointer=0
+	$text=$main_text.text
+	$list=Linked_list_new()
+	if 
+	ret($list)
+}

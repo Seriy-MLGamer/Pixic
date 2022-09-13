@@ -1,3 +1,0 @@
-#pragma once
-
-typedef struct UTF8_file UTF8_file;

@@ -1,10 +1,19 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic runtime.
+Pixic runtime is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic runtime is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic runtime. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include <hash table/Hash_map.h>
 
 #include <stdio.h>
 #include <hash table/system/Pair.h>
 
-#define min_fill_coeff .25f
-#define max_fill_coeff .5f
+#define fill_coeff_min .25f
+#define fill_coeff_max .5f
 
 static const struct Map_f f=
 {
@@ -32,21 +41,25 @@ inline bool compare_strings(const char *left, const char *right)
 }
 void Hash_map_set(Hash_map *self, const char *key, char *value)
 {
+	Hash_map_set2(self, hash(key), value);
+}
+void Hash_map_set2(Hash_map *self, Hash key, char *value)
+{
+	size_t array_size;
 	if (self->pairs)
 	{
-		size_t array_size=length(self->pairs);
-		Hash key_hash=hash(key);
-		Pair **pair=self->pairs+key_hash%array_size;
-		for (Pair *a=*pair; a; a=a->next) if (compare_strings(a->key, key))
+		array_size=length(self->pairs);
+		Pair **pair=self->pairs+key%array_size;
+		for (Pair *a=*pair; a; a=a->next) if (a->key==key)
 		{
 			a->value=value;
 			return;
 		}
 		size_t pair_count=self->pair_count;
 		self->pair_count++;
-		if ((float)(pair_count+1)/array_size>=max_fill_coeff)
+		if ((float)(pair_count+1)/array_size>=fill_coeff_max)
 		{
-			array_size=(pair_count+1)/min_fill_coeff;
+			array_size=(pair_count+1)/fill_coeff_min;
 			Pair **new_pairs=new_array(Pair *, array_size);
 			clean(new_pairs);
 			for (Pair **a=self->pairs; pair_count; a++)
@@ -55,125 +68,74 @@ void Hash_map_set(Hash_map *self, const char *key, char *value)
 				while (b)
 				{
 					Pair *next=b->next;
-					Pair **pair=new_pairs+b->hash%array_size;
-					b->prev=NULL;
-					if (*pair)
-					{
-						(*pair)->prev=b;
-						b->next=*pair;
-					}
-					else b->next=NULL;
-					*pair=b;
+					Linked_list_set((Linked_list *)b, (Linked_list **)new_pairs+b->key%array_size);
 					pair_count--;
 					b=next;
 				}
 			}
 			delete(self->pairs);
 			self->pairs=new_pairs;
-			pair=new_pairs+key_hash%array_size;
+			pair=new_pairs+key%array_size;
 		}
 		Pair *new_pair=new(Pair);
-		*new_pair=(Pair){key_hash, key, value, NULL};
-		if (*pair)
-		{
-			(*pair)->prev=new_pair;
-			new_pair->next=*pair;
-		}
-		else new_pair->next=NULL;
-		*pair=new_pair;
+		*new_pair=(Pair){.key=key, .value=value};
+		Linked_list_set((Linked_list *)new_pair, (Linked_list **)pair);
 	}
 	else
 	{
-		self->pairs=new_array(Pair *, 1); 
+		array_size=1/fill_coeff_min;
+		self->pairs=new_array(Pair *, array_size); 
 		Pair *pair=new(Pair);
-		*pair=(Pair){hash(key), key, value, NULL, NULL};
-		*self->pairs=pair;
+		*pair=(Pair){NULL, NULL, key, value};
+		self->pairs[key%array_size]=pair;
 		self->pair_count=1;
 	}
 }
 char *Hash_map_get(Hash_map *self, const char *key)
 {
-	if (self->pairs) for (Pair *a=self->pairs[hash(key)%length(self->pairs)]; a; a=a->next) if (compare_strings(a->key, key)) return a->value;
+	Hash key_hash=hash(key);
+	if (self->pairs) for (Pair *a=self->pairs[key_hash%length(self->pairs)]; a; a=a->next) if (a->key==key_hash) return a->value;
+	return "";
+}
+char *Hash_map_get2(Hash_map *self, Hash key)
+{
+	if (self->pairs) for (Pair *a=self->pairs[key%length(self->pairs)]; a; a=a->next) if (a->key==key) return a->value;
 	return "";
 }
 void Hash_map_unset(Hash_map *self, const char *key)
 {
+	Hash_map_unset2(self, hash(key));
+}
+void Hash_map_unset2(Hash_map *self, Hash key)
+{
 	if (self->pairs)
 	{
-		Pair **pair=self->pairs+hash(key)%length(self->pairs);
-		for (Pair *a=*pair; a; a=a->next) if (compare_strings(a->key, key))
+		Pair **pair=self->pairs+key%length(self->pairs);
+		for (Pair *a=*pair; a; a=a->next) if (a->key==key)
 		{
 			self->pair_count--;
 			if (self->pair_count)
 			{
-				if (self->pair_count!=1)
+				Linked_list_unset((Linked_list *)a, (Linked_list **)pair);
+				size_t pair_count=self->pair_count;
+				if ((float)pair_count/length(self->pairs)<fill_coeff_min)
 				{
-					if (a->prev)
+					size_t array_size=pair_count/fill_coeff_max;
+					Pair **new_pairs=new_array(Pair *, array_size);
+					clean(new_pairs);
+					for (Pair **a=self->pairs; pair_count; a++)
 					{
-						if (a->next)
+						Pair *b=*a;
+						while (b)
 						{
-							a->prev->next=a->next;
-							a->next->prev=a->prev;
+							Pair *next=b->next;
+							Linked_list_set((Linked_list *)b, (Linked_list **)new_pairs+b->key%array_size);
+							pair_count--;
+							b=next;
 						}
-						else a->prev->next=NULL;
 					}
-					else if (a->next)
-					{
-						a->next->prev=NULL;
-						*pair=a->next;
-					}
-					else *pair=NULL;
-					size_t pair_count=self->pair_count;
-					if ((float)pair_count/length(self->pairs)<min_fill_coeff)
-					{
-						size_t array_size=pair_count/max_fill_coeff;
-						Pair **new_pairs=new_array(Pair *, array_size);
-						clean(new_pairs);
-						for (Pair **a=self->pairs; pair_count; a++)
-						{
-							Pair *b=*a;
-							while (b)
-							{
-								Pair *next=b->next;
-								Pair **pair=new_pairs+b->hash%array_size;
-								b->prev=NULL;
-								if (*pair)
-								{
-									(*pair)->prev=b;
-									b->next=*pair;
-								}
-								else b->next=NULL;
-								*pair=b;
-								pair_count--;
-								b=next;
-							}
-						}
-						delete(self->pairs);
-						self->pairs=new_pairs;
-					}
-				}
-				else if (a->prev)
-				{
-					a->prev->next=NULL;
 					delete(self->pairs);
-					self->pairs=new_array(Pair *, 1);
-					*self->pairs=a->prev;
-				}
-				else if (a->next)
-				{
-					a->next->prev=NULL;
-					delete(self->pairs);
-					self->pairs=new_array(Pair *, 1);
-					*self->pairs=a->next;
-				}
-				else
-				{
-					pair=self->pairs;
-					while (!*pair) pair++;
-					Pair *found=*pair;
-					delete(self->pairs);
-					self->pairs=new_array(Pair *, 1);
-					*self->pairs=found;
+					self->pairs=new_pairs;
 				}
 			}
 			else
@@ -206,10 +168,11 @@ void Hash_map_show(Hash_map *self)
 			for (Pair *c=pairs[a]; c; c=c->next, b++)
 			{
 				printf("{\n");
-				for (size_t a=-2; a!=b; a++) printf("    ");
+				/*for (size_t a=-2; a!=b; a++) printf("    ");
 				printf("\"hash\": 0x%08X,\n", c->hash);
 				for (size_t a=-2; a!=b; a++) printf("    ");
-				printf("\"key\": \"%s\",\n", c->key);
+				printf("\"key\": \"%s\",\n", c->key);*/
+				printf("\"key\": 0x%08X,\n", c->key);
 				for (size_t a=-2; a!=b; a++) printf("    ");
 				printf("\"value\": \"%s\",\n", c->value);
 				for (size_t a=-2; a!=b; a++) printf("    ");

@@ -1,0 +1,161 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file file name.pixi
+ *
+ * Dependencies.
+ * configuration/shell.pixi
+ */
+
+/**
+ * Removes unused slashes and replaces them to the operating system default slashes.
+ * @param $file_path a file or folder path.
+ * @returns an ID of container with formatted file path string (remove it with remove()); -1 if $file_path value is negative; -2 if file path is wrong.
+ */
+fn format_file_path($file_path)
+{
+	if $file_path<0
+	{
+		ret(-1)
+	}
+	$path_size=get_size($file_path)
+	$result=new($path_size, 1, INT8)
+	$pointer=0
+	$slashes=0
+	for ($a=0; $a!=$path_size; $a+1)
+	{
+		$char=$file_path[$a]
+		if $slashes
+		{
+			if $char!='/'&&$char!='\\'
+			{
+				$result[$pointer]=$char
+				$pointer+1
+				$slashes=0
+			}
+		}
+		else
+		{
+			if $char!='/'&&$char!='\\'
+			{
+				$result[$pointer]=$char
+			}
+			else
+			{
+				if SHELL==SHELL_bash
+				{
+					$result[$pointer]='/'
+				}
+				else{if SHELL==SHELL_cmd
+				{
+					$result[$pointer]='\\'
+				}}
+				$slashes=1
+			}
+			$pointer+1
+		}
+	}
+	if $pointer
+	{
+		if $pointer>1&&!($result[$pointer-1]!='/'&&$result[$pointer-1]!='\\')
+		{
+			resize($result, $pointer-1)
+		}
+		else
+		{
+			resize($result, $pointer)
+		}
+		ret($result)
+	}
+	remove($result)
+	ret(-2)
+}
+fn get_full_file_name($file_path)
+{
+	if $file_path<0
+	{
+		ret(-1)
+	}
+	$result=clone($file_path)
+	$a=get_size($result)-1 while !($result[$a]!='/'&&$result[$a]!='\\')
+	{
+		$a-1
+	}
+	if $a!=-1
+	{
+		resize($result, $a+1)
+		while $a!=-1&&$result[$a]!='/'&&$result[$a]!='\\'
+		{
+			$a-1
+		}
+		if $a!=-1
+		{
+			$a+1
+			copy($result, $result, 0, $a)
+			resize($result, get_size($result)-$a)
+		}
+		$result.full_file_name=1
+		ret($result)
+	}
+	remove($result)
+	ret(-2)
+}
+fn get_file_name($file_path)
+{
+	if $file_path.full_file_name
+	{
+		$result=clone($file_path)
+	}
+	else
+	{
+		$result=get_full_file_name($file_path)
+		if $result<0
+		{
+			ret($result)
+		}
+	}
+	$a=get_size($result)-1 while $a&&$result[$a]!='.'
+	{
+		$a-1
+	}
+	if $a&&$a!=get_size($result)-1
+	{
+		resize($result, $a)
+	}
+	ret($result)
+}
+fn get_file_extension($file_path)
+{
+	if $file_path.full_file_name
+	{
+		$result=clone($file_path)
+	}
+	else
+	{
+		$result=get_full_file_name($file_path)
+		if $result<0
+		{
+			ret($result)
+		}
+	}
+	$a=get_size($result)-1 while $a&&$result[$a]!='.'
+	{
+		$a-1
+	}
+	if $a&&$a!=get_size($result)-1
+	{
+		$a+1
+		copy($result, $result, 0, $a)
+		resize($result, get_size($result)-$a)
+		ret($result)
+	}
+	remove($result)
+	ret(-3)
+}

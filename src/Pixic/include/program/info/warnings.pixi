@@ -1,0 +1,57 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file warnings.pixi
+ *
+ * Dependencies.
+ * configuration/language.pixi
+ * program/console/system/make arguments.pixi
+ */
+
+fn warning_unknown_parameter($arg)
+{
+	fprintf(STDERR, text_warning, arguments[0])
+	fprintf(STDERR, text_warning_unknown_parameter, arguments[$arg])
+}
+fn warning_double_input($arg)
+{
+	fprintf(STDERR, text_warning, arguments[0])
+	fprintf(STDERR, text_warning_double)
+	fprintf(STDERR, text_warning_double_input, arguments[$arg])
+	fprintf(STDERR, text_warning_double2, input)
+}
+fn warning_double_output_single($arg)
+{
+	fprintf(STDERR, text_warning, arguments[0])
+	fprintf(STDERR, text_warning_double)
+	fprintf(STDERR, text_warning_double_output_single, arguments[$arg])
+	fprintf(STDERR, text_warning_double2, output)
+}
+fn warning_double_output_extended($arg)
+{
+	fprintf(STDERR, text_warning, arguments[0])
+	fprintf(STDERR, text_warning_double)
+	fprintf(STDERR, text_warning_double_output_extended, arguments[$arg])
+	fprintf(STDERR, text_warning_double2, output)
+}
+fn warning_double_folder_single($arg)
+{
+	fprintf(STDERR, text_warning, arguments[0])
+	fprintf(STDERR, text_warning_double)
+	fprintf(STDERR, text_warning_double_folder_single, arguments[$arg])
+	fprintf(STDERR, text_warning_double2, folder)
+}
+fn warning_double_folder_extended($arg)
+{
+	fprintf(STDERR, text_warning, arguments[0])
+	fprintf(STDERR, text_warning_double)
+	fprintf(STDERR, text_warning_double_folder_extended, arguments[$arg])
+	fprintf(STDERR, text_warning_double2, folder)
+}

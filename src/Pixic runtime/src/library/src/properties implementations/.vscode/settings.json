@@ -10,6 +10,9 @@
 		"property_block.h": "c",
 		"c oop.h": "c",
 		"cstdio": "c",
-		"stdio.h": "c"
+		"stdio.h": "c",
+		"linked_list.h": "c",
+		"list_node.h": "c",
+		"type_traits": "c"
 	}
 }

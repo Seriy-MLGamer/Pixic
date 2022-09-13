@@ -1,0 +1,12 @@
+Token=new()
+Token
+fn Token_new($text, $line)
+{
+	$self=new()
+	$self.f=Token
+
+	$self.text=$text
+	$self.line=$line
+
+	ret($self)
+}
