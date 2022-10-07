@@ -7,9 +7,16 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file Jump.pixi
+ *
+ * Dependencies.
+ * core/structures/linked list/List_node.pixi
+ */
+
 fn Jump_new($value, $address)
 {
-	$self=new()
+	$self=List_node_new()
 
 	$self.value=$value
 	$self.address=$address

@@ -10,11 +10,10 @@ You should have received a copy of the GNU General Public License along with Pix
 #pragma once
 
 #include <typedefs/Map.h>
-#include <Pixic/core library/C OOP.h>
 
 struct Map
 {
-	vtable_class
+	const void *f;
 };
 struct Map_f
 {

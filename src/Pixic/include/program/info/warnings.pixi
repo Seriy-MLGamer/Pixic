@@ -12,7 +12,6 @@ You should have received a copy of the GNU General Public License along with Pix
  *
  * Dependencies.
  * configuration/language.pixi
- * program/console/system/make arguments.pixi
  */
 
 fn warning_unknown_parameter($arg)

@@ -1,17 +1,5 @@
 {
 	"files.associations": {
-		"container.h": "c",
-		"var.h": "c",
-		"container_id.h": "c",
-		"c oop.h": "c",
-		"safe memory.h": "c",
-		"stdbool.h": "c",
-		"color.h": "c",
-		"int.h": "c",
-		"configuration.h": "c",
-		"core.h": "c",
-		"containers.h": "c",
-		"pixic.h": "c",
-		"a.out.h": "c"
+		"configuration.h": "c"
 	}
 }

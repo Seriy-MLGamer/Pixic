@@ -4,8 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/../../../../../..",
-                "${workspaceFolder}/../../../../../../include"
+                "${workspaceFolder}/../../include"
             ],
             "cStandard": "c11",
             "compilerArgs": [

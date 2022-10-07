@@ -7,13 +7,10 @@ Pixic распространяется в надежде, что он будет
 Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, см. <https://www.gnu.org/licenses/>.
 */
 
-/**
- * @file locale.pixi
- */
-
 LANGUAGE=LANGUAGE_ru_RU
 
 include "info/errors.pixi"
 include "info/help.pixi"
 include "info/license notice.pixi"
+include "info/syntax errors.pixi"
 include "info/warnings.pixi"

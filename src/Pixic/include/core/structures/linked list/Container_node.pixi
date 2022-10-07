@@ -1,0 +1,31 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file Container_node.pixi
+ *
+ * Dependencies.
+ * core/structures/linked list/List_node.pixi
+ */
+
+fn Container_node_new($value)
+{
+	$self=List_node_new()
+
+	if $0>=1
+	{
+		$self.value=$value
+	}
+	else
+	{
+		$self.value=0
+	}
+
+	ret($self)
+}

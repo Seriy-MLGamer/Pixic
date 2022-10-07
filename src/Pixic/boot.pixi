@@ -9,7 +9,14 @@ You should have received a copy of the GNU General Public License along with Pix
 
 include "include/dependencies.pixi"
 
-printf("Input: %s
+logf("Input: %s
 Output: %s
 Folder: %s
 ", input, output, folder)
+
+//miku=39
+tokens=parse(Text_new(input))
+for (a=tokens.first; a>=0; a=a.next)
+{
+	a.f.show(a)
+}

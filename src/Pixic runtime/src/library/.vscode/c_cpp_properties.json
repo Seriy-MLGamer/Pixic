@@ -4,9 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include",
+                "${workspaceFolder}/../..",
                 "${workspaceFolder}/../../include",
-                "${workspaceFolder}/../../../..",
-                "${workspaceFolder}/../../../../include"
+                "${workspaceFolder}/../../../../out/pixic/src/include"
             ],
             "cStandard": "c11",
             "compilerArgs": [

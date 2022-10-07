@@ -1,4 +1,12 @@
 fn is_symbolic($char)
 {
-	if 
+	ret($char=='#'||$char=='$'||($char>='0'&&$char<='9')||($char>='A'&&$char<='Z')||$char=='_'||($char>='a'&&$char<='z')||($char>=0x80&&$char<=0xFF))
+}
+fn is_special($char)
+{
+	ret($char=='!'||$char=='"'||($char>='%'&&$char<='/')||$char==':'||($char>='<'&&$char<='>')||$char=='['||$char==']'||$char=='^'||($char>='{'&&$char<='~'))
+}
+fn is_space($char)
+{
+	ret(!(is_symbolic($char)||is_special($char)))
 }

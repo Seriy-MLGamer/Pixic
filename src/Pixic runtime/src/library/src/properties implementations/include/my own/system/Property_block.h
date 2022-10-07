@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License along with Pix
 
 #include <my own/system/Node_block.h>
 #include <typedefs/my own/system/Property.h>
-#include <Pixic/core library/C OOP.h>
+#include <system/C OOP.h>
 
 struct Property_block
 {

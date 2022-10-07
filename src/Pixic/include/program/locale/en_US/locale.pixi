@@ -7,16 +7,10 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * @file locale.pixi
- *
- * Dependencies.
- * configuration/main.pixi
- */
-
 LANGUAGE=LANGUAGE_en_US
 
 include "info/errors.pixi"
 include "info/help.pixi"
 include "info/license notice.pixi"
+include "info/syntax errors.pixi"
 include "info/warnings.pixi"

@@ -12,7 +12,6 @@ You should have received a copy of the GNU General Public License along with Pix
  *
  * Dependencies.
  * core/structures/linked list/Linked_list.pixi
- * core/structures/linked list/List_node.pixi
  * core/structures/jump table/system/Jump.pixi
  */
 
@@ -48,9 +47,9 @@ fn Jump_table_set($self, $value, $address)
 		$jump=$value%$array_size
 		for ($a=$jumps[$jump]; $a>=0; $a=$a.next)
 		{
-			if $a.value.value==$value
+			if $a.value==$value
 			{
-				$a.value.address=$address
+				$a.address=$address
 				ret
 			}
 		}
@@ -67,7 +66,7 @@ fn Jump_table_set($self, $value, $address)
 				while $b>=0
 				{
 					$next=$b.next
-					List_node_set($b, $new_jumps, $b.value.value%$array_size)
+					List_node_set($b, $new_jumps, $b.value%$array_size)
 					$jump_count-1
 					$b=$next
 				}
@@ -76,11 +75,11 @@ fn Jump_table_set($self, $value, $address)
 			$self.jumps=$new_jumps
 			$jump=$value%$array_size
 		}
-		List_node_set(List_node_new(Jump_new($value, $address)), $self.jumps, $jump)
+		List_node_set(Jump_new($value, $address), $self.jumps, $jump)
 	}
 	else
 	{
-		$jumps[$value%get_size($jumps)]=List_node_new(Jump_new($value, $address))
+		$jumps[$value%get_size($jumps)]=Jump_new($value, $address)
 		$self.jump_count=1
 	}
 }
@@ -90,9 +89,9 @@ fn Jump_table_get($self, $value)
 	{
 		for ($a=$self.jumps[$value%get_size($self.jumps)]; $a>=0; $a=$a.next)
 		{
-			if $a.value.value==$value
+			if $a.value==$value
 			{
-				ret($a.value.address)
+				ret($a.address)
 			}
 		}
 	}
@@ -107,7 +106,7 @@ fn Jump_table_unset($self, $value)
 		$jump=$value%get_size($jumps)
 		for ($a=$jumps[$jump]; $a>=0; $a=$a.next)
 		{
-			if $a.value.value==$value
+			if $a.value==$value
 			{
 				$jump_count-1
 				$self.jump_count=$jump_count
@@ -124,7 +123,7 @@ fn Jump_table_unset($self, $value)
 							while $b>=0
 							{
 								$next=$b.next
-								List_node_set($b, $new_jumps, $b.value.value%$array_size)
+								List_node_set($b, $new_jumps, $b.value%$array_size)
 								$jump_count-1
 								$b=$next
 							}
@@ -137,7 +136,6 @@ fn Jump_table_unset($self, $value)
 				{
 					$jumps[$jump]=-1
 				}
-				remove($a.value)
 				remove($a)
 				ret
 			}
@@ -156,7 +154,6 @@ fn Jump_table_remove($self)
 			while $b>=0
 			{
 				$next=$b.next
-				remove($b.value)
 				remove($b)
 				$jump_count-1
 				$b=$next

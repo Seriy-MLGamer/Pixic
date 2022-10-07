@@ -12,6 +12,7 @@ You should have received a copy of the GNU General Public License along with Pix
  *
  * Dependencies.
  * configuration/shell.pixi
+ * configuration/working folder.pixi
  */
 
 /**
@@ -36,9 +37,9 @@ fn format_file_path($file_path)
 		{
 			if $char!='/'&&$char!='\\'
 			{
+				$slashes=0
 				$result[$pointer]=$char
 				$pointer+1
-				$slashes=0
 			}
 		}
 		else
@@ -158,4 +159,18 @@ fn get_file_extension($file_path)
 	}
 	remove($result)
 	ret(-3)
+}
+fn get_full_file_path($file_path)
+{
+	$start=$file_path[0]
+	if $start<'A'||$start>'z'||$file_path[1]!=':'&&$start!='/'
+	{
+		$result=clone(working_folder)
+		strcat($result, $file_path)
+		ret($result)
+	}
+	else
+	{
+		ret(clone($file_path))
+	}
 }

@@ -1,15 +1,15 @@
-compile=gcc -o "$@" -c "$<" -O -s -I include -I ../../include -I ../../../.. -I ../../../../include
+compile=gcc -o "$@" -c "$<" -O -s -I include -I ../.. -I ../../include -I ../../../../out/pixic/src/include
 all: main.o test.o Pixic.o Safe\ memory.o containers.o core.o
-	gcc -o test main.o test.o Pixic.o "Safe memory.o" containers.o core.o -O -s
-main.o: src/static\ library/src/main.c
+	gcc -o main main.o test.o Pixic.o "Safe memory.o" containers.o core.o -O -s
+main.o: src/static\ library/main.c
 	$(compile)
 test.o: test.c
 	$(compile)
-Pixic.o: src/library\ core/src/Pixic.c
+Pixic.o: src/Pixic.c
 	$(compile)
-Safe\ memory.o: ../../../core\ library/src/Safe\ memory.c
+Safe\ memory.o: src/system/Safe\ memory.c
 	$(compile)
-containers.o: src/library\ core/src/containers.c
+containers.o: src/containers.c
 	$(compile)
-core.o: src/library\ core/src/core/core.c
+core.o: src/core/core.c
 	$(compile)

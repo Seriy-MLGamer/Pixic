@@ -23,7 +23,6 @@ static const struct Map_f f=
 	.show=(void (*)(void *))Tree_map_show
 	//(void (*)(void *))Tree_map_remove
 };
-
 Tree_map Tree_map_new()
 {
 	Tree_map self;

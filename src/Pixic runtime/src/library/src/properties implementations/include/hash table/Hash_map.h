@@ -12,6 +12,7 @@ You should have received a copy of the GNU General Public License along with Pix
 #include <typedefs/hash table/Hash_map.h>
 #include <Map.h>
 
+#include <stddef.h>
 #include <typedefs/hash table/system/Pair.h>
 #include <hash table/system/hash.h>
 

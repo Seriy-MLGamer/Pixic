@@ -10,6 +10,7 @@ You should have received a copy of the GNU General Public License along with Pix
 #include <hash table/Hash_map.h>
 
 #include <stdio.h>
+#include <system/C OOP.h>
 #include <hash table/system/Pair.h>
 
 #define fill_coeff_min .25f
@@ -23,7 +24,6 @@ static const struct Map_f f=
 	(void (*)(void *))Hash_map_show,
 	(void (*)(void *))Hash_map_remove
 };
-
 Hash_map Hash_map_new()
 {
 	Hash_map self;

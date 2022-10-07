@@ -1,0 +1,30 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file syntax errors.pixi
+ *
+ * Dependencies.
+ * configuration/language.pixi
+ */
+
+fn error_syntax_invalid_statement($text)
+{
+	fprintf(STDERR, text_error, arguments[0])
+	fprintf(STDERR, text_error_syntax, $text.file_name, first_line+1)
+	fprintf(STDERR, text_error_syntax_invalid_statement)
+	exit(64)
+}
+fn error_syntax_expected($text, $char)
+{
+	fprintf(STDERR, text_error, arguments[0])
+	fprintf(STDERR, text_error_syntax, $text.file_name, last_line+1)
+	fprintf(STDERR, text_error_syntax_expected, $char)
+	exit(65)
+}

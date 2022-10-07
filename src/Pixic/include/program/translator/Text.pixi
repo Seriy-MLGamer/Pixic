@@ -1,27 +1,119 @@
-fn Text_new($filename, $file)
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+fn Text_new($file_name)
 {
+	$file=fopen($file_name, "rb")
+	if !$file
+	{
+		ret(-1)
+	}
 	$self=new()
 
-	$self.filename=$filename
+	$self.file_name=$file_name
 	fseek($file, 0, SEEK_END)
 	$length=ftell($file)
 	if $length
 	{
-		$text=new($length, 1, INT8)
+		$data=new($length, 1, INT8)
 		fseek($file, 0, SEEK_SET)
-		fread($text, $length, $file)
-		$self.text=$text
+		fread($data, $length, $file)
+		$self.data=$data
+		$lines=new(2, 1, INT)
+		clean($lines)
+		$state=0
+		$line=0
+		for ($a=0; $a!=$length; $a+1)
+		{
+			if $state=='\n'
+			{
+
+				$line+1
+				resize($lines, 2, $line+1)
+				$lines[0, $line]=$a
+				if $data[$a]=='\n'
+				{
+					$lines[1, $line]=0
+				}
+				else{if $data[$a]=='\r'
+				{
+					$lines[1, $line]=0
+					$state='\r'
+				}
+				else
+				{
+					$state=0
+				}}
+			}
+			else{if $state=='\r'
+			{
+				if $data[$a]=='\n'
+				{
+					$state='\n'
+				}
+				else
+				{
+					$line+1
+					resize($lines, 2, $line+1)
+					$lines[0, $line]=$a
+					if $data[$a]=='\r'
+					{
+						$lines[1, $line]=0
+					}
+					else
+					{
+						$state=0
+					}
+				}
+			}
+			else{if $data[$a]=='\n'
+			{
+				$lines[1, $line]=$a-$lines[0, $line]
+				$state='\n'
+			}
+			else{if $data[$a]=='\r'
+			{
+				$lines[1, $line]=$a-$lines[0, $line]
+				$state='\r'
+			}}}}
+		}
+		$lines[1, $line]=$a-$lines[0, $line]
+		$self.lines=$lines
 	}
 	else
 	{
-		$self.text=-1
+		$self.data=-1
+		$self.lines=-1
 	}
+	fclose($file)
 
 	ret($self)
 }
 fn Text_remove($self)
 {
-	remove($self.text)
+	remove($self.data)
+	remove($self.lines)
 
 	remove($self)
+}
+fn Text_get_line($self, $dest, $line)
+{
+	$lines=$self.lines
+	if $line>0&&$line<=get_ysize($lines)
+	{
+		$size=$lines[1, $line]
+		if get_size($dest)>$size
+		{
+			resize($dest, $size)
+		}
+		copy($dest, $self.data, 0, $lines[0, $line], $size)
+		ret(0)
+	}
+	ret(1)
 }

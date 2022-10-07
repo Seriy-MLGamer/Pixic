@@ -11,11 +11,10 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file List_node.pixi
  */
 
-fn List_node_new($value)
+fn List_node_new()
 {
 	$self=new()
 
-	$self.value=$value
 	$self.prev=-1
 	$self.next=-1
 
@@ -23,12 +22,12 @@ fn List_node_new($value)
 }
 fn List_node_set($self, $list, $index)
 {
+	$self.prev=-1
 	if $0<3
 	{
 		$index=0
 	}
 	$start=$list[$index]
-	$self.prev=-1
 	if $start>=0
 	{
 		$start.prev=$self

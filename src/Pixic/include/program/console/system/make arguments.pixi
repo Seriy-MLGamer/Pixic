@@ -11,9 +11,9 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file make arguments.pixi
  */
 
-argument_count=argc()-4
+argument_count=argc()-5
 arguments=new(argument_count, 1, INT)
 for (a=0; a!=argument_count; a+1)
 {
-	arguments[a]=argv(a+4)
+	arguments[a]=argv(a+5)
 }
