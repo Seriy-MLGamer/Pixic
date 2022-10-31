@@ -14,17 +14,50 @@ You should have received a copy of the GNU General Public License along with Pix
  * configuration/language.pixi
  */
 
-fn error_syntax_invalid_statement($text)
+fn syntax_error($text, $positions)
 {
 	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_error_syntax, $text.file_name, first_line+1)
-	fprintf(STDERR, text_error_syntax_invalid_statement)
+	fprintf(STDERR, text_syntax_error, $text.file_name, $text.lines[2, $positions.line])
+}
+fn syntax_error_invalid_number($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_invalid_number)
 	exit(64)
 }
-fn error_syntax_expected($text, $char)
+fn syntax_error_expected($text, $positions, $char)
 {
-	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_error_syntax, $text.file_name, last_line+1)
-	fprintf(STDERR, text_error_syntax_expected, $char)
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected, $char)
 	exit(65)
+}
+fn syntax_error_expected_operand($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_operand)
+	exit(66)
+}
+fn syntax_error_expected_x($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_x)
+	exit(67)
+}
+fn syntax_error_expected_y($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_y)
+	exit(68)
+}
+fn syntax_error_expected_argument($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_argument)
+	exit(69)
+}
+fn syntax_error_expected_property($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_property)
+	exit(70)
 }

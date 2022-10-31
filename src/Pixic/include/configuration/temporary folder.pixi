@@ -11,8 +11,8 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file temporary folder.pixi
  *
  * Include before.
- * configuration/working folder.pixi
  * configuration/shell.pixi
+ * configuration/working folder.pixi
  * Dependencies.
  * core/strings/file name.pixi
  */

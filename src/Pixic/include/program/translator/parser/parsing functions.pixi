@@ -1,0 +1,142 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file parsing functions.pixi
+ * 
+ * Dependencies.
+ * core/structures/stack/Stack.pixi
+ * program/translator/parser/char filters.pixi
+ */
+
+fn get_char($text, $positions)
+{
+	$lines=$text.lines
+	$position=Stack_get($positions)
+	$line=$position.line
+	if $line!=get_ysize($lines)
+	{
+		$index=$position.index
+		if $index!=$lines[1, $line]
+		{
+			$position.index+1
+			ret($text.data[$index]&0xFF)
+		}
+		$position.index=$lines[0, $line+1]
+		$position.line+1
+	}
+	ret(EOF)
+}
+fn parse_multiple($parsers_array, $text, $positions)
+{
+	$size=get_size($parsers_array)
+	for ($a=0; $a!=$size; $a+1)
+	{
+		$result=$parsers_array[$a]($text, $positions)
+		if $result>=0
+		{
+			ret($result)
+		}
+	}
+	ret(-1)
+}
+fn promise_position($positions)
+{
+	Stack_push($positions, clone(Stack_get($positions)))
+}
+fn resolve_position($positions)
+{
+	remove($positions[$positions.pointer-1])
+	$positions[$positions.pointer-1]=Stack_get($positions)
+	Stack_pop($positions)
+}
+fn reject_position($positions)
+{
+	remove(Stack_pop($positions))
+}
+fn skip_spaces($text, $positions)
+{
+	$lines_count=get_ysize($text.lines)
+	$position=Stack_get($positions)
+	$state=0
+	while 1
+	{
+		if $position.line==$lines_count
+		{
+			ret(1)
+		}
+		promise_position($positions)
+		$state=skip_spaces_jump0[$state](get_char($text, $positions), $positions)
+		if $state<0
+		{
+			ret(0)
+		}
+	}
+}
+skip_spaces_jump0=new(5, 1, INT)
+skip_spaces_jump0[0]=
+{
+	if $1=='/'
+	{
+		ret(1)
+	}
+	if is_space($1)
+	{
+		resolve_position($2)
+		ret(0)
+	}
+	reject_position($2)
+	ret(-1)
+}
+skip_spaces_jump0[1]=
+{
+	if $1=='/'
+	{
+		resolve_position($2)
+		ret(2)
+	}
+	if $1=='*'
+	{
+		resolve_position($2)
+		ret(3)
+	}
+	reject_position($2)
+	ret(-1)
+}
+skip_spaces_jump0[2]=
+{
+	resolve_position($2)
+	if $1!=EOF
+	{
+		ret(2)
+	}
+	ret(0)
+}
+skip_spaces_jump0[3]=
+{
+	resolve_position($2)
+	if $1!='*'
+	{
+		ret(3)
+	}
+	ret(4)
+}
+skip_spaces_jump0[4]=
+{
+	resolve_position($2)
+	if $1=='/'
+	{
+		ret(0)
+	}
+	if $1!='*'
+	{
+		ret(3)
+	}
+	ret(4)
+}

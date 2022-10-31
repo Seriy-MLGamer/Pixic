@@ -9,4 +9,4 @@ rem You should have received a copy of the GNU General Public License along with
 
 pixilang -c boot.pixi
 move boot.pixicode ../../out/pixic/src/share/pixic/boot.pixicode
-../../out/pixic/src/bin/pixic boot.pixi
+../../out/pixic/src/bin/pixic test.txt

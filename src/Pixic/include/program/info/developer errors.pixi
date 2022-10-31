@@ -14,12 +14,12 @@ You should have received a copy of the GNU General Public License along with Pix
  * program/console/system/make arguments.pixi
  */
 
-fn error_developer_localization_UTF8()
+fn developer_error_localization_UTF8()
 {
 	fprintf(STDERR, "%s: whoopsies: UTF-8 error occured by localization developer. The Pixic won't start.\n", arguments[0])
 	exit(-1)
 }
-fn error_developer_localization_CP1251()
+fn developer_error_localization_CP1251()
 {
 	fprintf(STDERR, "%s: whoopsies: localization developer put a character out of range of 1251 codepage. The Pixic won't start.\n", arguments[0])
 	exit(-2)

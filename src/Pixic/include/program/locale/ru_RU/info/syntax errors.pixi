@@ -7,6 +7,11 @@ Pixic распространяется в надежде, что он будет
 Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, см. <https://www.gnu.org/licenses/>.
 */
 
-text_error_syntax=localize("файл \"%s\", строка %i: ")
-text_error_syntax_invalid_statement=localize("неправильная инструкция.\n")
-text_error_syntax_expected=localize("ожидалось \"%c\".\n")
+text_syntax_error=localize("файл \"%s\", строка %i: ")
+text_syntax_error_invalid_number=localize("неверное число.\n")
+text_syntax_error_expected=localize("ожидалось \"%c\".\n")
+text_syntax_error_expected_operand=localize("в выражении ожидался операнд.\n")
+text_syntax_error_expected_x=localize("в операнде-контейнере ожидалось значение координаты x.\n")
+text_syntax_error_expected_y=localize("в операнде-контейнере ожидалось значение координаты y.\n")
+text_syntax_error_expected_argument=localize("в вызове функции ожидался аргумент.\n")
+text_syntax_error_expected_property=localize("после оператора \".\" ожидалось имя свойства.\n")

@@ -1,0 +1,265 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file expression.pixi
+ *
+ * Include before.
+ * program/translator/parser/tokens/show.pixi
+ * Dependencies.
+ * program/translator/parser/parsers groups.pixi
+ * program/translator/parser/tokens/expressions/Binary_operator.pixi
+ */
+
+fn parse_expression($text, $positions)
+{
+	$space=0
+	while 1
+	{
+		if $space
+		{
+			if skip_spaces($text, $positions)
+			{
+				Stack_get($positions).line-1
+				syntax_error_expected_operand($text, $positions)
+			}
+			$token=parse_multiple(operands, $text, $positions)
+			if $token<0
+			{
+				syntax_error_expected_operand($text, $positions)
+			}
+		}
+		else
+		{
+			$token=parse_multiple(operands, $text, $positions)
+			if $token<0
+			{
+				ret(-1)
+			}
+			$operands=Stack_new(INT)
+			$operators=Stack_new(INT)
+			$space=1
+		}
+		Stack_push($operands, $token)
+		promise_position($positions)
+		if skip_spaces($text, $positions)
+		{
+			reject_position($positions)
+			break
+		}
+		$sequence=Stack_new(INT8)
+		while 1
+		{
+			$token=get_prop(parse_expression_jump0, $sequence)(get_char($text, $positions), $sequence, $positions)
+			if $token>-2
+			{
+				break
+			}
+		}
+		remove($sequence)
+		if $token!=-1
+		{
+			resolve_position($positions)
+			Stack_push($operators, $token)
+		}
+		else
+		{
+			reject_position($positions)
+			break
+		}
+	}
+	$token=parse_expression_part($operands, $operators, 0, $operands.pointer)
+	remove($operands)
+	remove($operators)
+	ret($token)
+}
+parse_expression_jump0=new()
+set_prop(parse_expression_jump0, "",
+	{
+		$operator=parse_expression_char_table[$1]
+		if $operator
+		{
+			if $operator!=-1
+			{
+				ret($operator)
+			}
+			promise_position($3)
+			Stack_push($2, $1)
+			ret(-2)
+		}
+		else
+		{
+			if $1!='%'
+			{
+				ret(-1)
+			}
+			ret(OPERATOR_mod)
+		}
+	}
+)
+parse_expression_jump0.d=
+{
+	if $1!='i'
+	{
+		reject_position($3)
+		ret(-1)
+	}
+	Stack_push($2, $1)
+	ret(-2)
+}
+parse_expression_jump0.di=
+{
+	if $1!='v'
+	{
+		reject_position($3)
+		ret(-1)
+	}
+	resolve_position($3)
+	promise_position($3)
+	Stack_push($2, $1)
+	ret(-2)
+}
+parse_expression_jump0.div=
+{
+	reject_position($3)
+	if is_symbolic($1)
+	{
+		ret(-1)
+	}
+	ret(OPERATOR_idiv)
+}
+set_prop(parse_expression_jump0, operator_strings[OPERATOR_not],
+	{
+		if $1!='='
+		{
+			reject_position($3)
+			ret(-1)
+		}
+		resolve_position($3)
+		ret(OPERATOR_neq)
+	}
+)
+set_prop(parse_expression_jump0, operator_strings[OPERATOR_g],
+	{
+		if $1=='>'
+		{
+			resolve_position($3)
+			ret(OPERATOR_rsh)
+		}
+		if $1=='='
+		{
+			resolve_position($3)
+			ret(OPERATOR_geq)
+		}
+		reject_position($3)
+		ret(OPERATOR_g)
+	}
+)
+set_prop(parse_expression_jump0, operator_strings[OPERATOR_l],
+	{
+		if $1=='<'
+		{
+			resolve_position($3)
+			ret(OPERATOR_lsh)
+		}
+		if $1=='='
+		{
+			resolve_position($3)
+			ret(OPERATOR_leq)
+		}
+		reject_position($3)
+		ret(OPERATOR_l)
+	}
+)
+set_prop(parse_expression_jump0, operator_strings[OPERATOR_assign],
+	{
+		if $1!='='
+		{
+			reject_position($3)
+			ret(-1)
+		}
+		resolve_position($3)
+		ret(OPERATOR_eq)
+	}
+)
+set_prop(parse_expression_jump0, operator_strings[OPERATOR_bor],
+	{
+		if $1!='|'
+		{
+			reject_position($3)
+			ret(OPERATOR_bor)
+		}
+		resolve_position($3)
+		ret(OPERATOR_or)
+	}
+)
+set_prop(parse_expression_jump0, operator_strings[OPERATOR_band],
+	{
+		if $1!='&'
+		{
+			reject_position($3)
+			ret(OPERATOR_band)
+		}
+		resolve_position($3)
+		ret(OPERATOR_and)
+	}
+)
+parse_expression_char_table=new(128, 1, INT8)
+clean(parse_expression_char_table)
+parse_expression_char_table['%']=OPERATOR_mod
+parse_expression_char_table['/']=OPERATOR_div
+parse_expression_char_table['d']=-1
+parse_expression_char_table['*']=OPERATOR_mul
+parse_expression_char_table['!']=-1
+parse_expression_char_table['+']=OPERATOR_add
+parse_expression_char_table['-']=OPERATOR_sub
+parse_expression_char_table['>']=-1
+parse_expression_char_table['<']=-1
+parse_expression_char_table['=']=-1
+parse_expression_char_table['|']=-1
+parse_expression_char_table['^']=OPERATOR_xor
+parse_expression_char_table['&']=-1
+fn parse_expression_part($operands, $operators, $start_operator, $end_operator)
+{
+	if $end_operator-$start_operator
+	{
+		$priority_record=0
+		$position_record=0
+		for ($a=$start_operator; $a!=$end_operator; $a+1)
+		{
+			$priority=PRIORITY[$operators[$a]]
+			if $priority>=$priority_record
+			{
+				$priority_record=$priority
+				$position_record=$a
+			}
+		}
+		ret(
+			Binary_operator_new(
+				$operators[$position_record],
+				parse_expression_part(
+					$operands,
+					$operators,
+					$start_operator,
+					$position_record
+				),
+				parse_expression_part(
+					$operands,
+					$operators,
+					$position_record+1,
+					$end_operator
+				)
+			)
+		)
+	}
+	else
+	{
+		ret($operands[$start_operator])
+	}
+}

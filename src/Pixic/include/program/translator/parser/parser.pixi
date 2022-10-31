@@ -7,290 +7,37 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * @file parser.pixi
- *
- * Dependencies.
- * core/structures/stack/Stack.pixi
- * core/structures/linked list/Twoended_list.pixi
- * program/translator/parser/char filters.pixi
- * program/translator/parser/tokens/Variable.pixi
- * program/info/syntax errors.pixi
- * program/translator/parser/tokens/String.pixi
- * program/translator/parser/tokens/Include.pixi
- */
-
-GROUP_none=         0
-GROUP_line_comment= 1
-GROUP_block_comment=2
-GROUP_string=       3
-GROUP_include=      4
-
-GROUPS=Stack_new(INT)
-SEQUENCE=Stack_new(INT8)
-
-start=0
-end=0
-first_line=0
-last_line=0
-found=0
-
 fn parse($text)
 {
-	$tokens=Twoended_list_new()
-	$data=$text.data
-	$lines=$text.lines
-	$line_count=get_ysize($lines)
-	for ($a=0; $a!=$line_count; $a+1)
+	$statements=Twoended_list_new()
+	$positions=Stack_new(INT)
+	$position=Position_new($text.lines[0, 0], 0)
+	Stack_push($positions, $position)
+	$lines_count=get_ysize($text.lines)
+	while !skip_spaces($text, $positions)
 	{
-		$length=$lines[0, $a]+$lines[1, $a]
-		for ($b=$lines[0, $a]; $b!=$length; $b+1)
+		$statement=parse_multiple(statements, $text, $positions)
+		if $statement!=-1
 		{
-			parse_jump0[Stack_get(GROUPS)]($data[$b], $b, $a, $text, $tokens)
-		}
-		parse_jump0[Stack_get(GROUPS)](EOF, $b, $a, $text, $tokens)
-	}
-	logf("GROUPS pointer: %i\nSEQUENCE pointer: %i\n", GROUPS.pointer, SEQUENCE.pointer)
-	ret($tokens)
-}
-parse_jump0=new(5, 1, INT)
-parse_jump0[GROUP_none]=parse_none
-parse_jump0[GROUP_line_comment]=parse_line_comment
-parse_jump0[GROUP_block_comment]=parse_block_comment
-parse_jump0[GROUP_string]=parse_string
-parse_jump0[GROUP_include]=parse_include
-fn parse_none($char, $index, $line, $text, $tokens)
-{
-	get_prop(parse_none_jump0, SEQUENCE)($char, $index, $line, $text, $tokens)
-}
-parse_none_jump0=new()
-set_prop(parse_none_jump0, "", parse_none_pnone)
-set_prop(parse_none_jump0, "/", parse_none_pslash)
-parse_none_jump0.ki=parse_none_ki
-parse_none_jump0.kin=parse_none_kin
-parse_none_jump0.v=parse_none_v
-fn parse_none_pnone($char, $index, $line, $text, $tokens)
-{
-	if is_symbolic($char)
-	{
-		start=$index
-		first_line=$line
-		last_line=$line
-		if $char=='i'
-		{
-			Stack_push(SEQUENCE, 'k')
-			Stack_push(SEQUENCE, 'i')
+			Twoended_node_set($statement, $statements)
 		}
 		else
 		{
-			Stack_push(SEQUENCE, 'v')
+			syntax_error_invalid_statement($text, $positions)
 		}
 	}
-	else{if $char=='"'
-	{
-		first_line=$line
-		Stack_push(GROUPS, GROUP_string)
-	}
-	else{if $char=='/'
-	{
-		first_line=$line
-		Stack_push(SEQUENCE, '/')
-	}}}
+	remove($position)
+	remove($positions)
+	ret($statements)
 }
-fn parse_none_pslash($char, $index, $line, $text, $tokens)
-{
-	Stack_clean(SEQUENCE)
-	if $char=='/'
-	{
-		Stack_push(GROUPS, GROUP_line_comment)
-	}
-	else{if $char=='*'
-	{
-		Stack_push(GROUPS, GROUP_block_comment)
-	}
-	else
-	{
-		parse_none_pnone($char, $index, $line, $text, $tokens)
-		//error_syntax_invalid_statement($text)
-	}}
-}
-fn parse_none_ki($char, $index, $line, $text, $tokens)
-{
-	if $char=='n'
-	{
-		found=0
-		Stack_push(SEQUENCE, 'n')
-	}
-	else
-	{
-		Stack_clean(SEQUENCE)
-		if is_symbolic($char)
-		{
-			Stack_push(SEQUENCE, 'v')
-		}
-		else
-		{
-			end=$index
-			Twoended_node_set(Variable_new($text), $tokens)
-			parse_none_pnone($char, $index, $line, $text, $tokens)
-		}
-	}
-}
-fn parse_none_kin($char, $index, $line, $text, $tokens)
-{
-	if found!=5
-	{
-		if $char=="clude"[found]
-		{
-			found+1
-		}
-		else
-		{
-			Stack_clean(SEQUENCE)
-			if is_symbolic($char)
-			{
-				Stack_push(SEQUENCE, 'v')
-			}
-			else
-			{
-				end=$index
-				Twoended_node_set(Variable_new($text), $tokens)
-				parse_none_pnone($char, $index, $line, $text, $tokens)
-			}
-		}
-	}
-	else
-	{
-		Stack_clean(SEQUENCE)
-		if is_symbolic($char)
-		{
-			Stack_push(SEQUENCE, 'v')
-		}
-		else{if is_space($char)
-		{
-			Stack_push(GROUPS, GROUP_include)
-		}
-		else{if $char=='"'
-		{
-			first_line=$line
-			Stack_push(GROUPS, GROUP_include)
-			Stack_push(GROUPS, GROUP_string)
-		}
-		else
-		{
-			error_syntax_invalid_statement($text)
-		}}}
-	}
-}
-fn parse_none_v($char, $index, $line, $text, $tokens)
-{
-	if !is_symbolic($char)
-	{
-		Stack_clean(SEQUENCE)
-		end=$index
-		Twoended_node_set(Variable_new($text), $tokens)
-		parse_none_pnone($char, $index, $line, $text, $tokens)
-	}
-}
-fn parse_line_comment($char, $index, $line, $text, $tokens)
-{
-	if $char==EOF
-	{
-		Stack_pop(GROUPS)
-	}
-}
-fn parse_block_comment($char, $index, $line, $text, $tokens)
-{
-	if SEQUENCE[0]!='*'
-	{
-		if $char=='*'
-		{
-			SEQUENCE[0]='*'
-		}
-	}
-	else{if $char!='*'
-	{
-		SEQUENCE[0]=0
-		if $char=='/'
-		{
-			Stack_pop(GROUPS)
-		}
-	}}
-}
-fn parse_string($char, $index, $line, $text, $tokens)
-{
-	if $line==get_ysize($text.lines)-1&&$char==EOF
-	{
-		last_line=$line
-		error_syntax_expected($text, '"')
-	}
-	else{if SEQUENCE[0]=='s'
-	{
-		if $char=='"'
-		{
-			Stack_pop(GROUPS)
-			SEQUENCE[0]=0
-			end=$index
-			last_line=$line
-			if Stack_get(GROUPS)!=GROUP_include
-			{
-				Twoended_node_set(String_new($text), $tokens)
-			}
-			else
-			{
-				Stack_pop(GROUPS)
-				Twoended_node_set(Include_new($text), $tokens)
-			}
-		}
-		else{if $char=='\\'
-		{
-			SEQUENCE[0]='r'
-		}}
-	}
-	else{if SEQUENCE[0]=='r'
-	{
-		SEQUENCE[0]='s'
-	}
-	else
-	{
-		start=$index
-		if $char=='"'
-		{
-			Stack_pop(GROUPS)
-			end=$index
-			last_line=$line
-			if Stack_get(GROUPS, GROUP_include)!=GROUP_include
-			{
-				Twoended_node_set(String_new($text), $tokens)
-			}
-			else
-			{
-				Stack_pop(GROUPS)
-				Twoended_node_set(Include_new($text), $tokens)
-			}
-		}
-		else{if $char=='\\'
-		{
-			SEQUENCE[0]='r'
-		}
-		else
-		{
-			SEQUENCE[0]='s'
-		}}
-	}}}
-}
-fn parse_include($char, $index, $line, $text, $tokens)
-{
-	if !is_space($char)
-	{
-		if $char=='"'
-		{
-			first_line=$line
-			Stack_push(GROUPS, GROUP_string)
-		}
-		else
-		{
-			error_syntax_invalid_statement($text)
-		}
-	}
-}
+statements=new(10, 1, INT)
+statements[0]=Assign_new
+statements[1]=Break_new
+statements[2]=Continue_new
+statements[3]=For_new
+statements[4]=Function_definition_new
+statements[5]=Go_new
+statements[6]=Halt_new
+statements[7]=If_new
+statements[8]=Procedure_call_new
+statements[9]=While_new

@@ -7,12 +7,12 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
-fn Expression_new($text, $line, $left, $right)
+fn Position_new($index, $line)
 {
-	$self=Token_new($text, $line)
+	$self=new()
 
-	$self.left=$left
-	$self.right=$right
+	$self.index=$index
+	$self.line=$line
 
 	ret($self)
 }

@@ -38,13 +38,13 @@ fn localize($UTF8_text)
 				if $char==UTF8_ERROR
 				{
 					UTF8_file_remove($file)
-					error_developer_localization_UTF8()
+					developer_error_localization_UTF8()
 				}
 				$char=Unicode_to_CP1251($char)
 				if $char==EOF
 				{
 					UTF8_file_remove($file)
-					error_developer_localization_CP1251()
+					developer_error_localization_CP1251()
 				}
 				$UTF8_text[$a]=$char
 			}

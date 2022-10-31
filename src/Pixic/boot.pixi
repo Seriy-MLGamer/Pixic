@@ -14,9 +14,23 @@ Output: %s
 Folder: %s
 ", input, output, folder)
 
-//miku=39
-tokens=parse(Text_new(input))
-for (a=tokens.first; a>=0; a=a.next)
+some_text=Text_new(input)
+data=some_text.data
+lines=some_text.lines
+lines_count=get_ysize(lines)
+temp_str=new(1, 1, INT8)
+for (a=0; a!=lines_count; a+1)
 {
-	a.f.show(a)
+	size=lines[1, a]-lines[0, a]
+	if size
+	{
+		resize(temp_str, size)
+		copy(temp_str, data, 0, lines[0, a])
+		logf("%i: %s\n", lines[2, a], temp_str)
+	}
 }
+some_stack=Stack_new(INT)
+Stack_push(some_stack, Position_new(some_text.lines[0, 0], 0))
+expression=parse_expression(some_text, some_stack)
+expression.f.show(expression) logf("
+Stack size: %i\n", some_stack.pointer+1)
