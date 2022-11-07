@@ -9,4 +9,4 @@
 
 pixilang -c boot.pixi
 mv boot.pixicode ../../out/pixic/src/share/pixic/boot.pixicode
-../../out/pixic/src/bin/pixic test.txt
+../../out/pixic/src/bin/pixic test.pixi

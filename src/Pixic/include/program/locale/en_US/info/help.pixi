@@ -7,7 +7,8 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
-text_help="Pixic v0.0.0pre-alpha-raw-undone
+text_help=
+"Pixic v0.0.0pre-alpha-raw-undone
 Pixic translates the code in Pixilang programming language into C language and compiles it with external C compiler increasing performance of the program.
 Usage: pixic [options] <input file>
 Options.

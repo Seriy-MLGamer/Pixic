@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file List_node.pixi
+ * @file core/structures/linked list/List_node.pixi
  */
 
 fn List_node_new()

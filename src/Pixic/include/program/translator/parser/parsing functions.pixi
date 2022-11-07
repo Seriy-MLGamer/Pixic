@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file parsing functions.pixi
+ * @file program/translator/parser/parsing functions.pixi
  * 
  * Dependencies.
  * core/structures/stack/Stack.pixi
@@ -63,11 +63,10 @@ fn reject_position($positions)
 fn skip_spaces($text, $positions)
 {
 	$lines_count=get_ysize($text.lines)
-	$position=Stack_get($positions)
 	$state=0
 	while 1
 	{
-		if $position.line==$lines_count
+		if Stack_get($positions).line==$lines_count
 		{
 			ret(1)
 		}
@@ -99,13 +98,16 @@ skip_spaces_jump0[1]=
 	if $1=='/'
 	{
 		resolve_position($2)
+		resolve_position($2)
 		ret(2)
 	}
 	if $1=='*'
 	{
 		resolve_position($2)
+		resolve_position($2)
 		ret(3)
 	}
+	reject_position($2)
 	reject_position($2)
 	ret(-1)
 }

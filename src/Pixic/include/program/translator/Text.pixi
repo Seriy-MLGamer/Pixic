@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Text.pixi
+ * @file program/translator/Text.pixi
  *
  * Dependencies.
  * program/translator/parser/char filters.pixi

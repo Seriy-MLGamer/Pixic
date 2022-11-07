@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file warnings.pixi
+ * @file program/info/warnings.pixi
  *
  * Dependencies.
  * configuration/language.pixi

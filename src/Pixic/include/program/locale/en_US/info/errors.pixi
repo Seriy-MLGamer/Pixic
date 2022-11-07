@@ -7,8 +7,13 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
-text_error="%s: error: "
-text_error_help="Type \"pixic --help\" for more details.\n"
-text_error_no_input_file="no input file.\n"
-text_error_wrong_input_file="wrong input file name: \"%s\".\n"
-text_error_input_file_not_found="input file \"%s\" isn't found or can't be read.\n"
+text_error=
+"%s: error: "
+text_error_help=
+"Type \"pixic --help\" for more details.\n"
+text_error_no_input_file=
+"no input file.\n"
+text_error_wrong_input_file=
+"wrong input file name: \"%s\".\n"
+text_error_input_file_not_found=
+"input file \"%s\" isn't found or can't be read.\n"

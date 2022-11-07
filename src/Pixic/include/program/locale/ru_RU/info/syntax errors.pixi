@@ -7,11 +7,31 @@ Pixic распространяется в надежде, что он будет
 Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, см. <https://www.gnu.org/licenses/>.
 */
 
-text_syntax_error=localize("файл \"%s\", строка %i: ")
-text_syntax_error_invalid_number=localize("неверное число.\n")
-text_syntax_error_expected=localize("ожидалось \"%c\".\n")
-text_syntax_error_expected_operand=localize("в выражении ожидался операнд.\n")
-text_syntax_error_expected_x=localize("в операнде-контейнере ожидалось значение координаты x.\n")
-text_syntax_error_expected_y=localize("в операнде-контейнере ожидалось значение координаты y.\n")
-text_syntax_error_expected_argument=localize("в вызове функции ожидался аргумент.\n")
-text_syntax_error_expected_property=localize("после оператора \".\" ожидалось имя свойства.\n")
+text_syntax_error=
+localize("файл \"%s\", строка %i: ")
+text_syntax_error_expected=
+localize("ожидалось \"%c\".\n")
+text_syntax_error_expected_statement=
+localize("в определении цикла for ожидалась инструкция.\n")
+text_syntax_error_expected_function_identifier=
+localize("в определении функции ожидался её идентификатор.\n")
+text_syntax_error_expected_argument=
+localize("в определении функции ожидалась переменная-аргумент.\n")
+text_syntax_error_expected_operator=
+localize("в инструкции присвоения ожидался двоичный оператор.\n")
+text_syntax_error_expected_expression=
+localize("ожидалось выражение.\n")
+text_syntax_error_expected_operand=
+localize("в выражении ожидался операнд.\n")
+text_syntax_error_expected_x=
+localize("в операнде-контейнере ожидалось выражение координаты x.\n")
+text_syntax_error_expected_y=
+localize("в операнде-контейнере ожидалось выражение координаты y.\n")
+text_syntax_error_expected_property=
+localize("после оператора \".\" ожидалось имя свойства.\n")
+text_syntax_error_invalid_statement=
+localize("неправильная инструкция.\n")
+text_syntax_error_invalid_number=
+localize("неправильное число.\n")
+text_syntax_error_reserved_identifier=
+localize("имя переменной не может быть зарезервированным идентификатором.\n")

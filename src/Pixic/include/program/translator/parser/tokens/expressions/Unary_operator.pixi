@@ -8,10 +8,13 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Unary_operator.pixi
+ * @file program/translator/parser/tokens/expressions/Unary_operator.pixi
  *
  * Dependencies.
- * program/translator/parser/tokens/expressions/operand.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/parser/parsers groups.pixi
+ * program/translator/parser/tokens/show.pixi
  */
 
 fn Unary_operator_new($text, $positions)
@@ -45,7 +48,7 @@ fn Unary_operator_new($text, $positions)
 		Stack_get($positions).line-1
 		syntax_error_expected_operand($text, $positions)
 	}
-	$token=parse_operand($text, $positions)
+	$token=parse_multiple(operands, $text, $positions)
 	if $token<0
 	{
 		syntax_error_expected_operand($text, $positions)
@@ -68,7 +71,7 @@ fn Unary_operator_show($self)
 {
 	begin_object()
 		indent() logf("\"type\": \"Unary_operator\"") next_property()
-		indent() logf("\"operator\": \"%s\"",operator_strings[$self.operator]) next_property()
+		indent() logf("\"operator\": \"%s\"", operator_strings[$self.operator]) next_property()
 		indent() logf("\"operand\": ") $self.operand.f.show($self.operand)
 	end_object()
 }

@@ -7,9 +7,16 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
-fn Postfix_new()
+/**
+ * @file program/translator/parser/tokens/expressions/Postfix.pixi
+ *
+ * Dependencies.
+ * program/translator/parser/tokens/expressions/Expression_traits.pixi
+ */
+
+fn Postfix_new($assignable, $is_function)
 {
-	$self=new()
+	$self=Expression_traits_new($assignable, $is_function)
 
 	$self.ID=-1
 

@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file main.pixi
+ * @file configuration/main.pixi
  */
 
 OS_Linux=  0

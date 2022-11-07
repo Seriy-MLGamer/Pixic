@@ -7,12 +7,13 @@ Pixic распространяется в надежде, что он будет
 Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, см. <https://www.gnu.org/licenses/>.
 */
 
-/**
- * @file errors.pixi
- */
-
-text_error=localize("%s: ошибка: ")
-text_error_help=localize("Введите \"pixic --help\" для дополнительной информации.\n")
-text_error_no_input_file=localize("входной файл не задан.\n")
-text_error_wrong_input_file=localize("Неправильное имя входного файла: \"%s\".\n")
-text_error_input_file_not_found=localize("входной файл \"%s\" не найден или не может быть прочитан.\n")
+text_error=
+localize("%s: ошибка: ")
+text_error_help=
+localize("Введите \"pixic --help\" для дополнительной информации.\n")
+text_error_no_input_file=
+localize("входной файл не задан.\n")
+text_error_wrong_input_file=
+localize("Неправильное имя входного файла: \"%s\".\n")
+text_error_input_file_not_found=
+localize("входной файл \"%s\" не найден или не может быть прочитан.\n")

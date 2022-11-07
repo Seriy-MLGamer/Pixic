@@ -8,15 +8,16 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Binary_operator.pixi
+ * @file program/translator/parser/tokens/expressions/Binary_operator.pixi
  *
  * Dependencies.
+ * program/translator/parser/tokens/expressions/Expression_traits.pixi
  * program/translator/parser/tokens/show.pixi
  */
 
 fn Binary_operator_new($operator, $left, $right)
 {
-	$self=new()
+	$self=Expression_traits_new(0, 0)
 	$self.f=Binary_operator
 
 	$self.operator=$operator

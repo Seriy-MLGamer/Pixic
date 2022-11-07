@@ -8,10 +8,11 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file show.pixi
+ * @file program/translator/parser/tokens/show.pixi
  *
  * Include before.
- * program/translator/parser/tokens/expressions/operators.pixi
+ * program/translator/parser/tokens/operators.pixi
+ * program/translator/parser/tokens/keywords.pixi
  */
 
 indents=0
@@ -19,7 +20,7 @@ indents=0
 operator_strings=new(23, 1, INT)
 operator_strings[OPERATOR_mod]=   "%"
 operator_strings[OPERATOR_div]=   "/"
-operator_strings[OPERATOR_idiv]=  "div"
+operator_strings[OPERATOR_idiv]=  KEYWORDS[KEYWORD_div]
 operator_strings[OPERATOR_mul]=   "*"
 operator_strings[OPERATOR_not]=   "!"
 operator_strings[OPERATOR_bnot]=  "~"

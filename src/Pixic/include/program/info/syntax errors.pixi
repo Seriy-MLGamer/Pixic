@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file syntax errors.pixi
+ * @file program/info/syntax errors.pixi
  *
  * Dependencies.
  * configuration/language.pixi
@@ -17,47 +17,83 @@ You should have received a copy of the GNU General Public License along with Pix
 fn syntax_error($text, $positions)
 {
 	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_syntax_error, $text.file_name, $text.lines[2, $positions.line])
-}
-fn syntax_error_invalid_number($text, $positions)
-{
-	syntax_error($text, $positions)
-	fprintf(STDERR, text_syntax_error_invalid_number)
-	exit(64)
+	fprintf(STDERR, text_syntax_error, $text.file_name, $text.lines[2, Stack_get($positions).line])
 }
 fn syntax_error_expected($text, $positions, $char)
 {
 	syntax_error($text, $positions)
 	fprintf(STDERR, text_syntax_error_expected, $char)
+	exit(64)
+}
+fn syntax_error_expected_statement($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_statement)
 	exit(65)
 }
-fn syntax_error_expected_operand($text, $positions)
+fn syntax_error_expected_function_identifier($text, $positions)
 {
 	syntax_error($text, $positions)
-	fprintf(STDERR, text_syntax_error_expected_operand)
+	fprintf(STDERR, text_syntax_error_expected_function_identifier)
 	exit(66)
-}
-fn syntax_error_expected_x($text, $positions)
-{
-	syntax_error($text, $positions)
-	fprintf(STDERR, text_syntax_error_expected_x)
-	exit(67)
-}
-fn syntax_error_expected_y($text, $positions)
-{
-	syntax_error($text, $positions)
-	fprintf(STDERR, text_syntax_error_expected_y)
-	exit(68)
 }
 fn syntax_error_expected_argument($text, $positions)
 {
 	syntax_error($text, $positions)
 	fprintf(STDERR, text_syntax_error_expected_argument)
+	exit(67)
+}
+fn syntax_error_expected_operator($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_operator)
+	exit(68)
+}
+fn syntax_error_expected_expression($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_expression)
 	exit(69)
+}
+fn syntax_error_expected_operand($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_operand)
+	exit(70)
+}
+fn syntax_error_expected_x($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_x)
+	exit(71)
+}
+fn syntax_error_expected_y($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_expected_y)
+	exit(72)
 }
 fn syntax_error_expected_property($text, $positions)
 {
 	syntax_error($text, $positions)
 	fprintf(STDERR, text_syntax_error_expected_property)
-	exit(70)
+	exit(73)
+}
+fn syntax_error_invalid_statement($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_invalid_statement)
+	exit(74)
+}
+fn syntax_error_invalid_number($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_invalid_number)
+	exit(75)
+}
+fn syntax_error_reserved_identifier($text, $positions)
+{
+	syntax_error($text, $positions)
+	fprintf(STDERR, text_syntax_error_reserved_identifier)
+	exit(76)
 }

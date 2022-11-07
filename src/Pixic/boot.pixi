@@ -7,6 +7,15 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file boot.pixi
+ *
+ * Dependencies.
+ * program/console/console parser.pixi
+ * program/translator/Text.pixi
+ * program/translator/parser/parser.pixi
+ */
+
 include "include/dependencies.pixi"
 
 logf("Input: %s
@@ -14,23 +23,27 @@ Output: %s
 Folder: %s
 ", input, output, folder)
 
-some_text=Text_new(input)
-data=some_text.data
-lines=some_text.lines
-lines_count=get_ysize(lines)
-temp_str=new(1, 1, INT8)
-for (a=0; a!=lines_count; a+1)
+start_timer()
+result=parse(Text_new(input))
+logf("Time: %i ms\n", get_timer())
+a=result.first
+if a<0
 {
-	size=lines[1, a]-lines[0, a]
-	if size
-	{
-		resize(temp_str, size)
-		copy(temp_str, data, 0, lines[0, a])
-		logf("%i: %s\n", lines[2, a], temp_str)
-	}
+	logf("null")
 }
-some_stack=Stack_new(INT)
-Stack_push(some_stack, Position_new(some_text.lines[0, 0], 0))
-expression=parse_expression(some_text, some_stack)
-expression.f.show(expression) logf("
-Stack size: %i\n", some_stack.pointer+1)
+else
+{
+	begin_array()
+		while 1
+		{
+			indent() a.f.show(a)
+			if a.next<0
+			{
+				break
+			}
+				next_property()
+			a=a.next
+		}
+	end_array()
+}
+logf("\n")

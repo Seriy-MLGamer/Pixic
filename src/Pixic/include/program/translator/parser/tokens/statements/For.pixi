@@ -1,0 +1,255 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/parser/tokens/statements/For.pixi
+ *
+ * Include before.
+ * program/translator/parser/parsing functions.pixi
+ * Dependencies.
+ * program/translator/parser/tokens/statements/Statement.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/parser/tokens/expressions/expression.pixi
+ * program/translator/parser/tokens/statements/Block.pixi
+ */
+
+fn For_new($text, $positions)
+{
+	$self=Statement_new($text, $positions)
+	$self.f=For
+
+	promise_position($positions)
+	$test=new(get_size(KEYWORDS[KEYWORD_for]), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, Stack_get($positions).index)
+	if strstr($test, KEYWORDS[KEYWORD_for])
+	{
+		remove($test)
+		reject_position($positions)
+
+		remove($self)
+		ret(-1)
+	}
+	Stack_get($positions).index+get_size($test)
+	remove($test)
+	promise_position($positions)
+	if is_symbolic(get_char($text, $positions))
+	{
+		reject_position($positions)
+		reject_position($positions)
+
+		remove($self)
+		ret(-4)
+	}
+	reject_position($positions)
+	if skip_spaces($text, $positions)
+	{
+		Stack_get($positions).line-1
+		syntax_error_expected($text, $positions, '(')
+	}
+	promise_position($positions)
+	if get_char($text, $positions)!='('
+	{
+		reject_position($positions)
+		syntax_error_expected($text, $positions, '(')
+	}
+	resolve_position($positions)
+	if For_skip_spaces($text, $positions)
+	{
+		Stack_get($positions).line-1
+		syntax_error_expected_statement($text, $positions)
+	}
+	$token=parse_multiple(statements, $text, $positions)
+	if $token<0
+	{
+		promise_position($positions)
+		if get_char($text, $positions)!=';'
+		{
+			reject_position($positions)
+			syntax_error_expected_statement($text, $positions)
+		}
+		resolve_position($positions)
+		$self.initialization=-1
+	}
+	else
+	{
+		$self.initialization=$token
+		if For_skip_spaces($text, $positions)
+		{
+			Stack_get($positions).line-1
+			syntax_error_expected($text, $positions, ';')
+		}
+		promise_position($positions)
+		if get_char($text, $positions)!=';'
+		{
+			reject_position($positions)
+			syntax_error_expected($text, $positions, ';')
+		}
+		resolve_position($positions)
+	}
+	if For_skip_spaces($text, $positions)
+	{
+		Stack_get($positions).line-1
+		syntax_error_expected_expression($text, $positions)
+	}
+	$token=parse_expression($text, $positions)
+	if $token<0
+	{
+		syntax_error_expected_expression($text, $positions)
+	}
+	else
+	{
+		$self.condition=$token
+		if For_skip_spaces($text, $positions)
+		{
+			Stack_get($positions).line-1
+			syntax_error_expected($text, $positions, ';')
+		}
+		promise_position($positions)
+		if get_char($text, $positions)!=';'
+		{
+			reject_position($positions)
+			syntax_error_expected($text, $positions, ';')
+		}
+		resolve_position($positions)
+	}
+	if skip_spaces($text, $positions)
+	{
+		Stack_get($positions).line-1
+		syntax_error_expected_statement($text, $positions)
+	}
+	$token=parse_multiple(statements, $text, $positions)
+	if $token<0
+	{
+		promise_position($positions)
+		if get_char($text, $positions)!=')'
+		{
+			reject_position($positions)
+			syntax_error_expected_statement($text, $positions)
+		}
+		resolve_position($positions)
+		$self.post_statement=-1
+	}
+	else
+	{
+		$self.post_statement=$token
+		if skip_spaces($text, $positions)
+		{
+			Stack_get($positions).line-1
+			syntax_error_expected($text, $positions, ')')
+		}
+		promise_position($positions)
+		if get_char($text, $positions)!=')'
+		{
+			reject_position($positions)
+			syntax_error_expected($text, $positions, ')')
+		}
+		resolve_position($positions)
+	}
+	$self.last_line=Stack_get($positions).line+1
+	if skip_spaces($text, $positions)
+	{
+		Stack_get($positions).line-1
+		syntax_error_expected($text, $positions, '{')
+	}
+	$token=Block_new($text, $positions)
+	if $token<0
+	{
+		syntax_error_expected($text, $positions, '{')
+	}
+	$self.body=$token
+	resolve_position($positions)
+
+	ret($self)
+}
+For=new()
+For.remove=For_remove
+For.show=For_show
+fn For_remove($self)
+{
+	$token=$self.initialization
+	if $token>=0
+	{
+		$token.f.remove($token)
+	}
+	$self.condition.f.remove($self.condition)
+	$token=$self.post_statement
+	if $token>=0
+	{
+		$token.f.remove($token)
+	}
+	Block_remove($self.body)
+
+	remove($self)
+}
+fn For_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"For\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent() logf("\"initialization\": ")
+			$token=$self.initialization
+			if $token<0
+			{
+				logf("null")
+			}
+			else
+			{
+				$token.f.show($token)
+			}
+			next_property()
+		indent() logf("\"condition\": ") $self.condition.f.show($self.condition) next_property()
+		indent() logf("\"post-statement\": ")
+			$token=$self.post_statement
+			if $token<0
+			{
+				logf("null")
+			}
+			else
+			{
+				$token.f.show($token)
+			}
+			next_property()
+		indent() logf("\"body\": ") Block_show($self.body)
+	end_object()
+}
+fn For_skip_spaces($text, $positions)
+{
+	$lines_count=get_ysize($text.lines)
+	$position=Stack_get($positions)
+	$state=0
+	while 1
+	{
+		if $position.line==$lines_count
+		{
+			ret(1)
+		}
+		promise_position($positions)
+		$state=For_skip_spaces_jump0[$state](get_char($text, $positions), $positions)
+		if $state<0
+		{
+			ret(0)
+		}
+	}
+}
+For_skip_spaces_jump0=clone(skip_spaces_jump0)
+For_skip_spaces_jump0[0]=
+{
+	if $1=='/'
+	{
+		ret(1)
+	}
+	if is_space($1)&&$1!=';'
+	{
+		resolve_position($2)
+		ret(0)
+	}
+	reject_position($2)
+	ret(-1)
+}

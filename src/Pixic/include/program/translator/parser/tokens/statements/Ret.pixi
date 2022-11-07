@@ -1,0 +1,89 @@
+/*
+Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/parser/tokens/statements/Ret.pixi
+ *
+ * Dependencies.
+ * program/translator/parser/tokens/statements/Statement.pixi
+ * program/translator/parser/tokens/expressions/parenthesis.pixi
+ */
+
+fn Ret_new($text, $positions)
+{
+	$self=Statement_new($text, $positions)
+	$self.f=Ret
+
+	promise_position($positions)
+	$test=new(get_size(KEYWORDS[KEYWORD_ret]), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, Stack_get($positions).index)
+	if strstr($test, KEYWORDS[KEYWORD_ret])
+	{
+		remove($test)
+		reject_position($positions)
+
+		remove($self)
+		ret(-1)
+	}
+	Stack_get($positions).index+get_size($test)
+	remove($test)
+	promise_position($positions)
+	if is_symbolic(get_char($text, $positions))
+	{
+		reject_position($positions)
+		reject_position($positions)
+
+		remove($self)
+		ret(-2)
+	}
+	reject_position($positions)
+	$token=parse_parenthesis($text, $positions)
+	if $token<0
+	{
+		$self.value=-1
+		resolve_position($positions)
+
+		ret($self)
+	}
+	$self.value=$token
+	resolve_position($positions)
+
+	ret($self)
+}
+Ret=new()
+Ret.remove=Ret_remove
+Ret.show=Ret_show
+fn Ret_remove($self)
+{
+	$value=$self.value
+	if $value>=0
+	{
+		$value.f.remove($value)
+	}
+
+	remove($self)
+}
+fn Ret_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Ret\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent() logf("\"value\": ")
+			$value=$self.value
+			if $value<0
+			{
+				logf("null")
+			}
+			else
+			{
+				$value.f.show($value)
+			}
+	end_object()
+}

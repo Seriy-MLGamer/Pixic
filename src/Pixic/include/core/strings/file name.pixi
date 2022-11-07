@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file file name.pixi
+ * @file core/strings/file name.pixi
  *
  * Dependencies.
  * configuration/shell.pixi

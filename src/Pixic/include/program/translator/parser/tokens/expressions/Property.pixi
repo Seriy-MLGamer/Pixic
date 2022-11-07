@@ -8,9 +8,10 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Property.pixi
+ * @file program/translator/parser/tokens/expressions/Property.pixi
  *
  * Dependencies.
+ * program/translator/parser/tokens/expressions/Postfix.pixi
  * program/translator/parser/parsing functions.pixi
  * program/info/syntax errors.pixi
  * program/translator/parser/tokens/show.pixi
@@ -18,7 +19,7 @@ You should have received a copy of the GNU General Public License along with Pix
 
 fn Property_new($text, $positions)
 {
-	$self=Postfix_new()
+	$self=Postfix_new(1, 0)
 	$self.f=Property
 
 	promise_position($positions)

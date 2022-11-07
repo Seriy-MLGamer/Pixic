@@ -8,16 +8,18 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Container.pixi
+ * @file program/translator/parser/tokens/expressions/Container.pixi
  *
  * Dependencies.
  * program/translator/parser/tokens/expressions/Postfix.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
  * program/translator/parser/tokens/expressions/expression.pixi
  */
 
 fn Container_new($text, $positions)
 {
-	$self=Postfix_new()
+	$self=Postfix_new(1, 0)
 	$self.f=Container
 
 	promise_position($positions)

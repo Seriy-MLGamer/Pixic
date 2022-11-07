@@ -7,6 +7,10 @@ Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file program/translator/parser/char filters.pixi
+ */
+
 fn is_symbolic($char)
 {
 	ret($char=='#'||$char=='$'||($char>='0'&&$char<='9')||($char>='A'&&$char<='Z')||$char=='_'||($char>='a'&&$char<='z')||($char>=0x80&&$char<=0xFF))

@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file temporary folder.pixi
+ * @file configuration/temporary folder.pixi
  *
  * Include before.
  * configuration/shell.pixi

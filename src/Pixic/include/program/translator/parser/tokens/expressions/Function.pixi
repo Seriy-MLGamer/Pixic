@@ -8,16 +8,18 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Container.pixi
+ * @file program/translator/parser/tokens/expressions/Function.pixi
  *
  * Dependencies.
  * program/translator/parser/tokens/expressions/Postfix.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
  * program/translator/parser/tokens/expressions/expression.pixi
  */
 
 fn Function_new($text, $positions)
 {
-	$self=Postfix_new()
+	$self=Postfix_new(0, 1)
 	$self.f=Function
 
 	promise_position($positions)
@@ -73,12 +75,12 @@ fn Function_new($text, $positions)
 			if skip_spaces($text, $positions)
 			{
 				Stack_get($positions).line-1
-				syntax_error_expected_argument($text, $positions)
+				syntax_error_expected_expression($text, $positions)
 			}
 			$argument=parse_expression($text, $positions)
 			if $argument<0
 			{
-				syntax_error_expected_argument($text, $positions)
+				syntax_error_expected_expression($text, $positions)
 			}
 		}
 		else
@@ -109,25 +111,30 @@ fn Function_show($self)
 		indent() logf("\"type\": \"Function\"") next_property()
 		indent() logf("\"ID\": ") $self.ID.f.show($self.ID) next_property()
 		indent() logf("\"arguments\": ")
-		$arguments=$self.arguments
-		$arguments_count=$arguments.pointer+1
-		if $arguments_count
-		{
-			begin_array()
-				for ($a=0; $a!=$arguments_count; $a+1)
-				{
-					$argument=$arguments[$a]
-					indent() $argument.f.show($argument)
+			$arguments=$self.arguments
+			$arguments_count=$arguments.pointer+1
+			if $arguments_count
+			{
+				begin_array()
+					$a=0 while 1
+					{
+						$argument=$arguments[$a]
+						indent() $argument.f.show($argument)
 						if $a!=$arguments_count-1
 						{
-							next_property()
+								next_property()
+							$a+1
 						}
-				}
-			end_array()
-		}
-		else
-		{
-			logf("null")
-		}
+						else
+						{
+							break
+						}
+					}
+				end_array()
+			}
+			else
+			{
+				logf("null")
+			}
 	end_object()
 }

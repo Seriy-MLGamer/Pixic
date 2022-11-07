@@ -8,19 +8,25 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file program/info/developer errors.pixi
+ * @file program/translator/parser/tokens/statements/Statement.pixi
  *
  * Dependencies.
- * program/console/system/make arguments.pixi
+ * core/structures/linked list/Twoended_node.pixi
+ * core/structures/stack/Stack.pixi
  */
 
-fn developer_error_localization_UTF8()
+fn Statement_new($text, $positions)
 {
-	fprintf(STDERR, "%s: whoopsies: UTF-8 error occured by localization developer. The Pixic won't start.\n", arguments[0])
-	exit(-1)
+	$self=Twoended_node_new()
+
+	$self.text=$text
+	$self.first_line=Stack_get($positions).line
+	$self.last_line=$self.first_line+1
+
+	ret($self)
 }
-fn developer_error_localization_CP1251()
+fn Statement_show($self)
 {
-	fprintf(STDERR, "%s: whoopsies: localization developer put a character out of range of 1251 codepage. The Pixic won't start.\n", arguments[0])
-	exit(-2)
+	$lines=$self.text.lines
+	logf("\"lines\": \"%i-%i\"", $lines[2, $self.first_line], $lines[2, $self.last_line-1])
 }

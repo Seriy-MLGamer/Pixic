@@ -8,22 +8,33 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Variable.pixi
+ * @file program/translator/parser/tokens/expressions/Variable.pixi
  *
  * Dependencies.
+ * program/translator/parser/tokens/expressions/Expression_traits.pixi
  * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
  * program/translator/parser/tokens/show.pixi
  */
 
 fn Variable_new($text, $positions)
 {
-	$self=new()
+	$self=Expression_traits_new(1, 0)
 	$self.f=Variable
 
 	promise_position($positions)
 	$self.text=$text.data
-	$self.name_start=Stack_get($positions).index
-	if is_symbolic(get_char($text, $positions))
+	$name_start=Stack_get($positions).index
+	$self.name_start=$name_start
+	$char=get_char($text, $positions)
+	if $char=='#'||($char>='0'&&$char<='9')
+	{
+		reject_position($positions)
+
+		remove($self)
+		ret(-1)
+	}
+	if is_symbolic($char)
 	{
 		promise_position($positions)
 		while 1
@@ -36,20 +47,30 @@ fn Variable_new($text, $positions)
 			else
 			{
 				reject_position($positions)
-				$self.name_length=Stack_get($positions).index-$self.name_start
+				$name_length=Stack_get($positions).index-$name_start
+				$test=new($name_length, 1, INT8)
+				copy($test, $text.data, 0, $name_start)
+				$keywords_count=get_size(KEYWORDS)
+				for ($a=0; $a!=$keywords_count; $a+1)
+				{
+					if !strcmp($test, KEYWORDS[$a])
+					{
+						reject_position($positions)
+						syntax_error_reserved_identifier($text, $positions)
+					}
+				}
+				remove($test)
+				$self.name_length=$name_length
 				resolve_position($positions)
 
 				ret($self)
 			}
 		}
 	}
-	else
-	{
-		reject_position($positions)
+	reject_position($positions)
 
-		remove($self)
-		ret(-1)
-	}
+	remove($self)
+	ret(-2)
 }
 Variable=new()
 Variable.remove=Variable_remove

@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file Container_node.pixi
+ * @file core/structures/linked list/Container_node.pixi
  *
  * Dependencies.
  * core/structures/linked list/List_node.pixi

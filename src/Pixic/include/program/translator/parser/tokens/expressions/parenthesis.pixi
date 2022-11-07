@@ -8,9 +8,11 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file parenthesis.pixi
+ * @file program/translator/parser/tokens/expressions/parenthesis.pixi
  *
  * Dependencies.
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
  * program/translator/parser/tokens/expressions/expression.pixi
  */
 
@@ -25,12 +27,12 @@ fn parse_parenthesis($text, $positions)
 	if skip_spaces($text, $positions)
 	{
 		Stack_get($positions).line-1
-		syntax_error_expected_operand($text, $positions)
+		syntax_error_expected_expression($text, $positions)
 	}
 	$expression=parse_expression($text, $positions)
 	if $expression<0
 	{
-		syntax_error_expected_operand($text, $positions)
+		syntax_error_expected_expression($text, $positions)
 	}
 	if skip_spaces($text, $positions)
 	{
