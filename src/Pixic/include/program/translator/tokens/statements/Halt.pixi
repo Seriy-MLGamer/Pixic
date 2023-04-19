@@ -1,0 +1,80 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either vers>
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.>
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/Halt.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/translator/Text.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Halt_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=Halt
+
+	Text_promise_position($text)
+	$test=new(get_size(KEYWORD_HALT), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, $text[0, $text.top])
+	if !strstr($test, KEYWORD_HALT)
+	{
+		$text[0, $text.top]+get_size($test)
+	}
+	else{if !strstr($test, KEYWORD_STOP)
+	{
+		$text[0, $text.top]+get_size($test)
+	}
+	else
+	{
+		remove($test)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}}
+	remove($test)
+	Text_promise_position($text)
+	$char=Text_get($text)
+	if is_symbolic($char)
+	{
+		Text_reject_position($text)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-2)
+	}
+	Text_reject_position($text)
+	Text_resolve_position($text)
+
+	ret($self)
+}
+Halt=new(1, 1, INT8)
+Halt.generate=Halt_generate
+Halt.show=Halt_show
+Halt.remove=Halt_remove
+fn Halt_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("halt statement generation")
+}
+fn Halt_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Halt\"") next_property()
+		indent() Statement_show($self)
+	end_object()
+}
+fn Halt_remove($self)
+{
+	remove($self)
+}

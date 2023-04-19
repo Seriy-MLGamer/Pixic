@@ -17,4 +17,5 @@ Options.
   -o <executable>  --output=<executable>  Name of the output executable.
   -f <folder>      --folder=<folder>      Folder for translated files. Default is \"%s<input file name>\" for normal mode and \"./<input file name>\" for \"--translate-only\" mode.
   -t               --translate-only       Translate only (executable won't be generated).
+  -s               --show-only            [Debug] Only show abstract syntax tree (intermediate C file won't be generated).
 "

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,89 +11,90 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/info/syntax errors.pixi
  *
  * Dependencies.
- * configuration/language.pixi
+ * configuration.pixi
  */
 
-fn syntax_error($text, $positions)
+fn syntax_error($text)
 {
-	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_syntax_error, $text.file_name, $text.lines[2, Stack_get($positions).line])
+	fclose(C_file)
+	fprintf(STDERR, text_error)
+	fprintf(STDERR, text_syntax_error, $text.file_name, $text.lines[2, $text[1, $text.top]])
 }
-fn syntax_error_expected($text, $positions, $char)
+fn syntax_error_expected($text, $char)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected, $char)
 	exit(64)
 }
-fn syntax_error_expected_statement($text, $positions)
+fn syntax_error_expected_statement($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_statement)
 	exit(65)
 }
-fn syntax_error_expected_function_identifier($text, $positions)
+fn syntax_error_expected_function_name($text)
 {
-	syntax_error($text, $positions)
-	fprintf(STDERR, text_syntax_error_expected_function_identifier)
+	syntax_error($text)
+	fprintf(STDERR, text_syntax_error_expected_function_name)
 	exit(66)
 }
-fn syntax_error_expected_argument($text, $positions)
+fn syntax_error_expected_argument($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_argument)
 	exit(67)
 }
-fn syntax_error_expected_operator($text, $positions)
+fn syntax_error_expected_operator($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_operator)
 	exit(68)
 }
-fn syntax_error_expected_expression($text, $positions)
+fn syntax_error_expected_expression($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_expression)
 	exit(69)
 }
-fn syntax_error_expected_operand($text, $positions)
+fn syntax_error_expected_operand($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_operand)
 	exit(70)
 }
-fn syntax_error_expected_x($text, $positions)
+fn syntax_error_expected_x($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_x)
 	exit(71)
 }
-fn syntax_error_expected_y($text, $positions)
+fn syntax_error_expected_y($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_y)
 	exit(72)
 }
-fn syntax_error_expected_property($text, $positions)
+fn syntax_error_expected_property($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_expected_property)
 	exit(73)
 }
-fn syntax_error_invalid_statement($text, $positions)
+fn syntax_error_invalid_statement($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_invalid_statement)
 	exit(74)
 }
-fn syntax_error_invalid_number($text, $positions)
+fn syntax_error_invalid_number($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_invalid_number)
 	exit(75)
 }
-fn syntax_error_reserved_identifier($text, $positions)
+fn syntax_error_reserved_identifier($text)
 {
-	syntax_error($text, $positions)
+	syntax_error($text)
 	fprintf(STDERR, text_syntax_error_reserved_identifier)
 	exit(76)
 }

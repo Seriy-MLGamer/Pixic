@@ -1,0 +1,111 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/Break.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/translator/Text.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Break_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=Break
+
+	Text_promise_position($text)
+	$test=new(get_size(KEYWORD_BREAKALL), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, $text[0, $text.top])
+	if !strstr($test, KEYWORD_BREAK)
+	{
+		$self.stages=1
+		$text[0, $text.top]+get_size(KEYWORD_BREAK)
+	}
+	else{if !strstr($test, KEYWORD_BREAK2)
+	{
+		$self.stages=2
+		$text[0, $text.top]+get_size(KEYWORD_BREAK2)
+	}
+	else{if !strstr($test, KEYWORD_BREAK3)
+	{
+		$self.stages=3
+		$text[0, $text.top]+get_size(KEYWORD_BREAK3)
+	}
+	else{if !strstr($test, KEYWORD_BREAK4)
+	{
+		$self.stages=4
+		$text[0, $text.top]+get_size(KEYWORD_BREAK4)
+	}
+	else{if !strstr($test, KEYWORD_BREAKALL)
+	{
+		$self.stages=0
+		$text[0, $text.top]+get_size($test)
+	}
+	else
+	{
+		remove($test)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}}}}}
+	remove($test)
+	Text_promise_position($text)
+	$char=Text_get($text)
+	if is_symbolic($char)
+	{
+		Text_reject_position($text)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-2)
+	}
+	Text_reject_position($text)
+	Text_resolve_position($text)
+
+	ret($self)
+}
+Break=new(1, 1, INT8)
+Break.generate=Break_generate
+Break.show=Break_show
+Break.remove=Break_remove
+fn Break_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("break statement generation")
+}
+fn Break_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Break\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent() logf("\"value\": \"break")
+			$stages=$self.stages
+			if $stages==1
+			{
+				logf("\"")
+			}
+			else{if $stages>=2
+			{
+				logf("%i\"", $stages)
+			}
+			else
+			{
+				logf("all\"")
+			}}
+	end_object()
+}
+fn Break_remove($self)
+{
+	remove($self)
+}

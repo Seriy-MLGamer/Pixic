@@ -1,0 +1,57 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/parser/tokens/operators.pixi
+ */
+
+OPERATOR_MOD=   0
+OPERATOR_DIV=   1
+OPERATOR_IDIV=  2
+OPERATOR_MUL=   3
+OPERATOR_NOT=   4
+OPERATOR_BNOT=  5
+OPERATOR_ADD=   6
+OPERATOR_NEG=   7
+OPERATOR_SUB=   8
+OPERATOR_RSH=   9
+OPERATOR_LSH=   10
+OPERATOR_EQ=    11
+OPERATOR_NEQ=   12
+OPERATOR_L=     13
+OPERATOR_G=     14
+OPERATOR_LEQ=   15
+OPERATOR_GEQ=   16
+OPERATOR_BOR=   17
+OPERATOR_XOR=   18
+OPERATOR_BAND=  19
+OPERATOR_OR=    20
+OPERATOR_AND=   21
+OPERATOR_ASSIGN=22
+
+PRIORITY=new(22, 1, INT8)
+PRIORITY[OPERATOR_MOD]= 0
+PRIORITY[OPERATOR_DIV]= 0
+PRIORITY[OPERATOR_IDIV]=0
+PRIORITY[OPERATOR_MUL]= 0
+PRIORITY[OPERATOR_ADD]= 1
+PRIORITY[OPERATOR_SUB]= 1
+PRIORITY[OPERATOR_RSH]= 2
+PRIORITY[OPERATOR_LSH]= 2
+PRIORITY[OPERATOR_EQ]=  3
+PRIORITY[OPERATOR_NEQ]= 3
+PRIORITY[OPERATOR_L]=   3
+PRIORITY[OPERATOR_G]=   3
+PRIORITY[OPERATOR_LEQ]= 3
+PRIORITY[OPERATOR_GEQ]= 3
+PRIORITY[OPERATOR_BOR]= 4
+PRIORITY[OPERATOR_XOR]= 4
+PRIORITY[OPERATOR_BAND]=4
+PRIORITY[OPERATOR_OR]=  5
+PRIORITY[OPERATOR_AND]= 5

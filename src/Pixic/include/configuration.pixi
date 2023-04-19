@@ -1,0 +1,60 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file configuration.pixi
+ *
+ * Include before.
+ * core/encodings/UTF8_file.pixi
+ * core/encodings/CP1251.pixi
+ * Dependencies.
+ * core/encodings/localized console.pixi
+ */
+
+OS_LINUX=  0
+OS_WINDOWS=1
+
+SHELL_BASH=0
+SHELL_CMD= 1
+
+LANGUAGE_ru_RU=0
+LANGUAGE_en_US=1
+
+WORK_PATH=get_real_path("1:/")
+PIXIC_TEMP_PATH=clone(TEMP_PATH)
+strcat(PIXIC_TEMP_PATH, "Pixic/")
+format_path(PIXIC_TEMP_PATH)
+
+if strstr(OS_NAME, "linux")>=0
+{
+	OS=OS_LINUX
+}
+else{if !strstr(OS_NAME, "win")
+{
+	OS=OS_WINDOWS
+}}
+
+SHELL_NAME=argv(2)
+if !strcmp(SHELL_NAME, "bash")
+{
+	SHELL=SHELL_BASH
+}
+else{if !strcmp(SHELL_NAME, "cmd")
+{
+	SHELL=SHELL_CMD
+}}
+
+include "program/locale/ru_RU/locale.pixi"
+if OS==OS_WINDOWS
+{
+	if LANGUAGE==LANGUAGE_ru_RU
+	{
+		system("chcp 1251")
+	}
+}

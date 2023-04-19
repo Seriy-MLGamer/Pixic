@@ -1,0 +1,43 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/parser/tokens/expressions/operand.pixi
+ *
+ * Dependencies.
+ * program/translator/parser/parsing functions.pixi
+ * program/translator/parser/parsers groups.pixi
+ */
+
+fn parse_operand($text)
+{
+	$operand=parse_multiple(simple_operands, $text)
+	if $operand<0
+	{
+		ret(-1)
+	}
+	while 1
+	{
+		Text_promise_position($text)
+		if skip_spaces($text)
+		{
+			Text_reject_position($text)
+			ret($operand)
+		}
+		$next_operand=parse_multiple(operands_postfixes, $text)
+		if $next_operand<0
+		{
+			Text_reject_position($text)
+			ret($operand)
+		}
+		Text_resolve_position($text)
+		$next_operand.ID=$operand
+		$operand=$next_operand
+	}
+}

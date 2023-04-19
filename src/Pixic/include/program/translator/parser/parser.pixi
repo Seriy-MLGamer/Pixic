@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,28 +11,26 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/translator/parser/parser.pixi
  *
  * Dependencies.
- * program/translator/parser/Position.pixi
  * program/translator/parser/parsers groups.pixi
  */
 
 fn parse($text)
 {
-	$positions=Stack_new(INT)
-	Stack_push($positions, Position_new($text.lines[0, 0], 0))
 	$statements=Twoended_list_new()
 	while 1
 	{
-		if skip_spaces($text, $positions)
+		if skip_spaces($text)
 		{
-			logf("Stack size: %i\n", $positions.pointer+1)
-			reject_position($positions)
-			remove($positions)
+			if $text.top
+			{
+				developer_error_nonempty_stack("parsing")
+			}
 			ret($statements)
 		}
-		$statement=parse_multiple(statements, $text, $positions)
+		$statement=parse_multiple(statements, $text)
 		if $statement<0
 		{
-			syntax_error_invalid_statement($text, $positions)
+			syntax_error_invalid_statement($text)
 		}
 		Twoended_node_set($statement, $statements)
 	}

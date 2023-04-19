@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,18 +9,27 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/info/developer errors.pixi
- *
- * Dependencies.
- * program/console/system/make arguments.pixi
  */
 
 fn developer_error_localization_UTF8()
 {
-	fprintf(STDERR, "%s: whoopsies: UTF-8 error occured by localization developer. The Pixic won't start.\n", arguments[0])
+	fprintf(STDERR, "pixic: whoopsies: an UTF-8 error occured by the localization developer. The Pixic won't start.\n")
 	exit(-1)
 }
 fn developer_error_localization_CP1251()
 {
-	fprintf(STDERR, "%s: whoopsies: localization developer put a character out of range of 1251 codepage. The Pixic won't start.\n", arguments[0])
+	fprintf(STDERR, "pixic: whoopsies: the localization developer put a character out of the range of the 1251 codepage. The Pixic won't start.\n")
 	exit(-2)
+}
+fn developer_error_nonempty_stack($process)
+{
+	fprintf(STDERR, "pixic: whoopsies: the stack isn't empty after the processing. That means that %s is done wrong.
+Yeah, we could continue, but I'll close the Pixic.
+", $process)
+	exit(-3)
+}
+fn developer_error_not_implemented($feature)
+{
+	fprintf(STDERR, "pixic: whoopsies: %s is not implemented by the developer. The Pixic needs to EXTREMELY crash. That'z crazy!\n", $feature)
+	exit(-128)
 }

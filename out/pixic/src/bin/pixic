@@ -1,6 +1,6 @@
-#!/usr/bin/bash
+#!/bin/bash
 
-#Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+#(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 #This file is part of Pixic.
 #Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,11 +11,7 @@ if [ "$OS" = Windows_NT ]
 then command=pixilang_console
 else command=pixilang
 fi
-command+=" \"$(dirname "$(dirname "$0")")/share/pixic/boot.pixicode\" bash \"$(pwd)/\""
-if [ "$TEMP" ]
-then command+=" \"$TEMP\""
-else command+=" -"
-fi
+command+=" \"$(dirname "$0")/../share/pixic/boot.pixicode\" bash"
 for ((a=0; a<=$#; a++))
 do
 	argument=${*:$a:1}

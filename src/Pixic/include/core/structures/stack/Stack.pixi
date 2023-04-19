@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -16,50 +16,50 @@ fn Stack_new($type)
 	$self=new(1, 1, $type)
 
 	$self[0]=0
-	$self.pointer=-1
+	$self.top=-1
 
 	ret($self)
 }
 fn Stack_push($self, $value)
 {
-	$pointer=$self.pointer+1
-	if $pointer==get_size($self)
+	$self.top+1
+	$top=$self.top
+	if $top!=get_size($self)
 	{
-		resize($self, $pointer+1)
+		$self[$top+1]=0
 	}
 	else
 	{
-		$self[$pointer+1]=0
+		resize($self, $top+1)
 	}
-	$self.pointer=$pointer
-	$self[$pointer]=$value
+	$self[$top]=$value
 }
 fn Stack_get($self, $offset)
 {
 	if $0<2
 	{
-		ret($self[$self.pointer])
+		ret($self[$self.top])
 	}
 	else
 	{
-		ret($self[$self.pointer-$offset])
+		ret($self[$self.top-$offset])
 	}
 }
 fn Stack_pop($self)
 {
-	$pointer=$self.pointer-1
-	if $pointer!=-2
+	$top=$self.top-1
+	if $top!=-2
 	{
-		$self.pointer=$pointer
-		$pointer+1
-		$result=$self[$pointer]
-		$self[$pointer]=0
+		$self.top=$top
+		$top+1
+		$result=$self[$top]
+		$self[$top]=0
 		ret($result)
 	}
 	ret(0)
 }
 fn Stack_clean($self)
 {
-	$self.pointer=-1
+	$self.top=-1
 	$self[0]=0
 }

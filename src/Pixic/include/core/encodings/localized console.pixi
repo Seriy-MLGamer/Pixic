@@ -1,0 +1,59 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file core/encodings/localized console.pixi
+ *
+ * Dependencies.
+ * configuration.pixi
+ * core/encodings/UTF8_file.pixi
+ * program/info/developer errors.pixi
+ * core/encodings/CP1251.pixi
+ */
+
+fn localize($UTF8_text)
+{
+	if OS==OS_LINUX
+	{
+		ret($UTF8_text)
+	}
+	else{if OS==OS_WINDOWS
+	{
+		if LANGUAGE==LANGUAGE_ru_RU
+		{
+			$file=UTF8_file_new2($UTF8_text, "rb")
+			for ($a=0; 1; $a+1)
+			{
+				$char=UTF8_file_get($file)
+				if $char==EOF
+				{
+					UTF8_file_remove($file)
+					resize($UTF8_text, $a)
+					ret($UTF8_text)
+				}
+				if $char==UTF8_ERROR
+				{
+					UTF8_file_remove($file)
+					developer_error_localization_UTF8()
+				}
+				$char=Unicode_to_CP1251($char)
+				if $char==EOF
+				{
+					UTF8_file_remove($file)
+					developer_error_localization_CP1251()
+				}
+				$UTF8_text[$a]=$char
+			}
+		}
+		else{if LANGUAGE==LANGUAGE_en_US
+		{
+			ret($UTF8_text)
+		}}
+	}}
+}

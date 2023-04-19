@@ -1,0 +1,72 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/Continue.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/translator/Text.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Continue_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=Continue
+
+	Text_promise_position($text)
+	$test=new(get_size(KEYWORD_CONTINUE), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, $text[0, $text.top])
+	if strstr($test, KEYWORD_CONTINUE)
+	{
+		remove($test)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	$text[0, $text.top]+get_size($test)
+	remove($test)
+	Text_promise_position($text)
+	if is_symbolic(Text_get($text))
+	{
+		Text_reject_position($text)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-2)
+	}
+	Text_reject_position($text)
+	Text_resolve_position($text)
+
+	ret($self)
+}
+Continue=new(1, 1, INT8)
+Continue.generate=Continue_generate
+Continue.show=Continue_show
+Continue.remove=Continue_remove
+fn Continue_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("continue statement generation")
+}
+fn Continue_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Continue\"") next_property()
+		indent() Statement_show($self)
+	end_object()
+}
+fn Continue_remove($self)
+{
+	remove($self)
+}

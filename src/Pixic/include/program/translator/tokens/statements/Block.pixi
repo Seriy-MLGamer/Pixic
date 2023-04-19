@@ -1,0 +1,87 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/Block.pixi
+ *
+ * Dependencies.
+ * core/structures/linked list/Twoended_list.pixi
+ * program/translator/parser/parsers groups.pixi
+ */
+
+fn Block_new($text)
+{
+	$self=Twoended_list_new()
+
+	Text_promise_position($text)
+	if Text_get($text)!='{'
+	{
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	while 1
+	{
+		if skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected($text, '}')
+		}
+		$statement=parse_multiple(statements, $text)
+		if $statement<0
+		{
+			Text_promise_position($text)
+			if Text_get($text)!='}'
+			{
+				Text_reject_position($text)
+				syntax_error_invalid_statement($text)
+			}
+			Text_resolve_position($text)
+			Text_resolve_position($text)
+
+			ret($self)
+		}
+		Twoended_node_set($statement, $self)
+	}
+}
+fn Block_show($self)
+{
+	$a=$self.first
+	if $a<0
+	{
+		logf("null")
+	}
+	else
+	{
+		begin_array()
+			while 1
+			{
+				indent() $a.f.show($a)
+				if $a.next<0
+				{
+					break
+				}
+					next_property()
+				$a=$a.next
+			}
+		end_array()
+	}
+}
+fn Block_remove($self)
+{
+	$a=$self.first while $a>=0
+	{
+		$next=$a.next
+		$a.f.remove($a)
+		$a=$next
+	}
+
+	remove($self)
+}

@@ -1,0 +1,39 @@
+/*
+(C) 2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+include "../../../include/core/strings/file name.pixi"
+include "../../../include/core/encodings/UTF8_file.pixi"
+include "../../../include/program/console/system/make arguments.pixi"
+include "../../../include/core/structures/jump table/Jump_table.pixi"
+include "../../../include/core/structures/linked list/Linked_list.pixi"
+include "../../../include/core/structures/jump table/system/Jump.pixi"
+include "../../../include/core/structures/linked list/List_node.pixi"
+include "../../../include/core/encodings/CP1251.pixi"
+include "../../../include/configuration.pixi"
+include "../../../include/core/encodings/localized console.pixi"
+include "../../../include/program/info/developer errors.pixi"
+
+input=new(256, 1, INT8)
+logf("Enter unformatted path: ")
+fgets(input, 256, STDIN)
+logf("fn format_path($path)\n")
+formatted=clone(input)
+format_path(formatted)
+logf("Formatted path: %s\n", formatted)
+logf("fn get_full_file_name($path)\n")
+logf("Full file name: %s\n", get_full_file_name(input))
+logf("fn get_file_name($path)\n")
+logf("File name: %s\n", get_file_name(input))
+logf("fn get_file_extension($path)\n")
+logf("File extension: %s\n", get_file_extension(input))
+logf("fn get_real_path2($path)\n")
+real_path=get_real_path2(input)
+logf("Real path: %s\n", real_path)
+format_path(real_path)
+logf("Formatted real path: %s\n", real_path)

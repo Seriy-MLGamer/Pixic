@@ -1,0 +1,153 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/expressions/Function.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/expressions/Postfix.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/expressions/expression.pixi
+ */
+
+fn Function_new($text)
+{
+	$self=Postfix_new(0, 1)
+	$self.f=Function
+
+	Text_promise_position($text)
+	if Text_get($text)!='('
+	{
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, ')')
+	}
+	$arguments=Stack_new(INT)
+	$argument=parse_expression($text)
+	if $argument<0
+	{
+		Text_promise_position($text)
+		if Text_get($text)!=')'
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ')')
+		}
+		Text_resolve_position($text)
+		$self.arguments=$arguments
+		Text_resolve_position($text)
+
+		ret($self)
+	}
+	while 1
+	{
+		if skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected($text, ')')
+		}
+		Stack_push($arguments, $argument)
+		Text_promise_position($text)
+		$argument=Text_get($text)
+		if $argument==')'
+		{
+			Text_resolve_position($text)
+			$self.arguments=$arguments
+			Text_resolve_position($text)
+
+			ret($self)
+		}
+		if $argument==','
+		{
+			Text_resolve_position($text)
+			if skip_spaces($text)
+			{
+				$text[1, $text.top]-1
+				syntax_error_expected_expression($text)
+			}
+			$argument=parse_expression($text)
+			if $argument<0
+			{
+				syntax_error_expected_expression($text)
+			}
+		}
+		else
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ')')
+		}
+	}
+}
+Function=new(1, 1, INT8)
+Function.generate=Function_generate
+Function.generate_call=Function_generate_call
+Function.show=Function_show
+Function.remove=Function_remove
+fn Function_generate($self)
+{
+	$self.ID.f.generate_call($self.ID, $self)
+}
+fn Function_generate_call($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("function call by address")
+}
+fn Function_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Function\"") next_property()
+		indent() logf("\"ID\": ") $self.ID.f.show($self.ID) next_property()
+		indent() logf("\"arguments\": ")
+			$arguments=$self.arguments
+			$arguments_count=$arguments.top
+			if $arguments_count+1
+			{
+				begin_array()
+					$a=0 while 1
+					{
+						$argument=$arguments[$a]
+						indent() $argument.f.show($argument)
+						if $a!=$arguments_count
+						{
+								next_property()
+							$a+1
+						}
+						else
+						{
+							break
+						}
+					}
+				end_array()
+			}
+			else
+			{
+				logf("null")
+			}
+	end_object()
+}
+fn Function_remove($self)
+{
+	$arguments=$self.arguments
+	while $arguments.top>=0
+	{
+		$argument=Stack_pop($arguments)
+		$argument.f.remove($argument)
+	}
+	remove($arguments)
+
+	Postfix_remove($self)
+}

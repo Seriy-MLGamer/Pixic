@@ -1,0 +1,169 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/expressions/Variable.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/expressions/Expression_traits.pixi
+ * program/translator/Text.pixi
+ * program/info/syntax errors.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Variable_new($text)
+{
+	$self=Expression_traits_new(1, 0)
+	$self.f=Variable
+
+	Text_promise_position($text)
+	$self.text=$text.data
+	$name_start=$text[0, $text.top]
+	$self.name_start=$name_start
+	$char=Text_get($text)
+	if $char=='#'||($char>='0'&&$char<='9')
+	{
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	if is_symbolic($char)
+	{
+		Text_promise_position($text)
+		while 1
+		{
+			if is_symbolic(Text_get($text))
+			{
+				Text_resolve_position($text)
+				Text_promise_position($text)
+			}
+			else
+			{
+				Text_reject_position($text)
+				if $text.data[$name_start]!='$'
+				{
+					$name_length=$text[0, $text.top]-$name_start
+					$test=new($name_length, 1, INT8)
+					copy($test, $text.data, 0, $name_start)
+					$keywords_count=get_size(KEYWORDS)
+					for ($a=0; $a!=$keywords_count; $a+1)
+					{
+						if !strcmp($test, KEYWORDS[$a])
+						{
+							Text_reject_position($text)
+							syntax_error_reserved_identifier($text)
+						}
+					}
+					remove($test)
+					$self.name_length=$name_length
+				}
+				else
+				{
+					$self.name_length=$text[0, $text.top]-$name_start
+				}
+				Text_resolve_position($text)
+
+				ret($self)
+			}
+		}
+	}
+	Text_reject_position($text)
+
+	remove($self)
+	ret(-2)
+}
+Variable=new(1, 1, INT8)
+Variable.generate=Variable_generate
+Variable.generate_call=Variable_generate_call
+Variable.show=Variable_show
+Variable.remove=Variable_remove
+fn Variable_generate($self)
+{
+	$text=$self.text
+	$name_start=$self.name_start
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	if $text[$name_start]!='$'
+	{
+		$name=new($self.name_length, 1, INT8)
+		copy($name, $text, 0, $name_start)
+		set_prop(variables, $name, 1)
+		fputs("pv", $statements_record)
+	}
+	else
+	{
+		$name=new($self.name_length-1, 1, INT8)
+		copy($name, $text, 0, $name_start+1)
+		set_prop($function_text.locals, $name, 1)
+		fputs("pl", $statements_record)
+	}
+	fputs($name, $statements_record)
+	remove($name)
+}
+fn Variable_generate_call($self, $function)
+{
+	$text=$self.text
+	$name_start=$self.name_start
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	if $text[$name_start]!='$'
+	{
+		$name=new($self.name_length, 1, INT8)
+		copy($name, $text, 0, $name_start)
+		fprintf($statements_record, "pf%s(", $name)
+		remove($name)
+	}
+	else
+	{
+		generator_deinit()
+		developer_error_not_implemented("function call by address")
+	}
+	$arguments=$function.arguments
+	$arguments_count=$arguments.top+1
+	if $arguments_count
+	{
+		fprintf($statements_record, "%u, ", $arguments_count)
+		$a=0 while 1
+		{
+			$arguments[$a].f.generate($arguments[$a])
+			if $a!=$arguments_count-1
+			{
+				fputs(", ", $statements_record)
+				$a+1
+			}
+			else
+			{
+				break
+			}
+		}
+	}
+	else
+	{
+		fputc('0', $statements_record)
+	}
+	fputc(')', $statements_record)
+}
+fn Variable_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Variable\"") next_property()
+		indent()
+			$name=new($self.name_length, 1, INT8)
+			copy($name, $self.text, 0, $self.name_start)
+			logf("\"name\": \"%s\"", $name)
+			remove($name)
+	end_object()
+}
+fn Variable_remove($self)
+{
+	remove($self)
+}

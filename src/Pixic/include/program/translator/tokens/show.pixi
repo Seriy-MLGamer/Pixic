@@ -1,0 +1,77 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/show.pixi
+ *
+ * Include before.
+ * program/translator/tokens/operators.pixi
+ * program/translator/tokens/keywords.pixi
+ */
+
+indents=0
+
+operator_strings=new(23, 1, INT)
+operator_strings[OPERATOR_MOD]=   "%"
+operator_strings[OPERATOR_DIV]=   "/"
+operator_strings[OPERATOR_IDIV]=  KEYWORD_DIV
+operator_strings[OPERATOR_MUL]=   "*"
+operator_strings[OPERATOR_NOT]=   "!"
+operator_strings[OPERATOR_BNOT]=  "~"
+operator_strings[OPERATOR_ADD]=   "+"
+operator_strings[OPERATOR_NEG]=   "-"
+operator_strings[OPERATOR_SUB]=   operator_strings[OPERATOR_NEG]
+operator_strings[OPERATOR_RSH]=   ">>"
+operator_strings[OPERATOR_LSH]=   "<<"
+operator_strings[OPERATOR_EQ]=    "=="
+operator_strings[OPERATOR_NEQ]=   "!="
+operator_strings[OPERATOR_L]=     "<"
+operator_strings[OPERATOR_G]=     ">"
+operator_strings[OPERATOR_LEQ]=   "<="
+operator_strings[OPERATOR_GEQ]=   ">="
+operator_strings[OPERATOR_BOR]=   "|"
+operator_strings[OPERATOR_XOR]=   "^"
+operator_strings[OPERATOR_BAND]=  "&"
+operator_strings[OPERATOR_OR]=    "||"
+operator_strings[OPERATOR_AND]=   "&&"
+operator_strings[OPERATOR_ASSIGN]="="
+
+fn indent()
+{
+	for ($a=0; $a!=indents; $a+1)
+	{
+		logf("  ")
+	}
+}
+fn begin_object()
+{
+	logf("{\n")
+	indents+1
+}
+fn end_object()
+{
+	logf("\n")
+	indents-1
+	indent() logf("}")
+}
+fn begin_array()
+{
+	logf("[\n")
+	indents+1
+}
+fn end_array()
+{
+	logf("\n")
+	indents-1
+	indent() logf("]")
+}
+fn next_property()
+{
+	logf(",\n")
+}

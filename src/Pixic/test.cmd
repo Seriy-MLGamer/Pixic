@@ -1,6 +1,6 @@
 @echo off
 
-rem Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+rem (C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 rem This file is part of Pixic.
 rem Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,4 +9,4 @@ rem You should have received a copy of the GNU General Public License along with
 
 pixilang -c boot.pixi
 move boot.pixicode ../../out/pixic/src/share/pixic/boot.pixicode
-../../out/pixic/src/bin/pixic test.pixi
+../../out/pixic/src/bin/pixic test.pixi -f out

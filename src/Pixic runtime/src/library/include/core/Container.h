@@ -50,8 +50,8 @@ struct Container
 		double *float64;
 		#endif
 	};
-	Int	width, height;
-	unsigned long flags;
+	Int width, height;
+	uint32_t flags;
 	Color key_color;
 	Container_ID alpha;
 };

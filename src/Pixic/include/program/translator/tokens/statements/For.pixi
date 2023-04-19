@@ -1,0 +1,260 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/For.pixi
+ *
+ * Include before.
+ * program/translator/parser/parsing functions.pixi
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/tokens/expressions/expression.pixi
+ * program/translator/tokens/statements/Block.pixi
+ */
+
+fn For_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=For
+
+	Text_promise_position($text)
+	$test=new(get_size(KEYWORD_FOR), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, $text[0, $text.top])
+	if strstr($test, KEYWORD_FOR)
+	{
+		remove($test)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	$text[0, $text.top]+get_size($test)
+	remove($test)
+	Text_promise_position($text)
+	if is_symbolic(Text_get($text))
+	{
+		Text_reject_position($text)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-4)
+	}
+	Text_reject_position($text)
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, '(')
+	}
+	Text_promise_position($text)
+	if Text_get($text)!='('
+	{
+		Text_reject_position($text)
+		syntax_error_expected($text, '(')
+	}
+	Text_resolve_position($text)
+	if For_skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_statement($text)
+	}
+	$token=parse_multiple(statements, $text)
+	if $token<0
+	{
+		Text_promise_position($text)
+		if Text_get($text)!=';'
+		{
+			Text_reject_position($text)
+			syntax_error_expected_statement($text)
+		}
+		Text_resolve_position($text)
+		$self.initialization=-1
+	}
+	else
+	{
+		$self.initialization=$token
+		if For_skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected($text, ';')
+		}
+		Text_promise_position($text)
+		if Text_get($text)!=';'
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ';')
+		}
+		Text_resolve_position($text)
+	}
+	if For_skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_expression($text)
+	}
+	$token=parse_expression($text)
+	if $token<0
+	{
+		syntax_error_expected_expression($text)
+	}
+	else
+	{
+		$self.condition=$token
+		if For_skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected($text, ';')
+		}
+		Text_promise_position($text)
+		if Text_get($text)!=';'
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ';')
+		}
+		Text_resolve_position($text)
+	}
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_statement($text)
+	}
+	$token=parse_multiple(statements, $text)
+	if $token<0
+	{
+		Text_promise_position($text)
+		if Text_get($text)!=')'
+		{
+			Text_reject_position($text)
+			syntax_error_expected_statement($text)
+		}
+		Text_resolve_position($text)
+		$self.post_statement=-1
+	}
+	else
+	{
+		$self.post_statement=$token
+		if skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected($text, ')')
+		}
+		Text_promise_position($text)
+		if Text_get($text)!=')'
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ')')
+		}
+		Text_resolve_position($text)
+	}
+	$self.last_line=$text[1, $text.top]+1
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, '{')
+	}
+	$token=Block_new($text)
+	if $token<0
+	{
+		syntax_error_expected($text, '{')
+	}
+	$self.body=$token
+	Text_resolve_position($text)
+
+	ret($self)
+}
+For=new(1, 1, INT8)
+For.generate=For_generate
+For.show=For_show
+For.remove=For_remove
+fn For_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("for loop generation")
+}
+fn For_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"For\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent() logf("\"initialization\": ")
+			$token=$self.initialization
+			if $token<0
+			{
+				logf("null")
+			}
+			else
+			{
+				$token.f.show($token)
+			}
+			next_property()
+		indent() logf("\"condition\": ") $self.condition.f.show($self.condition) next_property()
+		indent() logf("\"post-statement\": ")
+			$token=$self.post_statement
+			if $token<0
+			{
+				logf("null")
+			}
+			else
+			{
+				$token.f.show($token)
+			}
+			next_property()
+		indent() logf("\"body\": ") Block_show($self.body)
+	end_object()
+}
+fn For_skip_spaces($text)
+{
+	$lines_count=get_ysize($text.lines)
+	$state=0
+	while 1
+	{
+		if $text[1, $text.top]==$lines_count
+		{
+			ret(1)
+		}
+		Text_promise_position($text)
+		$state=For_skip_spaces_jump0[$state](Text_get($text), $text)
+		if $state<0
+		{
+			ret(0)
+		}
+	}
+}
+For_skip_spaces_jump0=clone(skip_spaces_jump0)
+For_skip_spaces_jump0[0]=
+{
+	if $1=='/'
+	{
+		ret(1)
+	}
+	if is_space($1)&&$1!=';'
+	{
+		Text_resolve_position($2)
+		ret(0)
+	}
+	Text_reject_position($2)
+	ret(-1)
+}
+fn For_remove($self)
+{
+	$token=$self.initialization
+	if $token>=0
+	{
+		$token.f.remove($token)
+	}
+	$self.condition.f.remove($self.condition)
+	$token=$self.post_statement
+	if $token>=0
+	{
+		$token.f.remove($token)
+	}
+	Block_remove($self.body)
+
+	remove($self)
+}

@@ -1,0 +1,215 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/generator/generator.pixi
+ *
+ * Include before.
+ * program/console/console parser.pixi
+ * program/translator/parser/parsers groups.pixi
+ * Dependencies.
+ * program/translator/parser/parser.pixi
+ */
+
+input_text=Text_new(input)
+if input_text<0
+{
+	error_cant_open_input(input)
+}
+if !show_only
+{
+	if !translate_only
+	{
+		create_directory(PIXIC_TEMP_PATH)
+	}
+	create_directory(folder)
+	C_file_name=clone(folder)
+	strcat(C_file_name, "/main.c")
+	C_file=fopen(C_file_name, "wb")
+	if !C_file
+	{
+		error_cant_open_C(C_file_name)
+	}
+}
+tokens=parse(input_text)
+if tokens.first<0
+{
+	fclose(C_file)
+	error_empty_input(input)
+}
+if show_only
+{
+	begin_array()
+		a=tokens.first while 1
+		{
+			indent() a.f.show(a)
+			if a.next>=0
+			{
+					next_property()
+				a=a.next
+			}
+			else
+			{
+				break
+			}
+		}
+	end_array() logf("\n")
+	halt
+}
+functions=new(1, 1, INT8)
+constants=new(1, 1, INT8)
+strings=new(1, 1, INT8)
+variables=new(1, 1, INT8)
+functions_texts=Stack_new(INT)
+functions[0]=0
+functions_record=fopen_mem(functions, "wb")
+constants[0]=0
+constants.count=0
+constants_record=fopen_mem(constants, "wb")
+strings[0]=0
+strings.count=0
+strings_record=fopen_mem(strings, "wb")
+Stack_push(functions_texts, Function_text_new())
+fputc('\t', constants_record)
+a=tokens.first while a>=0
+{
+	next=a.next
+	a.f.generate(a)
+	a.f.remove(a)
+	a=next
+}
+if functions_texts.top
+{
+	generator_deinit()
+	developer_error_nonempty_stack("generating of C file")
+}
+function_text=Stack_get(functions_texts)
+generator_deinit(1)
+remove(functions_texts)
+remove(tokens)
+fputs("#include <Pixic/Pixic.h>
+
+#include <stdarg.h>
+
+", C_file)
+tokens=get_proplist(functions)
+if tokens>=0
+{
+	tokens_count=get_size(tokens)
+	for (a=0; a!=tokens_count; a+1)
+	{
+		fprintf(C_file, "Var pf%s(uint32_t arguments_count, ...);\n", tokens[a])
+	}
+	remove_proplist(tokens)
+}
+if constants.count
+{
+	fprintf(C_file, "Var pc[%u];\n", constants.count)
+}
+if strings.count
+{
+	fprintf(C_file, "Var ps[%u];\n", strings.count)
+}
+tokens=get_proplist(variables)
+if tokens>=0
+{
+	fputs("Var ", C_file)
+	tokens_count=get_size(tokens)-1
+	a=0 while 1
+	{
+		fputs("pv", C_file)
+		fputs(tokens[a], C_file)
+		if a!=tokens_count
+		{
+			fputs(", ", C_file)
+			a+1
+		}
+		else
+		{
+			break
+		}
+	}
+	fputs(";\n", C_file)
+}
+fputs(functions, C_file)
+fputs("void app()
+{
+", C_file)
+if constants.count
+{
+	fputs(constants, C_file)
+	fputc('\n', C_file)
+}
+fputs(strings, C_file)
+if tokens>=0
+{
+	fputc('\t', C_file)
+	a=0 while 1
+	{
+		fprintf(C_file, "pv%s=Var_new(0);", tokens[a])
+		if a!=tokens_count
+		{
+			fputc(' ', C_file)
+			a+1
+		}
+		else
+		{
+			break
+		}
+	}
+	fputc('\n', C_file)
+	remove_proplist(tokens)
+}
+tokens=get_proplist(function_text.locals)
+if tokens>=0
+{
+	fputs("\tVar ", C_file)
+	tokens_count=get_size(tokens)-1
+	a=0 while 1
+	{
+		fprintf(C_file, "pl%s", tokens[a])
+		if a!=tokens_count
+		{
+			fputs(", ", C_file)
+			a+1
+		}
+		else
+		{
+			break
+		}
+	}
+	fputs(";\n", C_file)
+	remove_proplist(tokens)
+}
+fclose(function_text.statements_record)
+fputs(function_text.statements, C_file)
+fputc('}', C_file)
+Function_text_remove(function_text)
+fclose(C_file)
+
+fn generator_deinit($success)
+{
+	fclose(functions_record)
+	fclose(constants_record)
+	fclose(strings_record)
+	$size=functions_texts.top+1
+	if $0<1
+	{
+		for ($a=0; $a!=$size; $a+1)
+		{
+			Function_text_close(functions_texts[$a])
+			Function_text_remove(functions_texts[$a])
+		}
+		fclose(C_file)
+	}
+	else
+	{
+		Function_text_close(functions_texts[0])
+	}
+}

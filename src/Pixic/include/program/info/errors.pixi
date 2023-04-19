@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,25 +11,37 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/info/errors.pixi
  *
  * Dependencies.
- * configuration/language.pixi
+ * configuration.pixi
  */
 
-fn error_no_input_file()
+fn error_undefined_input()
 {
-	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_error_no_input_file)
+	fprintf(STDERR, text_error)
+	fprintf(STDERR, text_error_undefined_input)
 	fprintf(STDERR, text_error_help)
 	exit(1)
 }
-fn error_wrong_input_file()
+fn error_invalid_input($input)
 {
-	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_error_wrong_input_file, input)
+	fprintf(STDERR, text_error)
+	fprintf(STDERR, text_error_invalid_input, $input)
 	exit(2)
 }
-fn error_input_file_not_found()
+fn error_cant_open_input($input)
 {
-	fprintf(STDERR, text_error, arguments[0])
-	fprintf(STDERR, text_error_input_file_not_found, input)
+	fprintf(STDERR, text_error)
+	fprintf(STDERR, text_error_cant_open_input, $input)
 	exit(3)
+}
+fn error_cant_open_C($C)
+{
+	fprintf(STDERR, text_error)
+	fprintf(STDERR, text_error_cant_open_C, $C)
+	exit(4)
+}
+fn error_empty_input($input)
+{
+	fprintf(STDERR, text_error)
+	fprintf(STDERR, text_error_empty_input, $input)
+	exit(5)
 }

@@ -1,0 +1,24 @@
+/*
+(C) 2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+include "../../../include/core/strings/find.pixi"
+
+a=new(256, 1, INT8)
+b=new(256, 1, INT8)
+logf("fn strcmp_no_case($left, $right)\n")
+logf("Enter first string: ")
+fgets(a, 256, STDIN)
+logf("Enter second string: ")
+fgets(b, 256, STDIN)
+logf("Strings \"%s\" and \"%s\" are ", a, b)
+if strcmp_no_case(a, b)
+{
+	logf("not ")
+}
+logf("equal.\n")

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -8,12 +8,16 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 text_error=
-"%s: error: "
+"pixic: error: "
 text_error_help=
 "Type \"pixic --help\" for more details.\n"
-text_error_no_input_file=
-"no input file.\n"
-text_error_wrong_input_file=
-"wrong input file name: \"%s\".\n"
-text_error_input_file_not_found=
+text_error_undefined_input=
+"input file is not defined.\n"
+text_error_invalid_input=
+"invalid input file name: \"%s\".\n"
+text_error_cant_open_input=
 "input file \"%s\" isn't found or can't be read.\n"
+text_error_cant_open_C=
+"intermediate file in C language can't be created or written.\n"
+text_error_empty_input=
+"input file \"%s\" doesn't contain Pixilang statements. There is nothing to compile.\n"

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 Этот файл - часть Pixic.
 Pixic - свободная программа: вы можете перераспространять её и/или изменять её на условиях Стандартной общественной лицензии GNU в том виде, в каком она была опубликована Фондом свободного программного обеспечения; либо версии 3 лицензии, либо (по вашему выбору) любой более поздней версии.
@@ -8,9 +8,12 @@ Pixic распространяется в надежде, что он будет
 */
 
 text_warning=
-localize("%s: предупреждение: ")
+localize("pixic: предупреждение: ")
 text_warning_unknown_parameter=
 localize("неизвестный параметр: \"%s\".\n")
+text_warning_undefined_parameter=
+localize("нет значения после \"=\" развёрнутого параметра: \"%s\".
+Ладно, пропускаем. :)\n")
 text_warning_double=
 localize("повторное определение ")
 text_warning_double_input=

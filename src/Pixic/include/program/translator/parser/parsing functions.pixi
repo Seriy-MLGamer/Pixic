@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,34 +11,15 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/translator/parser/parsing functions.pixi
  * 
  * Dependencies.
- * core/structures/stack/Stack.pixi
- * program/translator/parser/char filters.pixi
+ * program/translator/Text.pixi
  */
 
-fn get_char($text, $positions)
-{
-	$lines=$text.lines
-	$position=Stack_get($positions)
-	$line=$position.line
-	if $line!=get_ysize($lines)
-	{
-		$index=$position.index
-		if $index!=$lines[1, $line]
-		{
-			$position.index+1
-			ret($text.data[$index]&0xFF)
-		}
-		$position.index=$lines[0, $line+1]
-		$position.line+1
-	}
-	ret(EOF)
-}
-fn parse_multiple($parsers_array, $text, $positions)
+fn parse_multiple($parsers_array, $text)
 {
 	$size=get_size($parsers_array)
 	for ($a=0; $a!=$size; $a+1)
 	{
-		$result=$parsers_array[$a]($text, $positions)
+		$result=$parsers_array[$a]($text)
 		if $result>=0
 		{
 			ret($result)
@@ -46,32 +27,18 @@ fn parse_multiple($parsers_array, $text, $positions)
 	}
 	ret(-1)
 }
-fn promise_position($positions)
-{
-	Stack_push($positions, clone(Stack_get($positions)))
-}
-fn resolve_position($positions)
-{
-	remove($positions[$positions.pointer-1])
-	$positions[$positions.pointer-1]=Stack_get($positions)
-	Stack_pop($positions)
-}
-fn reject_position($positions)
-{
-	remove(Stack_pop($positions))
-}
-fn skip_spaces($text, $positions)
+fn skip_spaces($text)
 {
 	$lines_count=get_ysize($text.lines)
 	$state=0
 	while 1
 	{
-		if Stack_get($positions).line==$lines_count
+		if $text[1, $text.top]==$lines_count
 		{
 			ret(1)
 		}
-		promise_position($positions)
-		$state=skip_spaces_jump0[$state](get_char($text, $positions), $positions)
+		Text_promise_position($text)
+		$state=skip_spaces_jump0[$state](Text_get($text), $text)
 		if $state<0
 		{
 			ret(0)
@@ -87,33 +54,33 @@ skip_spaces_jump0[0]=
 	}
 	if is_space($1)
 	{
-		resolve_position($2)
+		Text_resolve_position($2)
 		ret(0)
 	}
-	reject_position($2)
+	Text_reject_position($2)
 	ret(-1)
 }
 skip_spaces_jump0[1]=
 {
 	if $1=='/'
 	{
-		resolve_position($2)
-		resolve_position($2)
+		Text_resolve_position($2)
+		Text_resolve_position($2)
 		ret(2)
 	}
 	if $1=='*'
 	{
-		resolve_position($2)
-		resolve_position($2)
+		Text_resolve_position($2)
+		Text_resolve_position($2)
 		ret(3)
 	}
-	reject_position($2)
-	reject_position($2)
+	Text_reject_position($2)
+	Text_reject_position($2)
 	ret(-1)
 }
 skip_spaces_jump0[2]=
 {
-	resolve_position($2)
+	Text_resolve_position($2)
 	if $1!=EOF
 	{
 		ret(2)
@@ -122,7 +89,7 @@ skip_spaces_jump0[2]=
 }
 skip_spaces_jump0[3]=
 {
-	resolve_position($2)
+	Text_resolve_position($2)
 	if $1!='*'
 	{
 		ret(3)
@@ -131,7 +98,7 @@ skip_spaces_jump0[3]=
 }
 skip_spaces_jump0[4]=
 {
-	resolve_position($2)
+	Text_resolve_position($2)
 	if $1=='/'
 	{
 		ret(0)

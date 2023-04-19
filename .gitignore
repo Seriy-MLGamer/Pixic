@@ -1,9 +1,6 @@
-#Executables.
 *.exe
 *.out
-#Dynamic libraries.
 *.dll
 *.so
-#Static libraries.
 *.a
 *.o

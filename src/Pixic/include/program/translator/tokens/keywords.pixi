@@ -1,0 +1,45 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/parser/tokens/keywords.pixi
+ */
+
+KEYWORD_BREAK=   "break"
+KEYWORD_BREAK2=  "break2"
+KEYWORD_BREAK3=  "break3"
+KEYWORD_BREAK4=  "break4"
+KEYWORD_BREAKALL="breakall"
+KEYWORD_CONTINUE="continue"
+KEYWORD_FN=      "fn"
+KEYWORD_FOR=     "for"
+KEYWORD_HALT=    "halt"
+KEYWORD_STOP=    "stop"
+KEYWORD_IF=      "if"
+KEYWORD_ELSE=    "else"
+KEYWORD_RET=     "ret"
+KEYWORD_WHILE=   "while"
+KEYWORD_DIV=     "div"
+
+KEYWORDS=new(15, 1, INT)
+KEYWORDS[0]=KEYWORD_BREAK
+KEYWORDS[1]=KEYWORD_BREAK2
+KEYWORDS[2]=KEYWORD_BREAK3
+KEYWORDS[3]=KEYWORD_BREAK4
+KEYWORDS[4]=KEYWORD_BREAKALL
+KEYWORDS[5]=KEYWORD_CONTINUE
+KEYWORDS[6]=KEYWORD_FN
+KEYWORDS[7]=KEYWORD_FOR
+KEYWORDS[8]=KEYWORD_HALT
+KEYWORDS[9]=KEYWORD_STOP
+KEYWORDS[10]=KEYWORD_IF
+KEYWORDS[11]=KEYWORD_ELSE
+KEYWORDS[12]=KEYWORD_RET
+KEYWORDS[13]=KEYWORD_WHILE
+KEYWORDS[14]=KEYWORD_DIV

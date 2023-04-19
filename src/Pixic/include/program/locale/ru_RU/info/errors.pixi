@@ -8,12 +8,16 @@ Pixic распространяется в надежде, что он будет
 */
 
 text_error=
-localize("%s: ошибка: ")
+localize("pixic: ошибка: ")
 text_error_help=
 localize("Введите \"pixic --help\" для дополнительной информации.\n")
-text_error_no_input_file=
+text_error_undefined_input=
 localize("входной файл не задан.\n")
-text_error_wrong_input_file=
-localize("Неправильное имя входного файла: \"%s\".\n")
-text_error_input_file_not_found=
+text_error_invalid_input=
+localize("неправильное имя входного файла: \"%s\".\n")
+text_error_cant_open_input=
 localize("входной файл \"%s\" не найден или не может быть прочитан.\n")
+text_error_cant_open_C=
+localize("промежуточный файл на языке C не может быть создан или записан.\n")
+text_error_empty_input=
+localize("входной файл \"%s\" не содержит инструкций Pixilang. Компилятору нечего компилировать.\n")

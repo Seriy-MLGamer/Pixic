@@ -1,0 +1,6 @@
+ miku=fopen("miku.txt", "wb")
+fputs(
+"Miku
+Hatsune",
+miku)
+fclose(miku)

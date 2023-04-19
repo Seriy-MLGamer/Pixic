@@ -1,0 +1,130 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/expressions/Container.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/expressions/Postfix.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/expressions/expression.pixi
+ */
+
+fn Container_new($text)
+{
+	$self=Postfix_new(1, 0)
+	$self.f=Container
+
+	Text_promise_position($text)
+	if Text_get($text)!='['
+	{
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_x($text)
+	}
+	$token=parse_expression($text)
+	if $token<0
+	{
+		syntax_error_expected_x($text)
+	}
+	$self.x=$token
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, ']')
+	}
+	Text_promise_position($text)
+	$token=Text_get($text)
+	if $token==']'
+	{
+		Text_resolve_position($text)
+		$self.y=-1
+		Text_resolve_position($text)
+
+		ret($self)
+	}
+	if $token==','
+	{
+		if skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected_y($text)
+		}
+		Text_resolve_position($text)
+		$token=parse_expression($text)
+		if $token<0
+		{
+			syntax_error_expected_y($text)
+		}
+		$self.y=$token
+		if skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected($text, ']')
+		}
+		Text_promise_position($text)
+		if Text_get($text)!=']'
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ']')
+		}
+		Text_resolve_position($text)
+		Text_resolve_position($text)
+
+		ret($self)
+	}
+	Text_reject_position($text)
+	syntax_error_expected($text, ']')
+}
+Container=new(1, 1, INT8)
+Container.generate=Container_generate
+Container.generate_call=Container_generate_call
+Container.show=Container_show
+Container.remove=Container_remove
+fn Container_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("container access generation")
+}
+fn Container_generate_call($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("function call by address")
+}
+fn Container_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Container\"") next_property()
+		indent() logf("\"ID\": ") $self.ID.f.show($self.ID) next_property()
+		indent() logf("\"x\": ") $self.x.f.show($self.x)
+		if $self.y>=0
+		{
+				next_property()
+			indent() logf("\"y\": ") $self.y.f.show($self.y)
+		}
+	end_object()
+}
+fn Container_remove($self)
+{
+	$self.x.f.remove($self.x)
+	if $self.y>=0
+	{
+		$self.y.f.remove($self.y)
+	}
+
+	Postfix_remove($self)
+}

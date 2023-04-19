@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,9 +11,9 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/console/system/make arguments.pixi
  */
 
-argument_count=argc()-5
+argument_count=argc()-3
 arguments=new(argument_count, 1, INT)
 for (a=0; a!=argument_count; a+1)
 {
-	arguments[a]=argv(a+5)
+	arguments[a]=argv(a+3)
 }

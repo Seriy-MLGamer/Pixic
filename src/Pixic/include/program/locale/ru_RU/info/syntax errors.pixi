@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 Этот файл - часть Pixic.
 Pixic - свободная программа: вы можете перераспространять её и/или изменять её на условиях Стандартной общественной лицензии GNU в том виде, в каком она была опубликована Фондом свободного программного обеспечения; либо версии 3 лицензии, либо (по вашему выбору) любой более поздней версии.
@@ -13,8 +13,8 @@ text_syntax_error_expected=
 localize("ожидалось \"%c\".\n")
 text_syntax_error_expected_statement=
 localize("в определении цикла for ожидалась инструкция.\n")
-text_syntax_error_expected_function_identifier=
-localize("в определении функции ожидался её идентификатор.\n")
+text_syntax_error_expected_function_name=
+localize("в определении функции ожидалось её имя.\n")
 text_syntax_error_expected_argument=
 localize("в определении функции ожидалась переменная-аргумент.\n")
 text_syntax_error_expected_operator=

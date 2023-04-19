@@ -1,0 +1,60 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/expressions/Binary_operator.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/expressions/Expression_traits.pixi
+ * program/translator/generator/generator.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Binary_operator_new($operator, $left, $right)
+{
+	$self=Expression_traits_new(0, 0)
+	$self.f=Binary_operator
+
+	$self.operator=$operator
+	$self.left=$left
+	$self.right=$right
+
+	ret($self)
+}
+Binary_operator=new(1, 1, INT8)
+Binary_operator.generate=Binary_operator_generate
+Binary_operator.generate_call=Binary_operator_generate_call
+Binary_operator.show=Binary_operator_show
+Binary_operator.remove=Binary_operator_remove
+fn Binary_operator_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("binary operator generation")
+}
+fn Binary_operator_generate_call($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("function call by address")
+}
+fn Binary_operator_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Binary_operator\"") next_property()
+		indent() logf("\"operator\": \"%s\"", operator_strings[$self.operator]) next_property()
+		indent() logf("\"left\": ") $self.left.f.show($self.left) next_property()
+		indent() logf("\"right\": ") $self.right.f.show($self.right)
+	end_object()
+}
+fn Binary_operator_remove($self)
+{
+	$self.left.f.remove($self.left)
+	$self.right.f.remove($self.right)
+
+	remove($self)
+}

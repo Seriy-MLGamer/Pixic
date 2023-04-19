@@ -1,0 +1,301 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/Fn.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/translator/tokens/expressions/Variable.pixi
+ * program/translator/tokens/statements/Block.pixi
+ */
+
+fn Fn_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=Fn
+
+	Text_promise_position($text)
+	if strstr($text.data, $text[0, $text.top], KEYWORD_FN)!=$text[0, $text.top]
+	{
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	$text[0, $text.top]+get_size(KEYWORD_FN)
+	Text_promise_position($text)
+	if is_symbolic(Text_get($text))
+	{
+		Text_reject_position($text)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-2)
+	}
+	Text_reject_position($text)
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_function_name($text)
+	}
+	Text_promise_position($text)
+	$token=Variable_new($text)
+	if $token<0
+	{
+		syntax_error_expected_function_name($text)
+	}
+	if $text.data[$token.name_start]=='$'
+	{
+		Text_reject_position($text)
+		syntax_error_expected_function_name($text)
+	}
+	Text_resolve_position($text)
+	$self.name=$token
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, '(')
+	}
+	Text_promise_position($text)
+	if Text_get($text)!='('
+	{
+		Text_reject_position($text)
+		syntax_error_expected($text, '(')
+	}
+	Text_resolve_position($text)
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, ')')
+	}
+	$arguments=Stack_new(INT)
+	$token=Variable_new($text)
+	if $token<0
+	{
+		Text_promise_position($text)
+		if Text_get($text)!=')'
+		{
+			Text_reject_position($text)
+			syntax_error_expected($text, ')')
+		}
+	}
+	else
+	{
+		while 1
+		{
+			if skip_spaces($text)
+			{
+				$text[1, $text.top]-1
+				syntax_error_expected($text, ')')
+			}
+			Stack_push($arguments, $token)
+			Text_promise_position($text)
+			$token=Text_get($text)
+			if $token==')'
+			{
+				break
+			}
+			if $token==','
+			{
+				Text_resolve_position($text)
+				if skip_spaces($text)
+				{
+					$text[1, $text.top]-1
+					syntax_error_expected_argument($text)
+				}
+				$token=Variable_new($text)
+				if $token<0
+				{
+					syntax_error_expected_argument($text)
+				}
+			}
+			else
+			{
+				Text_reject_position($text)
+				syntax_error_expected($text, ')')
+			}
+		}
+	}
+	Text_resolve_position($text)
+	$self.arguments=$arguments
+	$self.last_line=$text[1, $text.top]+1
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, '{')
+	}
+	$token=Block_new($text)
+	if $token<0
+	{
+		syntax_error_expected($text, '{')
+	}
+	$self.body=$token
+	Text_resolve_position($text)
+
+	ret($self)
+}
+Fn=new(1, 1, INT8)
+Fn.generate=Fn_generate
+Fn.show=Fn_show
+Fn.remove=Fn_remove
+fn Fn_generate($self)
+{
+	$function_text=Function_text_new()
+	Stack_push(functions_texts, $function_text)
+	for ($a=$self.body.first; $a>=0; $a=$a.next)
+	{
+		$a.f.generate($a)
+	}
+	Function_text_close($function_text)
+	$text=$self.text
+	$lines=$text.lines
+	$data=$text.data
+	$name=new($self.name.name_length, 1, INT8)
+	copy($name, $data, 0, $self.name.name_start)
+	set_prop(functions, $name, 1)
+	$last_line=$self.last_line
+	for ($a=$self.first_line; $a!=$last_line; $a+1)
+	{
+		fputs("//", functions_record)
+		fwrite($data, $lines[1, $a]-$lines[0, $a], functions_record, $lines[0, $a])
+		fputc('\n', functions_record)
+	}
+	fprintf(functions_record, "Var pf%s(uint32_t arguments_count, ...)
+{
+	va_list arguments;
+	va_start(arguments, arguments_count);
+", $name)
+	remove($name)
+	$locals=$function_text.locals
+	$arguments=$self.arguments
+	$arguments_count=$arguments.top+1
+	for ($a=0; $a!=$arguments_count; $a+1)
+	{
+		$name_start=$arguments[$a].name_start
+		if $data[$name_start]!='$'
+		{
+			$name=new($arguments[$a].name_length, 1, INT8)
+			copy($name, $data, 0, $name_start)
+			set_prop(variables, $name, 1)
+		}
+		else
+		{
+			$name=new($arguments[$a].name_length-1, 1, INT8)
+			copy($name, $data, 0, $name_start+1)
+			set_prop($locals, $name, 1)
+		}
+		remove($name)
+	}
+	$tokens=get_proplist($locals)
+	if $tokens>=0
+	{
+		fputs("\tVar ", functions_record)
+		$tokens_count=get_size($tokens)-1
+		$a=0 while 1
+		{
+			fputs("pl", functions_record)
+			fputs($tokens[$a], functions_record)
+			if $a!=$tokens_count
+			{
+				fputs(", ", functions_record)
+				$a+1
+			}
+			else
+			{
+				break
+			}
+		}
+		fputs(";\n", functions_record)
+		remove_proplist($tokens)
+	}
+	for ($a=0; $a!=$arguments_count; $a+1)
+	{
+		fprintf(functions_record, "\tif (arguments_count>=%u) ", $a+1)
+		$argument=$arguments[$a]
+		$name_start=$argument.name_start
+		if $data[$name_start]!='$'
+		{
+			$name=new($argument.name_length, 1, INT8)
+			copy($name, $data, 0, $name_start)
+			fprintf(functions_record, "pv%s=va_arg(arguments, Var);\n", $name)
+		}
+		else
+		{
+			$name=new($argument.name_length-1, 1, INT8)
+			copy($name, $data, 0, $name_start+1)
+			fprintf(functions_record, "pl%s=va_arg(arguments, Var);\n", $name)
+		}
+		remove($name)
+	}
+	fputs($function_text.statements, functions_record)
+	fputs("}\n", functions_record)
+	Function_text_remove(Stack_pop(functions_texts))
+}
+fn Fn_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Fn\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent()
+			$token=$self.name
+			$text=$token.text
+			$name=new($token.name_length, 1, INT8)
+			copy($name, $text, 0, $token.name_start)
+			logf("\"name\": \"%s\"", $name)
+			next_property()
+		indent() logf("\"arguments\": ")
+			$arguments=$self.arguments
+			$arguments_count=$arguments.top
+			if $arguments_count+1
+			{
+				begin_array()
+					$a=0 while 1
+					{
+						$token=$arguments[$a]
+						indent()
+							resize($name, $token.name_length)
+							copy($name, $text, 0, $token.name_start)
+							logf("\"%s\"", $name)
+						if $a!=$arguments_count
+						{
+								next_property()
+							$a+1
+						}
+						else
+						{
+							break
+						}
+					}
+				end_array()
+			}
+			else
+			{
+				logf("null")
+			}
+			remove($name)
+			next_property()
+		indent() logf("\"body\": ") Block_show($self.body)
+	end_object()
+}
+fn Fn_remove($self)
+{
+	Variable_remove($self.name)
+	$arguments=$self.arguments
+	$size=$arguments.top+1
+	for ($a=0; $a!=$size; $a+1)
+	{
+		Variable_remove($arguments[$a])
+	}
+	remove($arguments)
+	Block_remove($self.body)
+
+	remove($self)
+}

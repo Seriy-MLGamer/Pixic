@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,39 +11,7 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file boot.pixi
  *
  * Dependencies.
- * program/console/console parser.pixi
- * program/translator/Text.pixi
- * program/translator/parser/parser.pixi
+ * program/translator/generator/generator.pixi
  */
 
 include "include/dependencies.pixi"
-
-logf("Input: %s
-Output: %s
-Folder: %s
-", input, output, folder)
-
-start_timer()
-result=parse(Text_new(input))
-logf("Time: %i ms\n", get_timer())
-a=result.first
-if a<0
-{
-	logf("null")
-}
-else
-{
-	begin_array()
-		while 1
-		{
-			indent() a.f.show(a)
-			if a.next<0
-			{
-				break
-			}
-				next_property()
-			a=a.next
-		}
-	end_array()
-}
-logf("\n")

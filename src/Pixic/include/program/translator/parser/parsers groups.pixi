@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,24 +11,23 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/translator/parser/parsers groups.pixi
  *
  * Dependencies.
- * program/translator/parser/tokens/statements/Break.pixi
- * program/translator/parser/tokens/statements/Continue.pixi
- * program/translator/parser/tokens/statements/Fn.pixi
- * program/translator/parser/tokens/statements/For.pixi
- * program/translator/parser/tokens/statements/Halt.pixi
- * program/translator/parser/tokens/statements/If.pixi
- * program/translator/parser/tokens/statements/Ret.pixi
- * program/translator/parser/tokens/statements/While.pixi
- * program/translator/parser/tokens/statements/Assign.pixi
- * program/translator/parser/tokens/statements/Procedure.pixi
- * program/translator/parser/tokens/expressions/operand.pixi
- * program/translator/parser/tokens/expressions/Unary_operator.pixi
- * program/translator/parser/tokens/expressions/Character.pixi
- * program/translator/parser/tokens/expressions/Number.pixi
- * program/translator/parser/tokens/expressions/String.pixi
- * program/translator/parser/tokens/expressions/Container.pixi
- * program/translator/parser/tokens/expressions/Function.pixi
- * program/translator/parser/tokens/expressions/Property.pixi
+ * program/translator/tokens/statements/Break.pixi
+ * program/translator/tokens/statements/Continue.pixi
+ * program/translator/tokens/statements/Fn.pixi
+ * program/translator/tokens/statements/For.pixi
+ * program/translator/tokens/statements/Halt.pixi
+ * program/translator/tokens/statements/If.pixi
+ * program/translator/tokens/statements/Ret.pixi
+ * program/translator/tokens/statements/While.pixi
+ * program/translator/tokens/statements/Assign.pixi
+ * program/translator/tokens/statements/Procedure.pixi
+ * program/translator/tokens/expressions/Unary_operator.pixi
+ * program/translator/tokens/expressions/Character.pixi
+ * program/translator/tokens/expressions/Number.pixi
+ * program/translator/tokens/expressions/String.pixi
+ * program/translator/tokens/expressions/Container.pixi
+ * program/translator/tokens/expressions/Function.pixi
+ * program/translator/tokens/expressions/Property.pixi
  */
 
 statements=new(10, 1, INT)

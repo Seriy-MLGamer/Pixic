@@ -1,0 +1,101 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/While.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/tokens/expressions/expression.pixi
+ * program/translator/tokens/statements/Block.pixi
+ */
+
+fn While_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=While
+
+	Text_promise_position($text)
+	$test=new(get_size(KEYWORD_WHILE), 1, INT8)
+	clean($test)
+	copy($test, $text.data, 0, $text[0, $text.top])
+	if strstr($test, KEYWORD_WHILE)
+	{
+		remove($test)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	$text[0, $text.top]+get_size($test)
+	remove($test)
+	Text_promise_position($text)
+	if is_symbolic(Text_get($text))
+	{
+		Text_reject_position($text)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-2)
+	}
+	Text_reject_position($text)
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_expression($text)
+	}
+	$token=parse_expression($text)
+	if $token<0
+	{
+		syntax_error_expected_expression($text)
+	}
+	$self.condition=$token
+	$self.last_line=$text[1, $text.top]+1
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected($text, '{')
+	}
+	$token=Block_new($text)
+	if $token<0
+	{
+		syntax_error_expected($text, '{')
+	}
+	$self.body=$token
+	Text_resolve_position($text)
+
+	ret($self)
+}
+While=new(1, 1, INT8)
+While.generate=While_generate
+While.show=While_show
+While.remove=While_remove
+fn While_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("while loop generation")
+}
+fn While_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"While\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent() logf("\"condition\": ") $self.condition.f.show($self.condition) next_property()
+		indent() logf("\"body\": ") Block_show($self.body)
+	end_object()
+}
+fn While_remove($self)
+{
+	$self.condition.f.remove($self.condition)
+	Block_remove($self.body)
+
+	remove($self)
+}

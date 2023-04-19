@@ -1,0 +1,121 @@
+/*
+(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/Assign.pixi
+ *
+ * Include before.
+ * program/translator/tokens/expressions/expression.pixi
+ * Dependencies.
+ * program/translator/tokens/statements/Statement.pixi
+ * program/translator/parser/parsing functions.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/generator/generator.pixi
+ */
+
+fn Assign_new($text)
+{
+	$self=Statement_new($text)
+	$self.f=Assign
+
+	Text_promise_position($text)
+	$token=parse_operand($text)
+	if $token<0
+	{
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-1)
+	}
+	if !$token.assignable
+	{
+		$token.f.remove($token)
+		Text_reject_position($text)
+
+		remove($self)
+		ret(-2)
+	}
+	$self.variable=$token
+	if skip_spaces($text)
+	{
+		$text[1, $text.top]-1
+		syntax_error_expected_operator($text)
+	}
+	Text_promise_position($text)
+	$sequence=Stack_new(INT8)
+	while 1
+	{
+		$token=get_prop(Assign_new_jump0, $sequence)(Text_get($text), $sequence, $text)
+		if $token>-2
+		{
+			break
+		}
+	}
+	remove($sequence)
+	if $token!=-1
+	{
+		Text_resolve_position($text)
+		$self.operator=$token
+		if skip_spaces($text)
+		{
+			$text[1, $text.top]-1
+			syntax_error_expected_expression($text)
+		}
+		$token=parse_expression($text)
+		if $token<0
+		{
+			syntax_error_expected_expression($text)
+		}
+		$self.value=$token
+		$self.last_line=$text[1, $text.top]+1
+		Text_resolve_position($text)
+
+		ret($self)
+	}
+	Text_reject_position($text)
+	syntax_error_expected_operator($text)
+}
+Assign_new_jump0=clone(parse_expression_jump0)
+set_prop(Assign_new_jump0, operator_strings[OPERATOR_ASSIGN],
+	{
+		if $1!='='
+		{
+			Text_reject_position($3)
+			ret(OPERATOR_ASSIGN)
+		}
+		Text_resolve_position($3)
+		ret(OPERATOR_EQ)
+	}
+)
+Assign=new(1, 1, INT8)
+Assign.generate=Assign_generate
+Assign.show=Assign_show
+Assign.remove=Assign_remove
+fn Assign_generate($self)
+{
+	generator_deinit()
+	developer_error_not_implemented("assign generation")
+}
+fn Assign_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Assign\"") next_property()
+		indent() Statement_show($self) next_property()
+		indent() logf("\"variable\": ") $self.variable.f.show($self.variable) next_property()
+		indent() logf("\"operator\": \"%s\"", operator_strings[$self.operator]) next_property()
+		indent() logf("\"value\": ") $self.value.f.show($self.value)
+	end_object()
+}
+fn Assign_remove($self)
+{
+	$self.variable.f.remove($self.variable)
+	$self.value.f.remove($self.value)
+
+	remove($self)
+}
