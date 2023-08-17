@@ -1,0 +1,47 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+text_help="Pixic v0.0.0pre-alpha-raw-undone
+Pixic translates the code in Pixilang programming language into C language and compiles it with external C compiler increasing performance of the program.
+Usage.
+  pixic [options] [input file]
+Arguments.
+  input file  The path to the file with code in Pixilang language that will be compiled. Default value is \"boot.pixi\" or \"boot.txt\".
+Options.
+  -h               --help                 Show help (this message).
+  -l               --license              Show notice about license and developers.
+  -o <executable>  --output=<executable>  The path for an output executable. Default value is \"<input file name>%s\".
+  -f <folder>      --folder=<folder>      The path for a folder for translated files. Default value is \"%s<input file name>\" for normal mode and \"<input file name>\" or \"<executable>\" for the \"--translate-only\" mode.
+  -t               --translate-only       Translate only (executable won't be generated).
+  -s               --show-only            [Debug] Only show abstract syntax tree (intermediate C file won't be generated).
+"
+text_license="Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+
+Please, help this project be high-quality software that also respects your freedom. Contribute at GitHub: <https://github.com/Seriy-MLGamer/Pixic>.
+Project maintainer.
+(C) 2022-2023 Seriy MLGamer. All freedoms preserved.
+Videos at Dzen: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at VKontakte: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+Top 10 relevant contributors (learn about how to become one of them: <there should be a link to criteria of relevance>).
+Other contributors are listed in source files of Pixic avaliable at GitHub: <https://github.com/Seriy-MLGamer/Pixic>.
+"

@@ -1,0 +1,65 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/operands/Binary_operator.pixi
+ * class Binary_operator extends Operand;
+ *
+ * Include before.
+ * program/translator/tokens/operands/system/Operand.pixi
+ * Dependencies.
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator.pixi
+ * program/translator/tokens/operators.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Binary_operator_new($operator, $left, $right)
+{
+	$self=Operand_new(0, 0)
+	$self.f=Binary_operator
+
+	$self.operator=$operator
+	$self.left=$left
+	$self.right=$right
+
+	ret($self)
+}
+Binary_operator=clone(Operand)
+Binary_operator.generate=Binary_operator_generate
+Binary_operator.show=Binary_operator_show
+Binary_operator.remove=Binary_operator_remove
+fn Binary_operator_generate($self)
+{
+	$statements_record=Stack_get(functions_texts).statements_record
+	fputs(OPERATOR_FUNCTION[$self.operator], $statements_record) $self.left.f.generate($self.left) fputs(", ", $statements_record) $self.right.f.generate($self.right) fputc(')', $statements_record)
+}
+fn Binary_operator_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Binary_operator\"") next_property()
+		indent() logf("\"operator\": \"%s\"", OPERATOR_STRING[$self.operator]) next_property()
+		indent() logf("\"left\": ") $self.left.f.show($self.left) next_property()
+		indent() logf("\"right\": ") $self.right.f.show($self.right)
+	end_object()
+}
+fn Binary_operator_remove($self)
+{
+	$self.left.f.remove($self.left)
+	$self.right.f.remove($self.right)
+
+	remove($self)
+}

@@ -1,0 +1,62 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/statements/system/Statement.pixi
+ * class Statement extends List_node;
+ *
+ * Dependencies.
+ * core/structures/linked list/List_node.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator.pixi
+ * program/translator/Function_text.pixi
+ */
+
+fn Statement_new($parser)
+{
+	$self=List_node_new()
+
+	$self.parser=$parser
+	$self.first_line=$parser[1, $parser.top]
+	$self.last_line=$self.first_line+1
+
+	ret($self)
+}
+fn Statement_generate($self)
+{
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	$parser=$self.parser
+	$lines=$parser.lines
+	$text=$parser.text
+	$last_line=$self.last_line
+	for ($a=$self.first_line; $a!=$last_line; $a+1)
+	{
+		Function_text_indent($function_text) fputs("//", $statements_record) fwrite($text, $lines[1, $a]-$lines[0, $a], $statements_record, $lines[0, $a]) fputc('\n', $statements_record)
+	}
+}
+fn Statement_show($self)
+{
+	$lines=$self.parser.lines
+	if $self.first_line!=$self.last_line-1
+	{
+		logf("\"lines\": \"%i-%i\"", $lines[2, $self.first_line], $lines[2, $self.last_line-1])
+	}
+	else
+	{
+		logf("\"line\": \"%i\"", $lines[2, $self.first_line])
+	}
+}

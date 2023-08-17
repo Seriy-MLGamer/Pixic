@@ -1,0 +1,53 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/Function_text.pixi
+ * class Function_text;
+ */
+
+fn Function_text_new()
+{
+	$self=new(1, 1, INT8)
+
+	$self.locals=new(1, 1, INT8)
+	$self.statements=new(1, 1, INT8)
+	$self.statements[0]=0
+	$self.statements_record=fopen_mem($self.statements, "wb")
+	$self.indents=1
+
+	ret($self)
+}
+fn Function_text_indent($self)
+{
+	$statements_record=$self.statements_record
+	$indents=$self.indents
+	for ($a=0; $a!=$indents; $a+1)
+	{
+		fputc('\t', $statements_record)
+	}
+}
+fn Function_text_close($self)
+{
+	fclose($self.statements_record)
+}
+fn Function_text_remove($self)
+{
+	remove($self.locals)
+	remove($self.statements)
+
+	remove($self)
+}

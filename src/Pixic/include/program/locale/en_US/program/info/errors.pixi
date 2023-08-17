@@ -1,0 +1,24 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+text_error="pixic: error: "
+text_error_help="Type \"pixic --help\" for more details.\n"
+text_error_undefined_input="input file is not defined.\n"
+text_error_invalid_input="invalid input file name: \"%s\".\n"
+text_error_cant_open_input="input file \"%s\" isn't found or can't be read.\n"
+text_error_cant_open_input_undefined="default input file (\"boot.pixi\" or \"boot.txt\") isn't found or can't be read.\n"
+text_error_cant_open_C="intermediate file in C language can't be created or written.\n"
+text_error_empty_input="input file \"%s\" doesn't contain Pixilang statements. There is nothing to compile.\n"

@@ -1,0 +1,75 @@
+/*
+(C) 2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file core/crypto/hash.pixi
+ * Various hash algorithms.
+ */
+
+/**
+ * CRC-32 IEEE 802.3 hash function.
+ * @param $data the INT8 container.
+ * @param $first the index of first character. Optional. Default is 0.
+ * @param $count the count of characters. Optional. Default is strlen($data)-$first.
+ * @return hash sum of the data block.
+ */
+fn CRC32($data, $first, $count)
+{
+	$result=0xFFFFFFFF
+	if $0<2
+	{
+		$a=0
+	}
+	else
+	{
+		$a=$first
+	}
+	if $0<3
+	{
+		while $data[$a]
+		{
+			$result=CRC32_table[($result^$data[$a])&0xFF]^($result>>8&0xFFFFFF)
+			$a+1
+		}
+	}
+	else
+	{
+		$last=$a+$count
+		while $a!=$last
+		{
+			$result=CRC32_table[($result^$data[$a])&0xFF]^($result>>8&0xFFFFFF)
+			$a+1
+		}
+	}
+	ret($result^0xFFFFFFFF)
+}
+CRC32_table=new(256, 1, INT32)
+for (a=0; a!=256; a+1)
+{
+	result=a
+	for (b=0; b!=8; b+1)
+	{
+		if result&1
+		{
+			result=(result>>1)&0x7FFFFFFF^0xEDB88320
+		}
+		else
+		{
+			result=(result>>1)&0x7FFFFFFF
+		}
+	}
+	CRC32_table[a]=result
+}

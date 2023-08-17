@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,14 +16,16 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file core/strings/file name.pixi
+ * The functions to operate with file path strings.
  *
  * Dependencies.
  * configuration.pixi
  */
 
 /**
- * Removes unused slashes and replaces them to the operating system default slashes.
- * @param $path a file or folder path.
+ * Removes unused slashes from the path and replaces them to operating system default slashes.
+ * @param $path the string with the file or folder path. Will be modified.
+ * @return 0 on success, or 1 on negative $path, or 2 on empty path.
  */
 fn format_path($path)
 {
@@ -28,21 +37,21 @@ fn format_path($path)
 	$slashes=0
 	for ($a=0; $path[$a]; $a+1)
 	{
-		$char=$path[$a]
+		$character=$path[$a]
 		if $slashes
 		{
-			if $char!='/'&&$char!='\\'
+			if $character!='/'&&$character!='\\'
 			{
 				$slashes=0
-				$path[$pointer]=$char
+				$path[$pointer]=$character
 				$pointer+1
 			}
 		}
 		else
 		{
-			if $char!='/'&&$char!='\\'
+			if $character!='/'&&$character!='\\'
 			{
-				$path[$pointer]=$char
+				$path[$pointer]=$character
 			}
 			else
 			{
@@ -66,6 +75,13 @@ fn format_path($path)
 	}
 	ret(2)
 }
+/**
+ * Get a file or folder name with an extension from the file or folder path.
+ * @param $path the string with the file or folder path.
+ * @return a new string with a file or folder name (remove it with remove()), or -1 on negative $path, or -2 on invalid or empty path.
+ * @see get_file_name()
+ * @see get_file_extension()
+ */
 fn get_full_file_name($path)
 {
 	if $path<0
@@ -96,6 +112,12 @@ fn get_full_file_name($path)
 	remove($result)
 	ret(-2)
 }
+/**
+ * Get a file or folder name without extension from the file or folder path.
+ * @param $path the string with the file or folder path.
+ * @return a new string with a file or folder name (remove it with remove()), or -1 on negative $path, or -2 on invalid or empty path.
+ * @see get_full_file_name()
+ */
 fn get_file_name($path)
 {
 	if $path<0
@@ -125,6 +147,12 @@ fn get_file_name($path)
 	}
 	ret($result)
 }
+/**
+ * Get an extension of file or folder name from the file or folder path.
+ * @param $path the string with the file or folder path.
+ * @return a new string with a file or folder name (remove it with remove()), or -1 on negative $path, or -2 on invalid or empty path, or -3, if there is no extension.
+ * @see get_full_file_name()
+ */
 fn get_file_extension($path)
 {
 	if $path<0
@@ -159,9 +187,9 @@ fn get_file_extension($path)
 	ret(-3)
 }
 /**
- * Standard get_real_path() function gets the path relative to the path of the booted Pixi-program. This function gets it relative to the working directory of the Pixilang interpreter.
- * @param $path a file or folder path.
- * @return an ID of the container with the real file path string (remove it with remove()); -1 if $path value is negative; -2 if path is wrong.
+ * The standard get_real_path() function gets a path relative to path of booted Pixi-program. This function gets it relative to working folder of Pixilang interpreter.
+ * @param $path the file or folder path.
+ * @return a new string with real file or folder path (remove it with remove()).
  */
 fn get_real_path2($path)
 {

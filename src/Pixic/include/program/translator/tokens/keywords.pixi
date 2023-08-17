@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -8,7 +15,8 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file program/translator/parser/tokens/keywords.pixi
+ * @file program/translator/tokens/keywords.pixi
+ * Pixilang keywords enumeration.
  */
 
 KEYWORD_BREAK=   "break"
@@ -28,16 +36,16 @@ KEYWORD_WHILE=   "while"
 KEYWORD_DIV=     "div"
 
 KEYWORDS=new(15, 1, INT)
-KEYWORDS[0]=KEYWORD_BREAK
-KEYWORDS[1]=KEYWORD_BREAK2
-KEYWORDS[2]=KEYWORD_BREAK3
-KEYWORDS[3]=KEYWORD_BREAK4
-KEYWORDS[4]=KEYWORD_BREAKALL
-KEYWORDS[5]=KEYWORD_CONTINUE
-KEYWORDS[6]=KEYWORD_FN
-KEYWORDS[7]=KEYWORD_FOR
-KEYWORDS[8]=KEYWORD_HALT
-KEYWORDS[9]=KEYWORD_STOP
+KEYWORDS[0]= KEYWORD_BREAK
+KEYWORDS[1]= KEYWORD_BREAK2
+KEYWORDS[2]= KEYWORD_BREAK3
+KEYWORDS[3]= KEYWORD_BREAK4
+KEYWORDS[4]= KEYWORD_BREAKALL
+KEYWORDS[5]= KEYWORD_CONTINUE
+KEYWORDS[6]= KEYWORD_FN
+KEYWORDS[7]= KEYWORD_FOR
+KEYWORDS[8]= KEYWORD_HALT
+KEYWORDS[9]= KEYWORD_STOP
 KEYWORDS[10]=KEYWORD_IF
 KEYWORDS[11]=KEYWORD_ELSE
 KEYWORDS[12]=KEYWORD_RET

@@ -1,0 +1,190 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/operands/Variable.pixi
+ * class Variable extends Operand;
+ *
+ * Include before.
+ * program/translator/tokens/operands/system/Operand.pixi
+ * Dependencies.
+ * program/translator/Parser.pixi
+ * program/translator/character filters.pixi
+ * program/translator/tokens/keywords.pixi
+ * program/info/syntax errors.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator.pixi
+ * program/translator/Function_text.pixi
+ * program/translator/tokens/operators.pixi
+ * program/info/developer errors.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Variable_new($parser)
+{
+	$self=Operand_new(1, 0)
+	$self.f=Variable
+
+	Parser_promise_position($parser)
+	$self.text=$parser.text
+	$name_start=$parser[0, $parser.top]
+	$self.name_start=$name_start
+	$character=Parser_get($parser)
+	if $character=='#'||($character>='0'&&$character<='9')
+	{
+		Parser_reject_position($parser)
+
+		remove($self)
+		ret(-1)
+	}
+	if is_symbolic($character)
+	{
+		Parser_promise_position($parser)
+		while 1
+		{
+			if is_symbolic(Parser_get($parser))
+			{
+				Parser_resolve_position($parser)
+				Parser_promise_position($parser)
+			}
+			else
+			{
+				Parser_reject_position($parser)
+				if $parser.text[$name_start]!='$'
+				{
+					$name_length=$parser[0, $parser.top]-$name_start
+					$test=new($name_length, 1, INT8)
+					copy($test, $parser.text, 0, $name_start)
+					$keywords_count=get_size(KEYWORDS)
+					for ($a=0; $a!=$keywords_count; $a+1)
+					{
+						if !strcmp($test, KEYWORDS[$a])
+						{
+							Parser_reject_position($parser)
+							syntax_error_reserved_identifier($parser)
+						}
+					}
+					remove($test)
+					$self.name_length=$name_length
+				}
+				else
+				{
+					$self.name_length=$parser[0, $parser.top]-$name_start
+				}
+				Parser_resolve_position($parser)
+
+				ret($self)
+			}
+		}
+	}
+	Parser_reject_position($parser)
+
+	remove($self)
+	ret(-2)
+}
+Variable=clone(Operand)
+Variable.generate=Variable_generate
+Variable.generate_assign=Variable_generate_assign
+Variable.generate_call=Variable_generate_call
+Variable.show=Variable_show
+Variable.remove=Variable_remove
+fn Variable_generate($self, $pe)
+{
+	$text=$self.text
+	$name_start=$self.name_start
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	if $text[$name_start]!='$'
+	{
+		$name=new($self.name_length, 1, INT8)
+		copy($name, $text, 0, $name_start)
+		set_prop(variables, $name, 1)
+		fputs("pv", $statements_record)
+	}
+	else
+	{
+		$name=new($self.name_length-1, 1, INT8)
+		copy($name, $text, 0, $name_start+1)
+		set_prop($function_text.locals, $name, 1)
+		fputs("pl", $statements_record)
+	}
+	fputs($name, $statements_record)
+	remove($name)
+}
+fn Variable_generate_assign($self, $assign)
+{
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	Function_text_indent($function_text) Variable_generate($self) fputc('=', $statements_record)
+		if $assign.operator!=OPERATOR_ASSIGN
+		{
+			fputs(OPERATOR_FUNCTION[$assign.operator], $statements_record) Variable_generate($self) fputs(", ", $statements_record) $assign.value.f.generate($assign.value) fputc(')', $statements_record)
+		}
+		else
+		{
+			$assign.value.f.generate($assign.value)
+		}
+		fputs(";\n", $statements_record)
+}
+fn Variable_generate_call($self, $function)
+{
+	$text=$self.text
+	$name_start=$self.name_start
+	if $text[$name_start]=='$'
+	{
+		generator_deinit()
+		developer_error_not_implemented("function call by address")
+	}
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	fputs("pf", $statements_record) fwrite($text, $self.name_length, $statements_record, $name_start) fputc('(', $statements_record)
+	$arguments=$function.arguments
+	$arguments_count=$arguments.top
+	if $arguments_count+1
+	{
+		fprintf($statements_record, "%u, ", $arguments_count+1)
+		$a=0 while 1
+		{
+			$arguments[$a].f.generate($arguments[$a])
+			if $a==$arguments_count
+			{
+				break
+			}
+			fputs(", ", $statements_record)
+			$a+1
+		}
+	}
+	else
+	{
+		fputc('0', $statements_record)
+	}
+	fputc(')', $statements_record)
+}
+fn Variable_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Variable\"") next_property()
+		indent()
+			$name=new($self.name_length, 1, INT8)
+			copy($name, $self.text, 0, $self.name_start)
+			logf("\"name\": \"%s\"", $name)
+			remove($name)
+	end_object()
+}
+fn Variable_remove($self)
+{
+	remove($self)
+}

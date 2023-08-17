@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,69 +16,72 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/translator/tokens/statements/Break.pixi
+ * class Break extends Statement;
  *
  * Dependencies.
- * program/translator/tokens/statements/Statement.pixi
- * program/translator/Text.pixi
- * program/translator/generator/generator.pixi
+ * program/translator/tokens/statements/system/Statement.pixi
+ * program/translator/Parser.pixi
+ * program/translator/tokens/keywords.pixi
+ * program/translator/character filters.pixi
+ * program/translator/generator.pixi
+ * program/info/developer errors.pixi
  * program/translator/tokens/show.pixi
  */
 
-fn Break_new($text)
+fn Break_new($parser)
 {
-	$self=Statement_new($text)
+	$self=Statement_new($parser)
 	$self.f=Break
 
-	Text_promise_position($text)
-	$test=new(get_size(KEYWORD_BREAKALL), 1, INT8)
+	Parser_promise_position($parser)
+	$test=new(8, 1, INT8)
 	clean($test)
-	copy($test, $text.data, 0, $text[0, $text.top])
-	if !strstr($test, KEYWORD_BREAK)
+	copy($test, $parser.text, 0, $parser[0, $parser.top])
+	if !strstr($test, KEYWORD_BREAKALL)
 	{
-		$self.stages=1
-		$text[0, $text.top]+get_size(KEYWORD_BREAK)
+		$self.stages=0
+		$parser[0, $parser.top]+8
 	}
 	else{if !strstr($test, KEYWORD_BREAK2)
 	{
 		$self.stages=2
-		$text[0, $text.top]+get_size(KEYWORD_BREAK2)
+		$parser[0, $parser.top]+6
 	}
 	else{if !strstr($test, KEYWORD_BREAK3)
 	{
 		$self.stages=3
-		$text[0, $text.top]+get_size(KEYWORD_BREAK3)
+		$parser[0, $parser.top]+6
 	}
 	else{if !strstr($test, KEYWORD_BREAK4)
 	{
 		$self.stages=4
-		$text[0, $text.top]+get_size(KEYWORD_BREAK4)
+		$parser[0, $parser.top]+6
 	}
-	else{if !strstr($test, KEYWORD_BREAKALL)
+	else{if !strstr($test, KEYWORD_BREAK)
 	{
-		$self.stages=0
-		$text[0, $text.top]+get_size($test)
+		$self.stages=1
+		$parser[0, $parser.top]+5
 	}
 	else
 	{
 		remove($test)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-1)
 	}}}}}
 	remove($test)
-	Text_promise_position($text)
-	$char=Text_get($text)
-	if is_symbolic($char)
+	Parser_promise_position($parser)
+	if is_symbolic(Parser_get($parser))
 	{
-		Text_reject_position($text)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-2)
 	}
-	Text_reject_position($text)
-	Text_resolve_position($text)
+	Parser_reject_position($parser)
+	Parser_resolve_position($parser)
 
 	ret($self)
 }
@@ -82,26 +92,26 @@ Break.remove=Break_remove
 fn Break_generate($self)
 {
 	generator_deinit()
-	developer_error_not_implemented("break statement generation")
+	developer_error_not_implemented("\"break\" statement generation")
 }
 fn Break_show($self)
 {
 	begin_object()
 		indent() logf("\"type\": \"Break\"") next_property()
 		indent() Statement_show($self) next_property()
-		indent() logf("\"value\": \"break")
+		indent()
 			$stages=$self.stages
 			if $stages==1
 			{
-				logf("\"")
+				logf("\"value\": \"break\"")
 			}
 			else{if $stages>=2
 			{
-				logf("%i\"", $stages)
+				logf("\"value\": \"break%u\"", $stages)
 			}
 			else
 			{
-				logf("all\"")
+				logf("\"value\": \"breakall\"")
 			}}
 	end_object()
 }

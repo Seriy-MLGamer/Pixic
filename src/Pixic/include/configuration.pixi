@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -14,10 +21,11 @@ You should have received a copy of the GNU General Public License along with Pix
  * core/encodings/UTF8_file.pixi
  * core/encodings/CP1251.pixi
  * Dependencies.
+ * core/strings/file name.pixi
  * core/encodings/localized console.pixi
  */
 
-OS_LINUX=  0
+OS_GNU=    0
 OS_WINDOWS=1
 
 SHELL_BASH=0
@@ -28,12 +36,13 @@ LANGUAGE_en_US=1
 
 WORK_PATH=get_real_path("1:/")
 PIXIC_TEMP_PATH=clone(TEMP_PATH)
+format_path(WORK_PATH)
 strcat(PIXIC_TEMP_PATH, "Pixic/")
 format_path(PIXIC_TEMP_PATH)
 
 if strstr(OS_NAME, "linux")>=0
 {
-	OS=OS_LINUX
+	OS=OS_GNU
 }
 else{if !strstr(OS_NAME, "win")
 {

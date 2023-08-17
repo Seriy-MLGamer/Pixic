@@ -1,0 +1,29 @@
+/*
+(C) 2022-2023 Серый MLGamer. Все свободы предоставлены.
+Видео в Дзене: <https://dzen.ru/seriy_mlgamer>
+Музыка на SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Видео на YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Код на GitHub: <https://github.com/Seriy-MLGamer>
+Страница ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Материальная поддержка в DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+Электронная почта: <Seriy-MLGamer@yandex.ru>
+
+Этот файл - часть Pixic.
+Pixic - свободная программа: вы можете перераспространять её и/или изменять её на условиях Стандартной общественной лицензии GNU в том виде, в каком она была опубликована Фондом свободного программного обеспечения; либо версии 3 лицензии, либо (по вашему выбору) любой более поздней версии.
+Pixic распространяется в надежде, что он будет полезен, но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЁННЫХ ЦЕЛЕЙ. Подробнее смотрите в Стандартной общественной лицензии GNU.
+Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, смотрите <https://www.gnu.org/licenses/>.
+*/
+
+text_warning=localize("pixic: предупреждение: ")
+text_warning_unknown_parameter=localize("неизвестный параметр: \"%s\".\n")
+text_warning_undefined_parameter=localize("нет значения после \"=\" развёрнутого параметра: \"%s\".
+Ладно, пропускаем. :)\n")
+text_warning_expected_assign=localize("ожидалось \"=\" и значение после развёрнутого параметра: \"%s\".
+Но ничего страшного. Можем продолжить! ;)\n")
+text_warning_double=localize("повторное определение ")
+text_warning_double_input=localize("входного файла: \"%s\". Его ")
+text_warning_double_output_single=localize("выходного исполняемого файла: \"-o %s\". Его ")
+text_warning_double_output_extended=localize("выходного исполняемого файла: \"%s\". Его ")
+text_warning_double_folder_single=localize("папки трансляции: \"-f %s\". Её ")
+text_warning_double_folder_extended=localize("папки трансляции: \"%s\". Её ")
+text_warning_double2=localize("значение остаётся равным \"%s\".\n")

@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -8,7 +15,11 @@ You should have received a copy of the GNU General Public License along with Pix
 */
 
 /**
- * @file program/translator/parser/tokens/operators.pixi
+ * @file program/translator/tokens/operators.pixi
+ * Some arithmetical operators things: enumeration, priorities, strings and functions in C.
+ *
+ * Include before.
+ * program/translator/tokens/keywords.pixi
  */
 
 OPERATOR_MOD=   0
@@ -55,3 +66,50 @@ PRIORITY[OPERATOR_XOR]= 4
 PRIORITY[OPERATOR_BAND]=4
 PRIORITY[OPERATOR_OR]=  5
 PRIORITY[OPERATOR_AND]= 5
+OPERATOR_STRING=new(23, 1, INT)
+OPERATOR_STRING[OPERATOR_MOD]=   "%"
+OPERATOR_STRING[OPERATOR_DIV]=   "/"
+OPERATOR_STRING[OPERATOR_IDIV]=  KEYWORD_DIV
+OPERATOR_STRING[OPERATOR_MUL]=   "*"
+OPERATOR_STRING[OPERATOR_NOT]=   "!"
+OPERATOR_STRING[OPERATOR_BNOT]=  "~"
+OPERATOR_STRING[OPERATOR_ADD]=   "+"
+OPERATOR_STRING[OPERATOR_NEG]=   "-"
+OPERATOR_STRING[OPERATOR_SUB]=   OPERATOR_STRING[OPERATOR_NEG]
+OPERATOR_STRING[OPERATOR_RSH]=   ">>"
+OPERATOR_STRING[OPERATOR_LSH]=   "<<"
+OPERATOR_STRING[OPERATOR_EQ]=    "=="
+OPERATOR_STRING[OPERATOR_NEQ]=   "!="
+OPERATOR_STRING[OPERATOR_L]=     "<"
+OPERATOR_STRING[OPERATOR_G]=     ">"
+OPERATOR_STRING[OPERATOR_LEQ]=   "<="
+OPERATOR_STRING[OPERATOR_GEQ]=   ">="
+OPERATOR_STRING[OPERATOR_BOR]=   "|"
+OPERATOR_STRING[OPERATOR_XOR]=   "^"
+OPERATOR_STRING[OPERATOR_BAND]=  "&"
+OPERATOR_STRING[OPERATOR_OR]=    "||"
+OPERATOR_STRING[OPERATOR_AND]=   "&&"
+OPERATOR_STRING[OPERATOR_ASSIGN]="="
+OPERATOR_FUNCTION=new(22, 1, INT)
+OPERATOR_FUNCTION[OPERATOR_MOD]= "Var_mod("
+OPERATOR_FUNCTION[OPERATOR_DIV]= "Var_div("
+OPERATOR_FUNCTION[OPERATOR_IDIV]="Var_idiv("
+OPERATOR_FUNCTION[OPERATOR_MUL]= "Var_mul("
+OPERATOR_FUNCTION[OPERATOR_NOT]= "Var_not("
+OPERATOR_FUNCTION[OPERATOR_BNOT]="Var_bnot("
+OPERATOR_FUNCTION[OPERATOR_ADD]= "Var_add("
+OPERATOR_FUNCTION[OPERATOR_NEG]= "Var_neg("
+OPERATOR_FUNCTION[OPERATOR_SUB]= "Var_sub("
+OPERATOR_FUNCTION[OPERATOR_RSH]= "Var_rsh("
+OPERATOR_FUNCTION[OPERATOR_LSH]= "Var_lsh("
+OPERATOR_FUNCTION[OPERATOR_EQ]=  "Var_eq("
+OPERATOR_FUNCTION[OPERATOR_NEQ]= "Var_neq("
+OPERATOR_FUNCTION[OPERATOR_L]=   "Var_l("
+OPERATOR_FUNCTION[OPERATOR_G]=   "Var_g("
+OPERATOR_FUNCTION[OPERATOR_LEQ]= "Var_leq("
+OPERATOR_FUNCTION[OPERATOR_GEQ]= "Var_geq("
+OPERATOR_FUNCTION[OPERATOR_BOR]= "Var_bor("
+OPERATOR_FUNCTION[OPERATOR_XOR]= "Var_xor("
+OPERATOR_FUNCTION[OPERATOR_BAND]="Var_band("
+OPERATOR_FUNCTION[OPERATOR_OR]=  "Var_or("
+OPERATOR_FUNCTION[OPERATOR_AND]= "Var_and("

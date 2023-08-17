@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,27 +16,38 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/info/developer errors.pixi
+ * Whoopsies about developers' wrongnessies, undone things and something like that.
  */
 
 fn developer_error_localization_UTF8()
 {
-	fprintf(STDERR, "pixic: whoopsies: an UTF-8 error occured by the localization developer. The Pixic won't start.\n")
+	fputs("pixic: whoopsies: an UTF-8 error occured by the localization developer. Pixic won't start.\n", STDERR)
 	exit(-1)
 }
 fn developer_error_localization_CP1251()
 {
-	fprintf(STDERR, "pixic: whoopsies: the localization developer put a character out of the range of the 1251 codepage. The Pixic won't start.\n")
+	fputs("pixic: whoopsies: the localization developer put a character out of the range of the 1251 codepage. Pixic won't start.\n", STDERR)
 	exit(-2)
 }
 fn developer_error_nonempty_stack($process)
 {
-	fprintf(STDERR, "pixic: whoopsies: the stack isn't empty after the processing. That means that %s is done wrong.
-Yeah, we could continue, but I'll close the Pixic.
-", $process)
+	fputs("pixic: whoopsies: the stack isn't empty after the processing. That means that ", STDERR) fputs($process, STDERR) fputs("is done wrong.
+Yeah, we could continue, but I'll close Pixic.
+", $process, STDERR)
 	exit(-3)
 }
 fn developer_error_not_implemented($feature)
 {
-	fprintf(STDERR, "pixic: whoopsies: %s is not implemented by the developer. The Pixic needs to EXTREMELY crash. That'z crazy!\n", $feature)
+	rand_seed(get_ticks())
+	rand()
+	fputs("pixic: whoopsies: ", STDERR) fputs($feature, STDERR) fputs(" is not implemented by the developer. Pixic ", STDERR) fputs(developer_error_not_implemented_table0[rand()*3/32768], STDERR) fputs(developer_error_not_implemented_table1[rand()*3/32768], STDERR)
 	exit(-128)
 }
+developer_error_not_implemented_table0=new(3, 1, INT)
+developer_error_not_implemented_table0[0]="needs to EXTREMELY crash. "
+developer_error_not_implemented_table0[1]="just can't even. "
+developer_error_not_implemented_table0[2]="VERY wants to quit. "
+developer_error_not_implemented_table1=new(3, 1, INT)
+developer_error_not_implemented_table1[0]="That'z crazy!\n"
+developer_error_not_implemented_table1[1]="But someday we, maybe, will start to fix that.\n"
+developer_error_not_implemented_table1[2]="You have to chill out of programming.\n"

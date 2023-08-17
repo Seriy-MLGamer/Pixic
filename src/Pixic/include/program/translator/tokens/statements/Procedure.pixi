@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,23 +16,28 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/translator/tokens/statements/Procedure.pixi
+ * class Procedure extends Statement;
  *
  * Dependencies.
- * program/translator/tokens/statements/Statement.pixi
- * program/translator/tokens/expressions/operand.pixi
+ * program/translator/tokens/statements/system/Statement.pixi
+ * program/translator/Parser.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator.pixi
+ * program/translator/Function_text.pixi
+ * program/translator/tokens/operands/Function.pixi
  * program/translator/tokens/show.pixi
  */
 
-fn Procedure_new($text)
+fn Procedure_new($parser)
 {
-	$self=Statement_new($text)
+	$self=Statement_new($parser)
 	$self.f=Procedure
 
-	Text_promise_position($text)
-	$token=parse_operand($text)
+	Parser_promise_position($parser)
+	$token=Parser_parse_operand($parser)
 	if $token<0
 	{
-		Text_reject_position($text)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-1)
@@ -33,14 +45,14 @@ fn Procedure_new($text)
 	if !$token.is_function
 	{
 		$token.f.remove($token)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-2)
 	}
+	Parser_resolve_position($parser)
 	$self.function=$token
-	$self.last_line=$text[1, $text.top]+1
-	Text_resolve_position($text)
+	$self.last_line=$parser[1, $parser.top]+1
 
 	ret($self)
 }
@@ -64,23 +76,20 @@ fn Procedure_show($self)
 		indent() logf("\"ID\": ") $function.ID.f.show($function.ID) next_property()
 		indent() logf("\"arguments\": ")
 			$arguments=$function.arguments
-			$arguments_count=$arguments.top+1
-			if $arguments_count
+			$arguments_count=$arguments.top
+			if $arguments_count+1
 			{
 				begin_array()
 					$a=0 while 1
 					{
 						$argument=$arguments[$a]
 						indent() $argument.f.show($argument)
-						if $a!=$arguments_count-1
-						{
-								next_property()
-							$a+1
-						}
-						else
+						if $a==$arguments_count
 						{
 							break
 						}
+							next_property()
+						$a+1
 					}
 				end_array()
 			}

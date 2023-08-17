@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,136 +16,149 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/translator/tokens/statements/Fn.pixi
+ * class Fn extends Statement;
  *
  * Dependencies.
- * program/translator/tokens/statements/Statement.pixi
- * program/translator/parser/parsing functions.pixi
- * program/translator/tokens/expressions/Variable.pixi
- * program/translator/tokens/statements/Block.pixi
+ * program/translator/tokens/statements/system/Statement.pixi
+ * program/translator/Parser.pixi
+ * program/translator/tokens/keywords.pixi
+ * program/translator/character filters.pixi
+ * program/info/syntax errors.pixi
+ * program/translator/tokens/operands/Variable.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/tokens/statements/system/Block.pixi
+ * program/translator/Function_text.pixi
+ * program/translator/generator.pixi
+ * program/translator/tokens/show.pixi
  */
 
-fn Fn_new($text)
+fn Fn_new($parser)
 {
-	$self=Statement_new($text)
+	$self=Statement_new($parser)
 	$self.f=Fn
 
-	Text_promise_position($text)
-	if strstr($text.data, $text[0, $text.top], KEYWORD_FN)!=$text[0, $text.top]
+	Parser_promise_position($parser)
+	$test=new(2, 1, INT8)
+	clean($test)
+	copy($test, $parser.text, 0, $parser[0, $parser.top])
+	if strstr($test, KEYWORD_FN)
 	{
-		Text_reject_position($text)
+		remove($test)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-1)
 	}
-	$text[0, $text.top]+get_size(KEYWORD_FN)
-	Text_promise_position($text)
-	if is_symbolic(Text_get($text))
+	remove($test)
+	$parser[0, $parser.top]+2
+	Parser_promise_position($parser)
+	if is_symbolic(Parser_get($parser))
 	{
-		Text_reject_position($text)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-2)
 	}
-	Text_reject_position($text)
-	if skip_spaces($text)
+	Parser_reject_position($parser)
+	Parser_resolve_position($parser)
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected_function_name($text)
+		$parser[1, $parser.top]-1
+		syntax_error_expected_function_name($parser)
 	}
-	Text_promise_position($text)
-	$token=Variable_new($text)
+	Parser_promise_position($parser)
+	$token=Variable_new($parser)
 	if $token<0
 	{
-		syntax_error_expected_function_name($text)
+		syntax_error_expected_function_name($parser)
 	}
-	if $text.data[$token.name_start]=='$'
+	if $parser.text[$token.name_start]=='$'
 	{
-		Text_reject_position($text)
-		syntax_error_expected_function_name($text)
+		Parser_reject_position($parser)
+		syntax_error_expected_function_name($parser)
 	}
-	Text_resolve_position($text)
+	Parser_resolve_position($parser)
 	$self.name=$token
-	if skip_spaces($text)
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected($text, '(')
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, '(')
 	}
-	Text_promise_position($text)
-	if Text_get($text)!='('
+	Parser_promise_position($parser)
+	if Parser_get($parser)!='('
 	{
-		Text_reject_position($text)
-		syntax_error_expected($text, '(')
+		Parser_reject_position($parser)
+		syntax_error_expected($parser, '(')
 	}
-	Text_resolve_position($text)
-	if skip_spaces($text)
+	Parser_resolve_position($parser)
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected($text, ')')
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, ')')
 	}
 	$arguments=Stack_new(INT)
-	$token=Variable_new($text)
+	$token=Variable_new($parser)
 	if $token<0
 	{
-		Text_promise_position($text)
-		if Text_get($text)!=')'
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=')'
 		{
-			Text_reject_position($text)
-			syntax_error_expected($text, ')')
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ')')
 		}
 	}
 	else
 	{
 		while 1
 		{
-			if skip_spaces($text)
+			if Parser_skip_spaces($parser)
 			{
-				$text[1, $text.top]-1
-				syntax_error_expected($text, ')')
+				$parser[1, $parser.top]-1
+				syntax_error_expected($parser, ')')
 			}
 			Stack_push($arguments, $token)
-			Text_promise_position($text)
-			$token=Text_get($text)
+			Parser_promise_position($parser)
+			$token=Parser_get($parser)
 			if $token==')'
 			{
 				break
 			}
 			if $token==','
 			{
-				Text_resolve_position($text)
-				if skip_spaces($text)
+				Parser_resolve_position($parser)
+				if Parser_skip_spaces($parser)
 				{
-					$text[1, $text.top]-1
-					syntax_error_expected_argument($text)
+					$parser[1, $parser.top]-1
+					syntax_error_expected_argument($parser)
 				}
-				$token=Variable_new($text)
+				$token=Variable_new($parser)
 				if $token<0
 				{
-					syntax_error_expected_argument($text)
+					syntax_error_expected_argument($parser)
 				}
 			}
 			else
 			{
-				Text_reject_position($text)
-				syntax_error_expected($text, ')')
+				Parser_reject_position($parser)
+				syntax_error_expected($parser, ')')
 			}
 		}
 	}
-	Text_resolve_position($text)
+	Parser_resolve_position($parser)
 	$self.arguments=$arguments
-	$self.last_line=$text[1, $text.top]+1
-	if skip_spaces($text)
+	$self.last_line=$parser[1, $parser.top]+1
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected($text, '{')
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, '{')
 	}
-	$token=Block_new($text)
+	$token=Block_new($parser)
 	if $token<0
 	{
-		syntax_error_expected($text, '{')
+		syntax_error_expected($parser, '{')
 	}
 	$self.body=$token
-	Text_resolve_position($text)
 
 	ret($self)
 }
@@ -155,17 +175,17 @@ fn Fn_generate($self)
 		$a.f.generate($a)
 	}
 	Function_text_close($function_text)
-	$text=$self.text
-	$lines=$text.lines
-	$data=$text.data
+	$parser=$self.parser
+	$lines=$parser.lines
+	$text=$parser.text
 	$name=new($self.name.name_length, 1, INT8)
-	copy($name, $data, 0, $self.name.name_start)
+	copy($name, $text, 0, $self.name.name_start)
 	set_prop(functions, $name, 1)
 	$last_line=$self.last_line
 	for ($a=$self.first_line; $a!=$last_line; $a+1)
 	{
 		fputs("//", functions_record)
-		fwrite($data, $lines[1, $a]-$lines[0, $a], functions_record, $lines[0, $a])
+		fwrite($text, $lines[1, $a]-$lines[0, $a], functions_record, $lines[0, $a])
 		fputc('\n', functions_record)
 	}
 	fprintf(functions_record, "Var pf%s(uint32_t arguments_count, ...)
@@ -173,69 +193,61 @@ fn Fn_generate($self)
 	va_list arguments;
 	va_start(arguments, arguments_count);
 ", $name)
-	remove($name)
-	$locals=$function_text.locals
-	$arguments=$self.arguments
-	$arguments_count=$arguments.top+1
-	for ($a=0; $a!=$arguments_count; $a+1)
-	{
-		$name_start=$arguments[$a].name_start
-		if $data[$name_start]!='$'
-		{
-			$name=new($arguments[$a].name_length, 1, INT8)
-			copy($name, $data, 0, $name_start)
-			set_prop(variables, $name, 1)
-		}
-		else
-		{
-			$name=new($arguments[$a].name_length-1, 1, INT8)
-			copy($name, $data, 0, $name_start+1)
-			set_prop($locals, $name, 1)
-		}
 		remove($name)
-	}
-	$tokens=get_proplist($locals)
-	if $tokens>=0
-	{
-		fputs("\tVar ", functions_record)
-		$tokens_count=get_size($tokens)-1
-		$a=0 while 1
+		$locals=$function_text.locals
+		$arguments=$self.arguments
+		$arguments_count=$arguments.top+1
+		for ($a=0; $a!=$arguments_count; $a+1)
 		{
-			fputs("pl", functions_record)
-			fputs($tokens[$a], functions_record)
-			if $a!=$tokens_count
+			$name_start=$arguments[$a].name_start
+			if $text[$name_start]!='$'
 			{
-				fputs(", ", functions_record)
-				$a+1
+				$name=new($arguments[$a].name_length, 1, INT8)
+				copy($name, $text, 0, $name_start)
+				set_prop(variables, $name, 1)
 			}
 			else
 			{
-				break
+				$name=new($arguments[$a].name_length-1, 1, INT8)
+				copy($name, $text, 0, $name_start+1)
+				set_prop($locals, $name, 1)
 			}
+			remove($name)
 		}
-		fputs(";\n", functions_record)
-		remove_proplist($tokens)
-	}
-	for ($a=0; $a!=$arguments_count; $a+1)
-	{
-		fprintf(functions_record, "\tif (arguments_count>=%u) ", $a+1)
-		$argument=$arguments[$a]
-		$name_start=$argument.name_start
-		if $data[$name_start]!='$'
+		$tokens=get_proplist($locals)
+		if $tokens>=0
 		{
-			$name=new($argument.name_length, 1, INT8)
-			copy($name, $data, 0, $name_start)
-			fprintf(functions_record, "pv%s=va_arg(arguments, Var);\n", $name)
+			fputs("\tVar ", functions_record)
+				$tokens_count=get_size($tokens)-1
+				$a=0 while 1
+				{
+					fputs("pl", functions_record) fputs($tokens[$a], functions_record)
+					if $a==$tokens_count
+					{
+						break
+					}
+					fputs(", ", functions_record)
+					$a+1
+				}
+				fputs(";\n", functions_record)
+			remove_proplist($tokens)
 		}
-		else
+		for ($a=0; $a!=$arguments_count; $a+1)
 		{
-			$name=new($argument.name_length-1, 1, INT8)
-			copy($name, $data, 0, $name_start+1)
-			fprintf(functions_record, "pl%s=va_arg(arguments, Var);\n", $name)
+			fprintf(functions_record, "\tif (arguments_count>=%u) ", $a+1)
+				$argument=$arguments[$a]
+				$name_start=$argument.name_start
+				if $text[$name_start]!='$'
+				{
+					fputs("pv", functions_record) fwrite($text, $argument.name_length, functions_record, $name_start)
+				}
+				else
+				{
+					fputs("pl", functions_record) fwrite($text, $argument.name_length-1, functions_record, $name_start+1)
+				}
+				fputs("=va_arg(arguments, Var);\n", functions_record)
 		}
-		remove($name)
-	}
-	fputs($function_text.statements, functions_record)
+		fputs($function_text.statements, functions_record)
 	fputs("}\n", functions_record)
 	Function_text_remove(Stack_pop(functions_texts))
 }
@@ -249,8 +261,7 @@ fn Fn_show($self)
 			$text=$token.text
 			$name=new($token.name_length, 1, INT8)
 			copy($name, $text, 0, $token.name_start)
-			logf("\"name\": \"%s\"", $name)
-			next_property()
+			logf("\"name\": \"%s\"", $name) next_property()
 		indent() logf("\"arguments\": ")
 			$arguments=$self.arguments
 			$arguments_count=$arguments.top
@@ -264,15 +275,12 @@ fn Fn_show($self)
 							resize($name, $token.name_length)
 							copy($name, $text, 0, $token.name_start)
 							logf("\"%s\"", $name)
-						if $a!=$arguments_count
-						{
-								next_property()
-							$a+1
-						}
-						else
+						if $a==$arguments_count
 						{
 							break
 						}
+							next_property()
+						$a+1
 					}
 				end_array()
 			}

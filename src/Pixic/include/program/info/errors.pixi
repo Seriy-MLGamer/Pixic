@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -12,36 +19,38 @@ You should have received a copy of the GNU General Public License along with Pix
  *
  * Dependencies.
  * configuration.pixi
+ * program/console/console parser.pixi
  */
 
 fn error_undefined_input()
 {
-	fprintf(STDERR, text_error)
-	fprintf(STDERR, text_error_undefined_input)
-	fprintf(STDERR, text_error_help)
+	fputs(text_error, STDERR) fputs(text_error_undefined_input, STDERR)
+	fputs(text_error_help, STDERR)
 	exit(1)
 }
-fn error_invalid_input($input)
+fn error_invalid_input()
 {
-	fprintf(STDERR, text_error)
-	fprintf(STDERR, text_error_invalid_input, $input)
+	fputs(text_error, STDERR) fprintf(STDERR, text_error_invalid_input, input)
 	exit(2)
 }
-fn error_cant_open_input($input)
+fn error_cant_open_input()
 {
-	fprintf(STDERR, text_error)
-	fprintf(STDERR, text_error_cant_open_input, $input)
+	fputs(text_error, STDERR) fprintf(STDERR, text_error_cant_open_input, input)
 	exit(3)
 }
-fn error_cant_open_C($C)
+fn error_cant_open_input_undefined()
 {
-	fprintf(STDERR, text_error)
-	fprintf(STDERR, text_error_cant_open_C, $C)
+	fputs(text_error, STDERR) fputs(text_error_cant_open_input_undefined, STDERR)
+	fputs(text_error_help, STDERR)
 	exit(4)
 }
-fn error_empty_input($input)
+fn error_cant_open_C()
 {
-	fprintf(STDERR, text_error)
-	fprintf(STDERR, text_error_empty_input, $input)
+	fputs(text_error, STDERR) fputs(text_error_cant_open_C, STDERR)
 	exit(5)
+}
+fn error_empty_input()
+{
+	fputs(text_error, STDERR) fprintf(STDERR, text_error_empty_input, input)
+	exit(6)
 }

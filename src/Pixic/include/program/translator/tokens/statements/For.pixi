@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,162 +16,167 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/translator/tokens/statements/For.pixi
+ * class For extends Statement;
  *
- * Include before.
- * program/translator/parser/parsing functions.pixi
  * Dependencies.
- * program/translator/tokens/statements/Statement.pixi
+ * program/translator/tokens/statements/system/Statement.pixi
+ * program/translator/Parser.pixi
+ * program/translator/tokens/keywords.pixi
+ * program/translator/character filters.pixi
  * program/info/syntax errors.pixi
- * program/translator/tokens/expressions/expression.pixi
- * program/translator/tokens/statements/Block.pixi
+ * program/translator/tokens groups.pixi
+ * program/translator/tokens/statements/system/Block.pixi
+ * program/translator/generator.pixi
+ * program/info/developer errors.pixi
+ * program/translator/tokens/show.pixi
  */
 
-fn For_new($text)
+fn For_new($parser)
 {
-	$self=Statement_new($text)
+	$self=Statement_new($parser)
 	$self.f=For
 
-	Text_promise_position($text)
-	$test=new(get_size(KEYWORD_FOR), 1, INT8)
+	Parser_promise_position($parser)
+	$test=new(3, 1, INT8)
 	clean($test)
-	copy($test, $text.data, 0, $text[0, $text.top])
+	copy($test, $parser.text, 0, $parser[0, $parser.top])
 	if strstr($test, KEYWORD_FOR)
 	{
 		remove($test)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-1)
 	}
-	$text[0, $text.top]+get_size($test)
 	remove($test)
-	Text_promise_position($text)
-	if is_symbolic(Text_get($text))
+	$parser[0, $parser.top]+3
+	Parser_promise_position($parser)
+	if is_symbolic(Parser_get($parser))
 	{
-		Text_reject_position($text)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
+		Parser_reject_position($parser)
 
 		remove($self)
-		ret(-4)
+		ret(-2)
 	}
-	Text_reject_position($text)
-	if skip_spaces($text)
+	Parser_reject_position($parser)
+	Parser_resolve_position($parser)
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected($text, '(')
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, '(')
 	}
-	Text_promise_position($text)
-	if Text_get($text)!='('
+	Parser_promise_position($parser)
+	if Parser_get($parser)!='('
 	{
-		Text_reject_position($text)
-		syntax_error_expected($text, '(')
+		Parser_reject_position($parser)
+		syntax_error_expected($parser, '(')
 	}
-	Text_resolve_position($text)
-	if For_skip_spaces($text)
+	Parser_resolve_position($parser)
+	if Parser_skip_spaces_for($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected_statement($text)
+		$parser[1, $parser.top]-1
+		syntax_error_expected_statement($parser)
 	}
-	$token=parse_multiple(statements, $text)
+	$token=Parser_parse_multiple($parser, STATEMENTS)
 	if $token<0
 	{
-		Text_promise_position($text)
-		if Text_get($text)!=';'
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=';'
 		{
-			Text_reject_position($text)
-			syntax_error_expected_statement($text)
+			Parser_reject_position($parser)
+			syntax_error_expected_statement($parser)
 		}
-		Text_resolve_position($text)
+		Parser_resolve_position($parser)
 		$self.initialization=-1
 	}
 	else
 	{
 		$self.initialization=$token
-		if For_skip_spaces($text)
+		if Parser_skip_spaces_for($parser)
 		{
-			$text[1, $text.top]-1
-			syntax_error_expected($text, ';')
+			$parser[1, $parser.top]-1
+			syntax_error_expected($parser, ';')
 		}
-		Text_promise_position($text)
-		if Text_get($text)!=';'
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=';'
 		{
-			Text_reject_position($text)
-			syntax_error_expected($text, ';')
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ';')
 		}
-		Text_resolve_position($text)
+		Parser_resolve_position($parser)
 	}
-	if For_skip_spaces($text)
+	if Parser_skip_spaces_for($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected_expression($text)
+		$parser[1, $parser.top]-1
+		syntax_error_expected_expression($parser)
 	}
-	$token=parse_expression($text)
+	$token=Parser_parse_expression($parser)
 	if $token<0
 	{
-		syntax_error_expected_expression($text)
+		syntax_error_expected_expression($parser)
 	}
 	else
 	{
 		$self.condition=$token
-		if For_skip_spaces($text)
+		if Parser_skip_spaces_for($parser)
 		{
-			$text[1, $text.top]-1
-			syntax_error_expected($text, ';')
+			$parser[1, $parser.top]-1
+			syntax_error_expected($parser, ';')
 		}
-		Text_promise_position($text)
-		if Text_get($text)!=';'
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=';'
 		{
-			Text_reject_position($text)
-			syntax_error_expected($text, ';')
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ';')
 		}
-		Text_resolve_position($text)
+		Parser_resolve_position($parser)
 	}
-	if skip_spaces($text)
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected_statement($text)
+		$parser[1, $parser.top]-1
+		syntax_error_expected_statement($parser)
 	}
-	$token=parse_multiple(statements, $text)
+	$token=Parser_parse_multiple($parser, STATEMENTS)
 	if $token<0
 	{
-		Text_promise_position($text)
-		if Text_get($text)!=')'
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=')'
 		{
-			Text_reject_position($text)
-			syntax_error_expected_statement($text)
+			Parser_reject_position($parser)
+			syntax_error_expected_statement($parser)
 		}
-		Text_resolve_position($text)
+		Parser_resolve_position($parser)
 		$self.post_statement=-1
 	}
 	else
 	{
 		$self.post_statement=$token
-		if skip_spaces($text)
+		if Parser_skip_spaces($parser)
 		{
-			$text[1, $text.top]-1
-			syntax_error_expected($text, ')')
+			$parser[1, $parser.top]-1
+			syntax_error_expected($parser, ')')
 		}
-		Text_promise_position($text)
-		if Text_get($text)!=')'
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=')'
 		{
-			Text_reject_position($text)
-			syntax_error_expected($text, ')')
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ')')
 		}
-		Text_resolve_position($text)
+		Parser_resolve_position($parser)
 	}
-	$self.last_line=$text[1, $text.top]+1
-	if skip_spaces($text)
+	$self.last_line=$parser[1, $parser.top]+1
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected($text, '{')
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, '{')
 	}
-	$token=Block_new($text)
+	$token=Block_new($parser)
 	if $token<0
 	{
-		syntax_error_expected($text, '{')
+		syntax_error_expected($parser, '{')
 	}
 	$self.body=$token
-	Text_resolve_position($text)
 
 	ret($self)
 }
@@ -175,7 +187,7 @@ For.remove=For_remove
 fn For_generate($self)
 {
 	generator_deinit()
-	developer_error_not_implemented("for loop generation")
+	developer_error_not_implemented("\"for\" loop generation")
 }
 fn For_show($self)
 {
@@ -207,39 +219,6 @@ fn For_show($self)
 			next_property()
 		indent() logf("\"body\": ") Block_show($self.body)
 	end_object()
-}
-fn For_skip_spaces($text)
-{
-	$lines_count=get_ysize($text.lines)
-	$state=0
-	while 1
-	{
-		if $text[1, $text.top]==$lines_count
-		{
-			ret(1)
-		}
-		Text_promise_position($text)
-		$state=For_skip_spaces_jump0[$state](Text_get($text), $text)
-		if $state<0
-		{
-			ret(0)
-		}
-	}
-}
-For_skip_spaces_jump0=clone(skip_spaces_jump0)
-For_skip_spaces_jump0[0]=
-{
-	if $1=='/'
-	{
-		ret(1)
-	}
-	if is_space($1)&&$1!=';'
-	{
-		Text_resolve_position($2)
-		ret(0)
-	}
-	Text_reject_position($2)
-	ret(-1)
 }
 fn For_remove($self)
 {

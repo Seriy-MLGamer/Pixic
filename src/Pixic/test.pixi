@@ -1,12 +1,36 @@
-fn miku()
+/*
+(C) 2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+ai_no_uta/**/=39
+ai_no_uta+39//Test comment.
+fn miku($song)
 {
-	printf(USER_PATH)
-	fn hatsune($song)
+	printf($song)
+	$meow=3
+	fn thank_yuu($x, $y)
 	{
-		printf($song)
+		miku($x)
+		miku($y)
 	}
-	fputc(10, STDOUT)
+	$song.happiness=$meow
 }
-miku()
-hatsune(get_real_path(TEMP_PATH))
+
+miku(ai_no_uta)
+miku_img=load()
+miku_img[4, 2]=0b10110^0xFF+floor(3.65e1)
+miku(thank_yuu(39, 93)).123456789[100000*0]==39+93*99/sin(9)
 fputc(0b1010, STDOUT)
+remove(miku_img)

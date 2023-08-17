@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,57 +16,87 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file core/structures/stack/Stack.pixi
+ * class Stack;
+ * The array with the stack methods.
  */
 
+/**
+ * class Stack;
+ * The array with the stack methods.
+ * @param $type the type of a container.
+ * @return an instance of the Stack class.
+ * @see Stack_push()
+ * @see Stack_get()
+ * @see Stack_pop()
+ * @see Stack_clean()
+ */
 fn Stack_new($type)
 {
 	$self=new(1, 1, $type)
 
-	$self[0]=0
 	$self.top=-1
 
 	ret($self)
 }
+/**
+ * Push the value to the stack.
+ * @param $self
+ * @param $value the value to be pushed.
+ * @see Stack_get()
+ * @see Stack_pop()
+ * @see Stack_new()
+ */
 fn Stack_push($self, $value)
 {
-	$self.top+1
-	$top=$self.top
-	if $top!=get_size($self)
-	{
-		$self[$top+1]=0
-	}
-	else
+	$top=$self.top+1
+	$self.top=$top
+	if $top==get_size($self)
 	{
 		resize($self, $top+1)
 	}
 	$self[$top]=$value
 }
-fn Stack_get($self, $offset)
+/**
+ * Get a value from the stack (without removal).
+ * @param $self
+ * @param $offset the offset down from the top of the stack. Optional. Default is 0, i. e. a value will be get from the top of the stack. Negative values and values bigger than stack height are undefined behavior.
+ * @return a value from the stack.
+ * @see Stack_pop()
+ * @see Stack_new()
+ */
+fn Stack_get($self/*, $offset*/)
 {
-	if $0<2
+	/*if $0<2
 	{
 		ret($self[$self.top])
 	}
 	else
 	{
 		ret($self[$self.top-$offset])
-	}
+	}*/
+	ret($self[$self.top])
 }
+/**
+ * Pop a value from the stack.
+ * Caution! This method is optimized by the cost of safety. Make sure that the stack isn't empty.
+ * @param $self
+ * @return a popped value.
+ * @see Stack_get()
+ * @see Stack_new()
+ */
 fn Stack_pop($self)
 {
-	$top=$self.top-1
-	if $top!=-2
-	{
-		$self.top=$top
-		$top+1
-		$result=$self[$top]
-		$self[$top]=0
-		ret($result)
-	}
-	ret(0)
+	$top=$self.top
+	$self.top=$top-1
+	ret($self[$top])
 }
+/**
+ * Clean the stack: set the stack height to 0.
+ * @param $self
+ * @see Stack_pop()
+ * @see Stack_new()
+ */
 fn Stack_clean($self)
 {
 	$self.top=-1
-	$self[0]=0
 }

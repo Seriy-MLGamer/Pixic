@@ -1,0 +1,69 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens groups.pixi
+ *
+ * Dependencies.
+ * program/translator/tokens/statements/Break.pixi
+ * program/translator/tokens/statements/Continue.pixi
+ * program/translator/tokens/statements/Fn.pixi
+ * program/translator/tokens/statements/For.pixi
+ * program/translator/tokens/statements/Halt.pixi
+ * program/translator/tokens/statements/If.pixi
+ * program/translator/tokens/statements/Ret.pixi
+ * program/translator/tokens/statements/While.pixi
+ * program/translator/tokens/statements/Assign.pixi
+ * program/translator/tokens/statements/Procedure.pixi
+ * program/translator/Parser.pixi
+ * program/translator/tokens/operands/Unary_operator.pixi
+ * program/translator/tokens/operands/Character.pixi
+ * program/translator/tokens/operands/Number.pixi
+ * program/translator/tokens/operands/String.pixi
+ * program/translator/tokens/operands/Variable.pixi
+ * program/translator/tokens/operands/Container.pixi
+ * program/translator/tokens/operands/Function.pixi
+ * program/translator/tokens/operands/Property.pixi
+ */
+
+STATEMENTS=new(10, 1, INT)
+STATEMENTS[0]=Break_new
+STATEMENTS[1]=Continue_new
+STATEMENTS[2]=Fn_new
+STATEMENTS[3]=For_new
+STATEMENTS[4]=Halt_new
+STATEMENTS[5]=If_new
+STATEMENTS[6]=Ret_new
+STATEMENTS[7]=While_new
+STATEMENTS[8]=Assign_new
+STATEMENTS[9]=Procedure_new
+
+OPERANDS=new(2, 1, INT)
+OPERANDS[0]=Parser_parse_operand
+OPERANDS[1]=Unary_operator_new
+
+SIMPLE_OPERANDS=new(5, 1, INT)
+SIMPLE_OPERANDS[0]=Character_new
+//SIMPLE_OPERANDS[1]=Lambda_new
+SIMPLE_OPERANDS[1]=Number_new
+SIMPLE_OPERANDS[2]=String_new
+SIMPLE_OPERANDS[3]=Variable_new
+SIMPLE_OPERANDS[4]=Parser_parse_parenthesis
+
+OPERANDS_POSTFIXES=new(3, 1, INT)
+OPERANDS_POSTFIXES[0]=Container_new
+OPERANDS_POSTFIXES[1]=Function_new
+OPERANDS_POSTFIXES[2]=Property_new

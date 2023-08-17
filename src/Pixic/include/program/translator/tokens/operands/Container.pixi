@@ -1,0 +1,182 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/operands/Container.pixi
+ * class Container extends Postfix;
+ *
+ * Include before.
+ * program/translator/tokens/operands/system/Operand.pixi
+ * Dependencies.
+ * program/translator/tokens/operands/system/Postfix.pixi
+ * program/translator/Parser.pixi
+ * program/info/syntax errors.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/generator.pixi
+ * program/translator/Function_text.pixi
+ * program/translator/tokens/operators.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Container_new($parser)
+{
+	$self=Postfix_new(1, 0)
+	$self.f=Container
+
+	Parser_promise_position($parser)
+	if Parser_get($parser)!='['
+	{
+		Parser_reject_position($parser)
+
+		remove($self)
+		ret(-1)
+	}
+	Parser_resolve_position($parser)
+	if Parser_skip_spaces($parser)
+	{
+		$parser[1, $parser.top]-1
+		syntax_error_expected_x($parser)
+	}
+	$token=Parser_parse_expression($parser)
+	if $token<0
+	{
+		syntax_error_expected_x($parser)
+	}
+	$self.x=$token
+	if Parser_skip_spaces($parser)
+	{
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, ']')
+	}
+	Parser_promise_position($parser)
+	$token=Parser_get($parser)
+	if $token==']'
+	{
+		Parser_resolve_position($parser)
+		$self.y=-1
+
+		ret($self)
+	}
+	if $token==','
+	{
+		Parser_resolve_position($parser)
+		if Parser_skip_spaces($parser)
+		{
+			$parser[1, $parser.top]-1
+			syntax_error_expected_y($parser)
+		}
+		$token=Parser_parse_expression($parser)
+		if $token<0
+		{
+			syntax_error_expected_y($parser)
+		}
+		$self.y=$token
+		if Parser_skip_spaces($parser)
+		{
+			$parser[1, $parser.top]-1
+			syntax_error_expected($parser, ']')
+		}
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=']'
+		{
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ']')
+		}
+		Parser_resolve_position($parser)
+
+		ret($self)
+	}
+	Parser_reject_position($parser)
+	syntax_error_expected($parser, ']')
+}
+Container=clone(Operand)
+Container.generate=Container_generate
+Container.generate_assign=Container_generate_assign
+Container.show=Container_show
+Container.remove=Container_remove
+fn Container_generate($self)
+{
+	$statements_record=Stack_get(functions_texts).statements_record
+	if $self.y<0
+	{
+		fputs("get_element(", $statements_record) $self.ID.f.generate($self.ID) fputs(", ", $statements_record) $self.x.f.generate($self.x)
+	}
+	else
+	{
+		fputs("get_element2(", $statements_record) $self.ID.f.generate($self.ID) fputs(", ", $statements_record) $self.x.f.generate($self.x) fputs(", ", $statements_record) $self.y.f.generate($self.y)
+	}
+	fputc(')', $statements_record)
+}
+fn Container_generate_assign($self, $assign)
+{
+	$function_text=Stack_get(functions_texts)
+	$statements_record=$function_text.statements_record
+	Function_text_indent($function_text)
+	if $assign.operator!=OPERATOR_ASSIGN
+	{
+			fputs("{\n", $statements_record)
+		$function_text.indents+1
+			Function_text_indent($function_text) fputs("Var temp0=", $statements_record) $self.ID.f.generate($self.ID) fputs(";\n", $statements_record)
+			Function_text_indent($function_text) fputs("Var temp1=", $statements_record) $self.x.f.generate($self.x) fputs(";\n", $statements_record)
+			if $self.y<0
+			{
+				Function_text_indent($function_text) fputs("set_element(temp0, temp1, ", $statements_record) fputs(OPERATOR_FUNCTION[$assign.operator], $statements_record) fputs("get_element(temp0, temp1), ", $statements_record)
+			}
+			else
+			{
+				Function_text_indent($function_text) fputs("Var temp2=", $statements_record) $self.y.f.generate($self.y) fputs(";\n", $statements_record)
+				Function_text_indent($function_text) fputs("set_element2(temp0, temp1, temp2, ", $statements_record) fputs(OPERATOR_FUNCTION[$assign.operator], $statements_record) fputs("get_element2(temp0, temp1, temp2), ", $statements_record)
+			}
+				$assign.value.f.generate($assign.value) fputs("));\n", $statements_record)
+			$function_text.indents-1
+		Function_text_indent($function_text) fputs("}\n", $statements_record)
+	}
+	else
+	{
+			if $self.y<0
+			{
+				fputs("set_element(", $statements_record) $self.ID.f.generate($self.ID) fputs(", ", $statements_record) $self.x.f.generate($self.x)
+			}
+			else
+			{
+				fputs("set_element2(", $statements_record) $self.ID.f.generate($self.ID) fputs(", ", $statements_record) $self.x.f.generate($self.x) fputs(", ", $statements_record) $self.y.f.generate($self.y)
+			}
+			fputs(", ", $statements_record) $assign.value.f.generate($assign.value) fputs(");\n", $statements_record)
+	}
+}
+fn Container_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Container\"") next_property()
+		indent() logf("\"ID\": ") $self.ID.f.show($self.ID) next_property()
+		indent() logf("\"x\": ") $self.x.f.show($self.x)
+		if $self.y>=0
+		{
+				next_property()
+			indent() logf("\"y\": ") $self.y.f.show($self.y)
+		}
+	end_object()
+}
+fn Container_remove($self)
+{
+	$self.x.f.remove($self.x)
+	if $self.y>=0
+	{
+		$self.y.f.remove($self.y)
+	}
+
+	Postfix_remove($self)
+}

@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -13,50 +20,38 @@ You should have received a copy of the GNU General Public License along with Pix
  * Dependencies.
  * configuration.pixi
  * program/console/system/make arguments.pixi
+ * program/console/console parser.pixi
  */
 
 fn warning_unknown_parameter($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_unknown_parameter, arguments[$arg])
+	fputs(text_warning, STDERR) fprintf(STDERR, text_warning_unknown_parameter, arguments[$arg])
 }
 fn warning_undefined_parameter($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_undefined_parameter, arguments[$arg])
+	fputs(text_warning, STDERR) fprintf(STDERR, text_warning_undefined_parameter, arguments[$arg])
+}
+fn warning_expected_assign($arg)
+{
+	fputs(text_warning, STDERR) fprintf(STDERR, text_warning_expected_assign, arguments[$arg])
 }
 fn warning_double_input($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_double)
-	fprintf(STDERR, text_warning_double_input, arguments[$arg])
-	fprintf(STDERR, text_warning_double2, input)
+	fputs(text_warning, STDERR) fputs(text_warning_double, STDERR) fprintf(STDERR, text_warning_double_input, arguments[$arg]) fprintf(STDERR, text_warning_double2, input)
 }
 fn warning_double_output_single($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_double)
-	fprintf(STDERR, text_warning_double_output_single, arguments[$arg])
-	fprintf(STDERR, text_warning_double2, output)
+	fputs(text_warning, STDERR) fputs(text_warning_double, STDERR) fprintf(STDERR, text_warning_double_output_single, arguments[$arg]) fprintf(STDERR, text_warning_double2, output)
 }
 fn warning_double_output_extended($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_double)
-	fprintf(STDERR, text_warning_double_output_extended, arguments[$arg])
-	fprintf(STDERR, text_warning_double2, output)
+	fputs(text_warning, STDERR) fputs(text_warning_double, STDERR) fprintf(STDERR, text_warning_double_output_extended, arguments[$arg]) fprintf(STDERR, text_warning_double2, output)
 }
 fn warning_double_folder_single($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_double)
-	fprintf(STDERR, text_warning_double_folder_single, arguments[$arg])
-	fprintf(STDERR, text_warning_double2, folder)
+	fputs(text_warning, STDERR) fputs(text_warning_double, STDERR) fprintf(STDERR, text_warning_double_folder_single, arguments[$arg]) fprintf(STDERR, text_warning_double2, folder)
 }
 fn warning_double_folder_extended($arg)
 {
-	fprintf(STDERR, text_warning)
-	fprintf(STDERR, text_warning_double)
-	fprintf(STDERR, text_warning_double_folder_extended, arguments[$arg])
-	fprintf(STDERR, text_warning_double2, folder)
+	fputs(text_warning, STDERR) fputs(text_warning_double, STDERR) fprintf(STDERR, text_warning_double_folder_extended, arguments[$arg]) fprintf(STDERR, text_warning_double2, folder)
 }

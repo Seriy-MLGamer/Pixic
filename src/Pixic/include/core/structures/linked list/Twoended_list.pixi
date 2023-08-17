@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,8 +16,16 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file core/structures/linked list/Twoended_list.pixi
+ * class Twoended_list;
+ * The linked list data structure. Has two start points: "first" and "last" fields.
  */
 
+/**
+ * class Twoended_list;
+ * The linked list data structure. Has two start points: "first" and "last" fields.
+ * @return an instance of the Twoended_list class.
+ * @see Linked_list_new()
+ */
 fn Twoended_list_new()
 {
 	$self=new(1, 1, INT8)

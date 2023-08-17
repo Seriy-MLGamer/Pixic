@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,21 +16,26 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file core/structures/jump table/Jump_table.pixi
+ * class Jump_table;
+ * The implementation of "switch case" in Pixilang that supports randomized case values.
+ * Set the corresponding function or jump address to the case value (or something else, even float numbers).
+ * There is no "switch case" and many other things in Pixilang, so I have to костылить.
  *
  * Dependencies.
  * core/structures/linked list/Linked_list.pixi
+ * core/structures/linked list/List_node.pixi
  * core/structures/jump table/system/Jump.pixi
  */
 
-fill_coeff_min=.25
-fill_coeff_max=.5
+MINIMUM_FILL_COEFFICIENT=.25
+MAXIMUM_FILL_COEFFICIENT=.5
 
 /**
  * class Jump_table;
- * An implementation of "switch case" in Pixilang that supports randomized case values.
- * Set to the case value corresponding function or jump address (or something else, even float numbers).
+ * The implementation of "switch case" in Pixilang that supports randomized case values.
+ * Set the corresponding function or jump address to the case value (or something else, even float numbers).
  * There is no "switch case" and many other things in Pixilang, so I have to костылить.
- * @returns an instance of class Jump_table.
+ * @return an instance of the Jump_table class.
  * @see Jump_table_set()
  * @see Jump_table_get()
  * @see Jump_table_unset()
@@ -33,63 +45,76 @@ fn Jump_table_new()
 {
 	$self=new(1, 1, INT8)
 
-	$self.jumps=Linked_list_new(1/fill_coeff_min)
-	$self.jump_count=0
+	$self.jumps=Linked_list_new(1/MINIMUM_FILL_COEFFICIENT)
+	$self.jumps_count=0
 
 	ret($self)
 }
-fn Jump_table_set($self, $value, $address)
+/**
+ * Set the pair of the case value and the function or jump address to the Jump_table object or change an existing pair.
+ * @param $self
+ * @param $case the case value.
+ * @param $address the function or jump address (or something else).
+ * @see Jump_table_new()
+ */
+fn Jump_table_set($self, $case, $address)
 {
 	$jumps=$self.jumps
-	if $self.jump_count
+	if $self.jumps_count
 	{
 		$array_size=get_size($jumps)
-		$jump=$value%$array_size
+		$jump=$case%$array_size
 		for ($a=$jumps[$jump]; $a>=0; $a=$a.next)
 		{
-			if $a.value==$value
+			if $a.case==$case
 			{
 				$a.address=$address
 				ret
 			}
 		}
-		$jump_count=$self.jump_count
-		$jump_count_inc=$jump_count+1
-		$self.jump_count=$jump_count_inc
-		if $jump_count_inc/$array_size>=fill_coeff_max
+		$jumps_count=$self.jumps_count
+		$jumps_count_incremented=$jumps_count+1
+		$self.jumps_count=$jumps_count_incremented
+		if $jumps_count_incremented/$array_size>=MAXIMUM_FILL_COEFFICIENT
 		{
-			$array_size=floor($jump_count_inc/fill_coeff_min)
+			$array_size=floor($jumps_count_incremented/MINIMUM_FILL_COEFFICIENT)
 			$new_jumps=Linked_list_new($array_size)
-			for ($a=0; $jump_count; $a+1)
+			for ($a=0; $jumps_count; $a+1)
 			{
-				$b=$jumps[$a]
-				while $b>=0
+				$b=$jumps[$a] while $b>=0
 				{
 					$next=$b.next
-					List_node_set($b, $new_jumps, $b.value%$array_size)
-					$jump_count-1
+					List_node_set_to_oneended($b, $new_jumps, $b.case%$array_size)
+					$jumps_count-1
 					$b=$next
 				}
 			}
 			remove($jumps)
 			$self.jumps=$new_jumps
-			$jump=$value%$array_size
+			$jump=$case%$array_size
 		}
-		List_node_set(Jump_new($value, $address), $self.jumps, $jump)
+		List_node_set_to_oneended(Jump_new($case, $address), $self.jumps, $jump)
 	}
 	else
 	{
-		$jumps[$value%get_size($jumps)]=Jump_new($value, $address)
-		$self.jump_count=1
+		$jumps[$case%get_size($jumps)]=Jump_new($case, $address)
+		$self.jumps_count=1
 	}
 }
-fn Jump_table_get($self, $value)
+/**
+ * Get a function or jump address of the case.
+ * @param $self
+ * @param $case the case value.
+ * @return a function or jump address or 0 if the case not found.
+ * @see Jump_table_new()
+ */
+fn Jump_table_get($self, $case)
 {
-	if $self.jump_count
+	if $self.jumps_count
 	{
-		for ($a=$self.jumps[$value%get_size($self.jumps)]; $a>=0; $a=$a.next)
+		for ($a=$self.jumps[$case%get_size($self.jumps)]; $a>=0; $a=$a.next)
 		{
-			if $a.value==$value
+			if $a.case==$case
 			{
 				ret($a.address)
 			}
@@ -97,34 +122,39 @@ fn Jump_table_get($self, $value)
 	}
 	ret(0)
 }
-fn Jump_table_unset($self, $value)
+/**
+ * Remove the pair of the case value and a function or jump address from the Jump_table object.
+ * @param $self
+ * @param $case the case value.
+ * @see Jump_table_new()
+ */
+fn Jump_table_unset($self, $case)
 {
-	$jump_count=$self.jump_count
-	if $jump_count
+	$jumps_count=$self.jumps_count
+	if $jumps_count
 	{
 		$jumps=$self.jumps
-		$jump=$value%get_size($jumps)
+		$jump=$case%get_size($jumps)
 		for ($a=$jumps[$jump]; $a>=0; $a=$a.next)
 		{
-			if $a.value==$value
+			if $a.case==$case
 			{
-				$jump_count-1
-				$self.jump_count=$jump_count
-				if $jump_count
+				$jumps_count-1
+				$self.jumps_count=$jumps_count
+				if $jumps_count
 				{
-					List_node_unset($a, $jumps, $jump)
-					if $jump_count/get_size($jumps)<fill_coeff_min
+					List_node_unset_from_oneended($a, $jumps, $jump)
+					if $jumps_count/get_size($jumps)<MINIMUM_FILL_COEFFICIENT
 					{
-						$array_size=floor($jump_count/fill_coeff_max)
+						$array_size=floor(($jumps_count+1)/MAXIMUM_FILL_COEFFICIENT)
 						$new_jumps=Linked_list_new($array_size)
-						for ($a=0; $jump_count; $a+1)
+						for ($a=0; $jumps_count; $a+1)
 						{
-							$b=$jumps[$a]
-							while $b>=0
+							$b=$jumps[$a] while $b>=0
 							{
 								$next=$b.next
-								List_node_set($b, $new_jumps, $b.value%$array_size)
-								$jump_count-1
+								List_node_set_to_oneended($b, $new_jumps, $b.case%$array_size)
+								$jumps_count-1
 								$b=$next
 							}
 						}
@@ -142,20 +172,24 @@ fn Jump_table_unset($self, $value)
 		}
 	}
 }
+/**
+ * Remove the Jump_table object.
+ * @param $self
+ * @see Jump_table_new()
+ */
 fn Jump_table_remove($self)
 {
-	$jump_count=$self.jump_count
-	if $jump_count
+	$jumps_count=$self.jumps_count
+	if $jumps_count
 	{
 		$jumps=$self.jumps
-		for ($a=0; $jump_count; $a+1)
+		for ($a=0; $jumps_count; $a+1)
 		{
-			$b=$jumps[$a]
-			while $b>=0
+			$b=$jumps[$a] while $b>=0
 			{
 				$next=$b.next
 				remove($b)
-				$jump_count-1
+				$jumps_count-1
 				$b=$next
 			}
 		}

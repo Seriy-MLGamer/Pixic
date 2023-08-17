@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,26 +16,27 @@ You should have received a copy of the GNU General Public License along with Pix
 
 /**
  * @file program/translator/tokens/statements/Assign.pixi
+ * class Assign extends Statement;
  *
  * Include before.
- * program/translator/tokens/expressions/expression.pixi
+ * program/translator/Parser.pixi
  * Dependencies.
- * program/translator/tokens/statements/Statement.pixi
- * program/translator/parser/parsing functions.pixi
+ * program/translator/tokens/statements/system/Statement.pixi
  * program/info/syntax errors.pixi
- * program/translator/generator/generator.pixi
+ * program/translator/tokens/operators.pixi
+ * program/translator/tokens/show.pixi
  */
 
-fn Assign_new($text)
+fn Assign_new($parser)
 {
-	$self=Statement_new($text)
+	$self=Statement_new($parser)
 	$self.f=Assign
 
-	Text_promise_position($text)
-	$token=parse_operand($text)
+	Parser_promise_position($parser)
+	$token=Parser_parse_operand($parser)
 	if $token<0
 	{
-		Text_reject_position($text)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-1)
@@ -36,71 +44,69 @@ fn Assign_new($text)
 	if !$token.assignable
 	{
 		$token.f.remove($token)
-		Text_reject_position($text)
+		Parser_reject_position($parser)
 
 		remove($self)
 		ret(-2)
 	}
+	Parser_resolve_position($parser)
 	$self.variable=$token
-	if skip_spaces($text)
+	if Parser_skip_spaces($parser)
 	{
-		$text[1, $text.top]-1
-		syntax_error_expected_operator($text)
+		$parser[1, $parser.top]-1
+		syntax_error_expected_operator($parser)
 	}
-	Text_promise_position($text)
-	$sequence=Stack_new(INT8)
+	Parser_promise_position($parser)
+	$token=0
 	while 1
 	{
-		$token=get_prop(Assign_new_jump0, $sequence)(Text_get($text), $sequence, $text)
-		if $token>-2
+		$token=Assign_new_jump0[-$token](Parser_get($parser), $parser)
+		if $token>=0
 		{
 			break
 		}
 	}
-	remove($sequence)
-	if $token!=-1
+	if $token!=INT_MAX
 	{
-		Text_resolve_position($text)
+		Parser_resolve_position($parser)
 		$self.operator=$token
-		if skip_spaces($text)
+		if Parser_skip_spaces($parser)
 		{
-			$text[1, $text.top]-1
-			syntax_error_expected_expression($text)
+			$parser[1, $parser.top]-1
+			syntax_error_expected_expression($parser)
 		}
-		$token=parse_expression($text)
+		$token=Parser_parse_expression($parser)
 		if $token<0
 		{
-			syntax_error_expected_expression($text)
+			syntax_error_expected_expression($parser)
 		}
 		$self.value=$token
-		$self.last_line=$text[1, $text.top]+1
-		Text_resolve_position($text)
+		$self.last_line=$parser[1, $parser.top]+1
 
 		ret($self)
 	}
-	Text_reject_position($text)
-	syntax_error_expected_operator($text)
+	Parser_reject_position($parser)
+	syntax_error_expected_operator($parser)
 }
-Assign_new_jump0=clone(parse_expression_jump0)
-set_prop(Assign_new_jump0, operator_strings[OPERATOR_ASSIGN],
+Assign_new_jump0=clone(Parser_parse_expression_jump0)
+Assign_new_jump0[5]=
+{
+	if $1!='='
 	{
-		if $1!='='
-		{
-			Text_reject_position($3)
-			ret(OPERATOR_ASSIGN)
-		}
-		Text_resolve_position($3)
-		ret(OPERATOR_EQ)
+		Parser_reject_position($2)
+		ret(OPERATOR_ASSIGN)
 	}
-)
+	Parser_resolve_position($2)
+	ret(OPERATOR_EQ)
+}
 Assign=new(1, 1, INT8)
 Assign.generate=Assign_generate
 Assign.show=Assign_show
 Assign.remove=Assign_remove
 fn Assign_generate($self)
 {
-	generator_deinit()
-	developer_error_not_implemented("assign generation")
+	Statement_generate($self)
+	$self.variable.f.generate_assign($self.variable, $self)
 }
 fn Assign_show($self)
 {
@@ -108,7 +114,7 @@ fn Assign_show($self)
 		indent() logf("\"type\": \"Assign\"") next_property()
 		indent() Statement_show($self) next_property()
 		indent() logf("\"variable\": ") $self.variable.f.show($self.variable) next_property()
-		indent() logf("\"operator\": \"%s\"", operator_strings[$self.operator]) next_property()
+		indent() logf("\"operator\": \"%s\"", OPERATOR_STRING[$self.operator]) next_property()
 		indent() logf("\"value\": ") $self.value.f.show($self.value)
 	end_object()
 }

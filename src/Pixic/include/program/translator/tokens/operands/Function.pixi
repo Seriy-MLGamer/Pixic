@@ -1,0 +1,152 @@
+/*
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
+
+This file is part of Pixic.
+Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file program/translator/tokens/operands/Function.pixi
+ * class Function extends Postfix;
+ *
+ * Include before.
+ * program/translator/tokens/operands/system/Operand.pixi
+ * Dependencies.
+ * program/translator/tokens/operands/system/Postfix.pixi
+ * program/translator/Parser.pixi
+ * program/info/syntax errors.pixi
+ * core/structures/stack/Stack.pixi
+ * program/translator/tokens/show.pixi
+ */
+
+fn Function_new($parser)
+{
+	$self=Postfix_new(0, 1)
+	$self.f=Function
+
+	Parser_promise_position($parser)
+	if Parser_get($parser)!='('
+	{
+		Parser_reject_position($parser)
+
+		remove($self)
+		ret(-1)
+	}
+	Parser_resolve_position($parser)
+	if Parser_skip_spaces($parser)
+	{
+		$parser[1, $parser.top]-1
+		syntax_error_expected($parser, ')')
+	}
+	$arguments=Stack_new(INT)
+	$argument=Parser_parse_expression($parser)
+	if $argument<0
+	{
+		Parser_promise_position($parser)
+		if Parser_get($parser)!=')'
+		{
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ')')
+		}
+		Parser_resolve_position($parser)
+		$self.arguments=$arguments
+
+		ret($self)
+	}
+	while 1
+	{
+		if Parser_skip_spaces($parser)
+		{
+			$parser[1, $parser.top]-1
+			syntax_error_expected($parser, ')')
+		}
+		Stack_push($arguments, $argument)
+		Parser_promise_position($parser)
+		$argument=Parser_get($parser)
+		if $argument==')'
+		{
+			Parser_resolve_position($parser)
+			$self.arguments=$arguments
+
+			ret($self)
+		}
+		if $argument==','
+		{
+			Parser_resolve_position($parser)
+			if Parser_skip_spaces($parser)
+			{
+				$parser[1, $parser.top]-1
+				syntax_error_expected_expression($parser)
+			}
+			$argument=Parser_parse_expression($parser)
+			if $argument<0
+			{
+				syntax_error_expected_expression($parser)
+			}
+		}
+		else
+		{
+			Parser_reject_position($parser)
+			syntax_error_expected($parser, ')')
+		}
+	}
+}
+Function=clone(Operand)
+Function.generate=Function_generate
+Function.show=Function_show
+Function.remove=Function_remove
+fn Function_generate($self)
+{
+	$self.ID.f.generate_call($self.ID, $self)
+}
+fn Function_show($self)
+{
+	begin_object()
+		indent() logf("\"type\": \"Function\"") next_property()
+		indent() logf("\"ID\": ") $self.ID.f.show($self.ID) next_property()
+		indent() logf("\"arguments\": ")
+			$arguments=$self.arguments
+			$arguments_count=$arguments.top
+			if $arguments_count+1
+			{
+				begin_array()
+					$a=0 while 1
+					{
+						$argument=$arguments[$a]
+						indent() $argument.f.show($argument)
+						if $a==$arguments_count
+						{
+							break
+						}
+							next_property()
+						$a+1
+					}
+				end_array()
+			}
+			else
+			{
+				logf("null")
+			}
+	end_object()
+}
+fn Function_remove($self)
+{
+	$arguments=$self.arguments
+	$size=$arguments.top+1
+	for ($a=0; $a!=$size; $a+1)
+	{
+		$arguments[$a].f.remove($arguments[$a])
+	}
+	remove($arguments)
+
+	Postfix_remove($self)
+}

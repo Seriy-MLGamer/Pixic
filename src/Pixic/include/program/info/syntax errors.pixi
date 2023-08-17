@@ -1,5 +1,12 @@
 /*
-(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+Code at GitHub: <https://github.com/Seriy-MLGamer>
+Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+E-mail: <Seriy-MLGamer@yandex.ru>
 
 This file is part of Pixic.
 Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,90 +18,77 @@ You should have received a copy of the GNU General Public License along with Pix
  * @file program/info/syntax errors.pixi
  *
  * Dependencies.
+ * program/translator/generator.pixi
  * configuration.pixi
  */
 
-fn syntax_error($text)
+fn syntax_error($parser)
 {
 	fclose(C_file)
-	fprintf(STDERR, text_error)
-	fprintf(STDERR, text_syntax_error, $text.file_name, $text.lines[2, $text[1, $text.top]])
+	fputs(text_error, STDERR) fprintf(STDERR, text_syntax_error, $parser.file_name, $parser.lines[2, $parser[1, $parser.top]])
 }
-fn syntax_error_expected($text, $char)
+fn syntax_error_expected($parser, $character)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected, $char)
+	syntax_error($parser) fprintf(STDERR, text_syntax_error_expected, $character)
 	exit(64)
 }
-fn syntax_error_expected_statement($text)
+fn syntax_error_expected_statement($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_statement)
+	syntax_error($parser) fputs(text_syntax_error_expected_statement, STDERR)
 	exit(65)
 }
-fn syntax_error_expected_function_name($text)
+fn syntax_error_expected_function_name($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_function_name)
+	syntax_error($parser) fputs(text_syntax_error_expected_function_name, STDERR)
 	exit(66)
 }
-fn syntax_error_expected_argument($text)
+fn syntax_error_expected_argument($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_argument)
+	syntax_error($parser) fputs(text_syntax_error_expected_argument, STDERR)
 	exit(67)
 }
-fn syntax_error_expected_operator($text)
+fn syntax_error_expected_operator($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_operator)
+	syntax_error($parser) fputs(text_syntax_error_expected_operator, STDERR)
 	exit(68)
 }
-fn syntax_error_expected_expression($text)
+fn syntax_error_expected_expression($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_expression)
+	syntax_error($parser) fputs(text_syntax_error_expected_expression, STDERR)
 	exit(69)
 }
-fn syntax_error_expected_operand($text)
+fn syntax_error_expected_operand($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_operand)
+	syntax_error($parser) fputs(text_syntax_error_expected_operand, STDERR)
 	exit(70)
 }
-fn syntax_error_expected_x($text)
+fn syntax_error_expected_x($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_x)
+	syntax_error($parser) fputs(text_syntax_error_expected_x, STDERR)
 	exit(71)
 }
-fn syntax_error_expected_y($text)
+fn syntax_error_expected_y($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_y)
+	syntax_error($parser) fputs(text_syntax_error_expected_y, STDERR)
 	exit(72)
 }
-fn syntax_error_expected_property($text)
+fn syntax_error_expected_property($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_expected_property)
+	syntax_error($parser) fputs(text_syntax_error_expected_property, STDERR)
 	exit(73)
 }
-fn syntax_error_invalid_statement($text)
+fn syntax_error_invalid_statement($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_invalid_statement)
+	syntax_error($parser) fputs(text_syntax_error_invalid_statement, STDERR)
 	exit(74)
 }
-fn syntax_error_invalid_number($text)
+fn syntax_error_invalid_number($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_invalid_number)
+	syntax_error($parser) fputs(text_syntax_error_invalid_number, STDERR)
 	exit(75)
 }
-fn syntax_error_reserved_identifier($text)
+fn syntax_error_reserved_identifier($parser)
 {
-	syntax_error($text)
-	fprintf(STDERR, text_syntax_error_reserved_identifier)
+	syntax_error($parser) fputs(text_syntax_error_reserved_identifier, STDERR)
 	exit(76)
 }

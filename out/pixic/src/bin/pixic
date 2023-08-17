@@ -1,26 +1,34 @@
 #!/bin/bash
 
-#(C) 2022-2023 Серый MLGamer <Seriy-MLGamer@yandex.ru>
+#(C) 2022-2023 Серый MLGamer. All freedoms preserved.
+#Videos at Дзен: <https://dzen.ru/seriy_mlgamer>
+#Music at SoundCloud: <https://soundcloud.com/seriy_mlgamer>
+#Videos at YouTube: <https://www.youtube.com/@Seriy_MLGamer>
+#Code at GitHub: <https://github.com/Seriy-MLGamer>
+#Me at ВКонтакте: <https://vkontakte.ru/seriy_mlgamer>
+#Material support at DonationAlerts: <https://www.donationalerts.com/r/seriy_mlgamer>
+#E-mail: <Seriy-MLGamer@yandex.ru>
 
 #This file is part of Pixic.
 #Pixic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 #Pixic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #You should have received a copy of the GNU General Public License along with Pixic. If not, see <https://www.gnu.org/licenses/>.
 
-if [ "$OS" = Windows_NT ]
+if [[ $OS = Windows_NT ]]
 then command=pixilang_console
 else command=pixilang
 fi
 command+=" \"$(dirname "$0")/../share/pixic/boot.pixicode\" bash"
+declare -i a b
 for ((a=0; a<=$#; a++))
 do
-	argument=${*:$a:1}
-	for ((b=0; $b!=${#argument}; b++))
+	argument=${*:a:1}
+	for ((b=0; b!=${#argument}; b++))
 	do
-		if [ ${argument:$b:1} = \" ] || [ ${argument:$b:1} = $ ] || [ ${argument:$b:1} = \\ ]
+		if [[ ${argument:b:1} = \" || ${argument:b:1} = $ || ${argument:b:1} = \\ ]]
 		then
-			argument=${argument:0:$b}\\${argument:$b}
-			((b++))
+			argument=${argument:0:b}\\${argument:b}
+			b+=1
 		fi
 	done
 	command+=" \"$argument\""
